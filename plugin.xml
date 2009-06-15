@@ -1,0 +1,42 @@
+<plugin name='springcache' version='1.0.1' grailsVersion='1.1-RC2 &gt; *'>
+  <author>Rob Fletcher</author>
+  <authorEmail>rob@energizedwork.com</authorEmail>
+  <title>Spring Cache Plugin</title>
+  <description>Uses the spring-modules-cache library to allow caching pointcuts to be easily applied to Spring managed beans in a
+Grails application (e.g. services). Default cache configuration uses a simple ConcurrentHashMap backed cache
+implementation but this can easily be overridden by declaring a springcache.provider property in Config.groovy. Valid
+provider options are 'ehcache', 'jboss', 'jcs' and 'oscache', any other value will be ignored and the default cache
+implementation used.
+
+Simply add @Cacheable(modelId="myCachingModel1") to methods that should cache their results and
+@CacheFlush(modelId="myFlushingModel") to methods that should flush the cache. The modelId attribute should match models
+configured in Config.groovy, e.g.:
+    springcache {
+        cachingModels {
+            myCachingModel1 = 'cacheName=CACHE_1'
+            myCachingModel2 = 'cacheName=CACHE_2'
+        }
+        flushingModels {
+            myFlushingModel = 'cacheNames=CACHE_1,CACHE_2'
+        }
+    }
+For more on specific options for configuring caching and flushing models see:
+https://springmodules.dev.java.net/docs/reference/0.9/html/cache.html#cachingModels and
+https://springmodules.dev.java.net/docs/reference/0.9/html/cache.html#flushingModels
+
+Be aware that the annotations will only have any effect on Spring-managed beans. If you create instances of your class
+directly rather than getting them from the application context they will not be decorated with caching/flushing
+behaviour.
+
+See https://springmodules.dev.java.net/docs/reference/0.9/html/cache.html for more details on how to configure alternate
+caching providers.
+
+Caching can be disabled with the config key springcache.disabled=true, for exaple you may want to do this in your test
+environment to avoid having methods you are testing returning cached results.
+</description>
+  <documentation>http://grails.org/Springcache+Plugin</documentation>
+  <resources />
+  <dependencies>
+    <plugin name='core' version='1.0 &gt; *' />
+  </dependencies>
+</plugin>
