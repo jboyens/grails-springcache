@@ -1,0 +1,9 @@
+test/reports
+*.log
+*.launch
+*.tmproj
+.classpath
+.project
+build.xml
+ivy.xml
+ivysettings.xml

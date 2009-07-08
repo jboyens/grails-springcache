@@ -1,4 +1,4 @@
-<plugin name='springcache' version='1.0.1' grailsVersion='1.1-RC2 &gt; *'>
+<plugin name='springcache' version='1.0.1' grailsVersion='1.2-M1 &gt; *'>
   <author>Rob Fletcher</author>
   <authorEmail>rob@energizedwork.com</authorEmail>
   <title>Spring Cache Plugin</title>
@@ -35,8 +35,11 @@ Caching can be disabled with the config key springcache.disabled=true, for exapl
 environment to avoid having methods you are testing returning cached results.
 </description>
   <documentation>http://grails.org/Springcache+Plugin</documentation>
-  <resources />
+  <resources>
+    <resource>UrlMappings</resource>
+  </resources>
   <dependencies>
     <plugin name='core' version='1.0 &gt; *' />
   </dependencies>
+  <behavior />
 </plugin>
