@@ -4,6 +4,3 @@ test/reports
 *.tmproj
 .classpath
 .project
-build.xml
-ivy.xml
-ivysettings.xml
