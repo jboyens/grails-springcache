@@ -238,7 +238,7 @@
   </component>
   <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectKey">
-    <option name="state" value="project:///Users/rob/IdeaProjects/grails-springcache/grails-springcache.ipr" />
+    <option name="state" value="project:///home/rob/workspace/grails-springcache/grails-springcache.ipr" />
   </component>
   <component name="ProjectModuleManager">
     <modules>
@@ -271,8 +271,5 @@
     <mapping directory="" vcs="Git" />
   </component>
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
-  <UsedPathMacros>
-    <macro name="USER_HOME" description="" />
-  </UsedPathMacros>
 </project>
 

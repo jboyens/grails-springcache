@@ -74,6 +74,7 @@ springcache {
     cachingModels {
         sailorCachingModel = "cacheName=SAILOR_CACHE"
         shipCachingModel = "cacheName=SHIP_CACHE"
+		longRunningCacheModel = "cacheName=LONG_RUNNING_CACHE"
     }
     flushingModels {
         sailorFlushingModel = "cacheNames=SAILOR_CACHE"

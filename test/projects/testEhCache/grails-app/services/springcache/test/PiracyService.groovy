@@ -6,6 +6,7 @@ import org.springmodules.cache.annotations.CacheFlush
 class PiracyService {
 	@Cacheable (modelId = 'sailorCachingModel')
 	def getSailors() {
+		println "getSailors"
 		Sailor.list()
 	}
 
@@ -21,6 +22,7 @@ class PiracyService {
 
 	@CacheFlush (modelId = 'sailorFlushingModel')
 	void registerNewSailor(Sailor sailor) {
+		println "registerNewSailor"
 		sailor.save()
 	}
 
@@ -31,6 +33,7 @@ class PiracyService {
 
 	@CacheFlush (modelId = 'allFlushingModel')
 	void registerNewShipWithCrew(Ship ship, Collection<Sailor> crew) {
+		println "registerNewShipWithCrew"
 		ship.save()
 		crew*.save()
 	}

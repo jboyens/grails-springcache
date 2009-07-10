@@ -35,9 +35,7 @@ Caching can be disabled with the config key springcache.disabled=true, for exapl
 environment to avoid having methods you are testing returning cached results.
 </description>
   <documentation>http://grails.org/Springcache+Plugin</documentation>
-  <resources>
-    <resource>UrlMappings</resource>
-  </resources>
+  <resources />
   <dependencies>
     <plugin name='core' version='1.0 &gt; *' />
   </dependencies>
