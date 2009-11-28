@@ -22,22 +22,20 @@ public class CacheAspect {
 	private CacheManager cacheManager;
 
 	@Around("@annotation(cacheable)")
-	public Object aroundAdvice(ProceedingJoinPoint pjp, Cacheable cacheable) throws Throwable {
+	public Object invokeCachedMethod(ProceedingJoinPoint pjp, Cacheable cacheable) throws Throwable {
 		Cache cache = cacheManager.getCache(cacheable);
-
-		CacheKey key = toCacheKey(pjp);
-
-		return getFromCacheOrProceed(pjp, cache, key);
+		CacheKey key = generateCacheKey(pjp);
+		return getFromCacheOrInvoke(pjp, cache, key);
 	}
 
-	CacheKey toCacheKey(ProceedingJoinPoint pjp) {
+	CacheKey generateCacheKey(ProceedingJoinPoint pjp) {
 		List<Object> values = new ArrayList<Object>();
 		values.add(pjp.getSignature().getName());
 		values.addAll(Arrays.asList(pjp.getArgs()));
 		return new DefaultCacheKey(values);
 	}
 
-	Object getFromCacheOrProceed(ProceedingJoinPoint pjp, Cache cache, CacheKey key) throws Throwable {
+	Object getFromCacheOrInvoke(ProceedingJoinPoint pjp, Cache cache, CacheKey key) throws Throwable {
 		Object value;
 		if (cache.containsKey(key)) {
 			log.debug("Cache hit for %s", key.toString());

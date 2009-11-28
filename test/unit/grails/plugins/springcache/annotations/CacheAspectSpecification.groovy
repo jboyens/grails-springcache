@@ -19,8 +19,8 @@ class CacheAspectSpecification extends Specification {
 		def aspect = new CacheAspect()
 
 		when: "cache keys are generated"
-		def key1 = aspect.toCacheKey(joinPoint1)
-		def key2 = aspect.toCacheKey(joinPoint2)
+		def key1 = aspect.generateCacheKey(joinPoint1)
+		def key2 = aspect.generateCacheKey(joinPoint2)
 
 		then: "the keys should not be equal for different method name and argument combinations"
 		key1 != key2
@@ -38,8 +38,8 @@ class CacheAspectSpecification extends Specification {
 		def aspect = new CacheAspect()
 
 		when: "cache keys are generated"
-		def key1 = aspect.toCacheKey(joinPoint1)
-		def key2 = aspect.toCacheKey(joinPoint2)
+		def key1 = aspect.generateCacheKey(joinPoint1)
+		def key2 = aspect.generateCacheKey(joinPoint2)
 
 		then: "the keys should be equal for multiple method calls with the same arguments"
 		key1 == key2
@@ -70,7 +70,7 @@ class CacheAspectSpecification extends Specification {
 		joinPoint.proceed().returns(UNCACHED_VALUE)
 		def result
 		play {
-			result = aspect.getFromCacheOrProceed(joinPoint, cache, key)
+			result = aspect.getFromCacheOrInvoke(joinPoint, cache, key)
 		}
 
 		then: "the method's result is returned"
@@ -91,7 +91,7 @@ class CacheAspectSpecification extends Specification {
 		when: "a method call is intercepted"
 		def result
 		play {
-			result = aspect.getFromCacheOrProceed(joinPoint, cache, key)
+			result = aspect.getFromCacheOrInvoke(joinPoint, cache, key)
 		}
 
 		then: "the cached value is returned"

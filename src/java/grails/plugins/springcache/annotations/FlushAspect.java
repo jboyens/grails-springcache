@@ -1,18 +1,15 @@
 package grails.plugins.springcache.annotations;
 
-import org.springframework.stereotype.Component;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.ProceedingJoinPoint;
+import org.springframework.stereotype.Component;
 
 @Component
 @Aspect
 public class FlushAspect {
 
-	@Around("@annotation(cacheFlush)")
-	public Object aroundAdvice(ProceedingJoinPoint pjp, CacheFlush cacheFlush) throws Throwable {
-		System.out.println("Flush something");
-		return pjp.proceed();
+	@After("@annotation(cacheFlush)")
+	public void flushCaches(CacheFlush cacheFlush) throws Throwable {
 	}
 
 }
