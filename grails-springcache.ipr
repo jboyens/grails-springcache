@@ -60,6 +60,28 @@
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
   </component>
+  <component name="FacetAutodetectingManager">
+    <autodetection-disabled>
+      <facet-type id="Grails">
+        <modules>
+          <module name="testEhCache">
+            <files>
+              <file url="file://$PROJECT_DIR$/test/projects/testEhCache/application.properties" />
+            </files>
+          </module>
+        </modules>
+      </facet-type>
+      <facet-type id="Spring">
+        <modules>
+          <module name="testEhCache">
+            <files>
+              <file url="file://$PROJECT_DIR$/test/projects/testEhCache/web-app/WEB-INF/applicationContext.xml" />
+            </files>
+          </module>
+        </modules>
+      </facet-type>
+    </autodetection-disabled>
+  </component>
   <component name="HierarchyBrowserManager">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
     <option name="SORT_ALPHABETICALLY" value="false" />
@@ -78,7 +100,12 @@
         <inspection_tool class="UnusedMessageFormatParameter" level="WARNING" enabled="false" />
       </profile>
     </profiles>
-    <list size="0" />
+    <list size="4">
+      <item index="0" class="java.lang.String" itemvalue="SERVER PROBLEM" />
+      <item index="1" class="java.lang.String" itemvalue="INFO" />
+      <item index="2" class="java.lang.String" itemvalue="WARNING" />
+      <item index="3" class="java.lang.String" itemvalue="ERROR" />
+    </list>
   </component>
   <component name="JavacSettings">
     <option name="DEBUGGING_INFO" value="true" />
@@ -243,7 +270,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/grails-springcache.iml" filepath="$PROJECT_DIR$/grails-springcache.iml" />
-      <module fileurl="file://$PROJECT_DIR$/test/projects/testEhCache/testEhCache.iml" filepath="$PROJECT_DIR$/test/projects/testEhCache/testEhCache.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">

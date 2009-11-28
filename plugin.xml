@@ -1,4 +1,4 @@
-<plugin name='springcache' version='1.0.1' grailsVersion='1.2-M1 &gt; *'>
+<plugin name='springcache' version='1.1-SNAPSHOT' grailsVersion='1.2-M3 &gt; *'>
   <author>Rob Fletcher</author>
   <authorEmail>rob@energizedwork.com</authorEmail>
   <title>Spring Cache Plugin</title>
@@ -36,10 +36,17 @@ environment to avoid having methods you are testing returning cached results.
 </description>
   <documentation>http://grails.org/Springcache+Plugin</documentation>
   <resources>
+    <resource>BuildConfig</resource>
     <resource>UrlMappings</resource>
   </resources>
   <dependencies>
-    <plugin name='core' version='1.0 &gt; *' />
+    <resolvers>
+      <resolver type='grailsPlugins' name='grailsPlugins' />
+      <resolver type='mavenLocal' />
+      <resolver type='mavenCentral' />
+      <resolver type='mavenLocal' />
+      <resolver type='mavenRepo' root='http://download.java.net/maven/2/' name='http://download.java.net/maven/2/' m2compatbile='true' />
+    </resolvers>
   </dependencies>
   <behavior />
 </plugin>
