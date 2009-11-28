@@ -7,4 +7,7 @@ public interface Cache {
 	Object get(CacheKey key);
 
 	void put(CacheKey key, Object value);
+
+	void flush();
+	
 }

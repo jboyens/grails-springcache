@@ -1,17 +1,19 @@
 package grails.plugins.springcache.annotations;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import grails.plugins.springcache.cache.Cache;
+import grails.plugins.springcache.cache.CacheKey;
+import grails.plugins.springcache.cache.CacheManager;
+import grails.plugins.springcache.cache.DefaultCacheKey;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
-import grails.plugins.springcache.cache.CacheKey;
-import grails.plugins.springcache.cache.Cache;
-import grails.plugins.springcache.cache.CacheManager;
-import grails.plugins.springcache.cache.DefaultCacheKey;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 @Aspect
@@ -23,7 +25,7 @@ public class CacheAspect {
 
 	@Around("@annotation(cacheable)")
 	public Object invokeCachedMethod(ProceedingJoinPoint pjp, Cacheable cacheable) throws Throwable {
-		Cache cache = cacheManager.getCache(cacheable);
+		Cache cache = cacheManager.getCache(cacheable.cacheName());
 		CacheKey key = generateCacheKey(pjp);
 		return getFromCacheOrInvoke(pjp, cache, key);
 	}

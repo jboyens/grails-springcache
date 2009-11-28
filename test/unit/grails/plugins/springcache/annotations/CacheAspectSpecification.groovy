@@ -119,4 +119,8 @@ class MockCache implements Cache {
 	int size() {
 		map.size()
 	}
+
+	void flush() {
+		map.clear()
+	}
 }
