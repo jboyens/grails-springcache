@@ -1,6 +1,6 @@
 package grails.plugins.springcache.annotations;
 
-import grails.plugins.springcache.cache.CacheManager;
+import grails.plugins.springcache.cache.CacheProvider;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class FlushAspect {
 
-	private CacheManager cacheManager;
+	private CacheProvider cacheManager;
 
 	@After("@annotation(cacheFlush)")
 	public void flushCaches(CacheFlush cacheFlush) throws Throwable {
@@ -20,7 +20,7 @@ public class FlushAspect {
 	}
 
 	@Autowired(required = true)
-	public void setCacheManager(CacheManager cacheManager) {
+	public void setCacheManager(CacheProvider cacheManager) {
 		this.cacheManager = cacheManager;
 	}
 

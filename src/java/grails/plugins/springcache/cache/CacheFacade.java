@@ -1,6 +1,6 @@
 package grails.plugins.springcache.cache;
 
-public interface Cache {
+public interface CacheFacade {
 
 	boolean containsKey(CacheKey key);
 

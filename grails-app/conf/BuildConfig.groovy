@@ -19,7 +19,7 @@ grails.project.dependency.resolution = {
 //        runtime ("net.sf.ehcache:ehcache:1.6.1") {
 //            excludes 'jms', 'commons-logging', 'servlet-api'
 //        }
-		test "org.gmock:gmock:0.8.0"
+//		test "org.gmock:gmock:0.8.0"
 //		test "org.hamcrest:hamcrest-all:1.2"
 	}
 }

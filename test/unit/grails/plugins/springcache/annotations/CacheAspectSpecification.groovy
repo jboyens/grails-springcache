@@ -1,24 +1,20 @@
 package grails.plugins.springcache.annotations
 
 import grails.plugins.springcache.annotations.CacheAspect
-import grails.plugins.springcache.cache.Cache
-import grails.plugins.springcache.cache.CacheKey
+import grails.plugins.springcache.cache.CacheFacade
+import grails.plugins.springcache.cache.DefaultCacheKey
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.Signature
-import org.gmock.WithGMock
 import spock.lang.Specification
 
-@WithGMock
 class CacheAspectSpecification extends Specification {
 
 	private static final UNCACHED_VALUE = "UNCACHED"
 	private static final CACHED_VALUE = "CACHED"
 
 	void "Cache keys are distinguished by the name and arguments of the invoked method"() {
-		setup:
-		def aspect = new CacheAspect()
-
 		when: "cache keys are generated"
+		def aspect = new CacheAspect()
 		def key1 = aspect.generateCacheKey(joinPoint1)
 		def key2 = aspect.generateCacheKey(joinPoint2)
 
@@ -34,10 +30,8 @@ class CacheAspectSpecification extends Specification {
 	}
 
 	void "Cache keys are consistent for repeated method calls"() {
-		setup:
-		def aspect = new CacheAspect()
-
 		when: "cache keys are generated"
+		def aspect = new CacheAspect()
 		def key1 = aspect.generateCacheKey(joinPoint1)
 		def key2 = aspect.generateCacheKey(joinPoint2)
 
@@ -61,66 +55,40 @@ class CacheAspectSpecification extends Specification {
 
 	void "The intercepted method is invoked if the cache does not contain the result of a previous call"() {
 		given: "the cache is empty"
-		def aspect = new CacheAspect()
-		def joinPoint = mock(ProceedingJoinPoint)
-		def key = mock(CacheKey)
-		def cache = new MockCache()
+		def joinPoint = Mock(ProceedingJoinPoint)
+		def key = new DefaultCacheKey([])
+		def cache = Mock(CacheFacade)
+		cache.containsKey(key) >> false
 
 		when: "a method call is intercepted"
-		joinPoint.proceed().returns(UNCACHED_VALUE)
-		def result
-		play {
-			result = aspect.getFromCacheOrInvoke(joinPoint, cache, key)
-		}
+		def result = new CacheAspect().getFromCacheOrInvoke(joinPoint, cache, key)
 
-		then: "the method's result is returned"
+		then: "the method is invoked"
+		1 * joinPoint.proceed() >> UNCACHED_VALUE
+
+		and: "the method's result is returned"
 		result == UNCACHED_VALUE
 
 		and: "the method's result is cached"
-		cache.get(key) == UNCACHED_VALUE
+		1 * cache.put(key, UNCACHED_VALUE)
 	}
 
 	void "The cached value is returned if the cache contains the result of a previous call"() {
 		given: "the result of a previous call is in the cache"
-		def aspect = new CacheAspect()
-		def joinPoint = mock(ProceedingJoinPoint)
-		def key = mock(CacheKey)
-		def cache = new MockCache()
-		cache.put(key, CACHED_VALUE)
+		def joinPoint = Mock(ProceedingJoinPoint)
+		def key = new DefaultCacheKey([])
+		def cache = Mock(CacheFacade)
+		cache.containsKey(key) >> true
+		cache.get(key) >> CACHED_VALUE
 
 		when: "a method call is intercepted"
-		def result
-		play {
-			result = aspect.getFromCacheOrInvoke(joinPoint, cache, key)
-		}
+		def result = new CacheAspect().getFromCacheOrInvoke(joinPoint, cache, key)
 
 		then: "the cached value is returned"
 		result == CACHED_VALUE
+
+		and: "the method is not invoked"
+		0 * joinPoint.proceed()
 	}
 
-}
-
-class MockCache implements Cache {
-
-	private Map map = [:]
-
-	boolean containsKey(CacheKey key) {
-		return map.containsKey(key)
-	}
-
-	Object get(CacheKey key) {
-		return map[key]
-	}
-
-	void put(CacheKey key, Object value) {
-		map[key] = value
-	}
-
-	int size() {
-		map.size()
-	}
-
-	void flush() {
-		map.clear()
-	}
 }

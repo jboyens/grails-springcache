@@ -1,32 +1,35 @@
 package grails.plugins.springcache.annotations
 
+import grails.plugins.springcache.annotations.CacheFlush
+import grails.plugins.springcache.annotations.FlushAspect
+import grails.plugins.springcache.cache.CacheFacade
+import grails.plugins.springcache.cache.CacheProvider
 import spock.lang.Specification
-import org.gmock.WithGMock
-import grails.plugins.springcache.cache.*
 
-@WithGMock
 class FlushAspectSpecification extends Specification {
 
 	void "All specfied caches are flushed"() {
 		given: "some caches exist"
-		def cache1 = mock(Cache)
-		def cache2 = mock(Cache)
-		def cacheManager = mock(CacheManager) {
-			getCache("cache1").returns(cache1)
-			getCache("cache2").returns(cache2)
-		}
-		def aspect = new FlushAspect()
-		aspect.cacheManager = cacheManager
+		def cache1 = Mock(CacheFacade)
+		def cache2 = Mock(CacheFacade)
+		def cache3 = Mock(CacheFacade)
+		def cacheManager = Mock(CacheProvider)
+		cacheManager.getCache("cache1") >> cache1
+		cacheManager.getCache("cache2") >> cache2
+		cacheManager.getCache("cache3") >> cache3
 
 		when: "the flush aspect is triggered"
-		cache1.flush()
-		cache2.flush()
 		def annotation = [cacheNames: {-> ["cache1", "cache2"] as String[] }] as CacheFlush
-		play {
-			aspect.flushCaches(annotation)
-		}
+		def aspect = new FlushAspect()
+		aspect.cacheManager = cacheManager
+		aspect.flushCaches(annotation)
 
-		then: "whatever"
+		then: "the specified caches are flushed"
+		1 * cache1.flush()
+		1 * cache2.flush()
+
+		and: "any other caches are not flushed"
+		0 * cache3.flush()
 	}
 
 }

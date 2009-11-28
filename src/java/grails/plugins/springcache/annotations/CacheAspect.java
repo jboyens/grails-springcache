@@ -3,9 +3,9 @@ package grails.plugins.springcache.annotations;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import grails.plugins.springcache.cache.Cache;
+import grails.plugins.springcache.cache.CacheFacade;
 import grails.plugins.springcache.cache.CacheKey;
-import grails.plugins.springcache.cache.CacheManager;
+import grails.plugins.springcache.cache.CacheProvider;
 import grails.plugins.springcache.cache.DefaultCacheKey;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -21,11 +21,11 @@ public class CacheAspect {
 
 	private final Logger log = LoggerFactory.getLogger(CacheAspect.class);
 
-	private CacheManager cacheManager;
+	private CacheProvider cacheManager;
 
 	@Around("@annotation(cacheable)")
 	public Object invokeCachedMethod(ProceedingJoinPoint pjp, Cacheable cacheable) throws Throwable {
-		Cache cache = cacheManager.getCache(cacheable.cacheName());
+		CacheFacade cache = cacheManager.getCache(cacheable.cacheName());
 		CacheKey key = generateCacheKey(pjp);
 		return getFromCacheOrInvoke(pjp, cache, key);
 	}
@@ -37,7 +37,7 @@ public class CacheAspect {
 		return new DefaultCacheKey(values);
 	}
 
-	Object getFromCacheOrInvoke(ProceedingJoinPoint pjp, Cache cache, CacheKey key) throws Throwable {
+	Object getFromCacheOrInvoke(ProceedingJoinPoint pjp, CacheFacade cache, CacheKey key) throws Throwable {
 		Object value;
 		if (cache.containsKey(key)) {
 			log.debug("Cache hit for %s", key.toString());
@@ -51,7 +51,7 @@ public class CacheAspect {
 	}
 
 	@Autowired(required = true)
-	public void setCacheManager(CacheManager cacheManager) {
+	public void setCacheManager(CacheProvider cacheManager) {
 		this.cacheManager = cacheManager;
 	}
 
