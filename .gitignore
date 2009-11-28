@@ -1,9 +1,11 @@
 test/reports
 *.log
 *.launch
-*.tmproj
+*.iws
 .classpath
 .project
 build.xml
 ivy.xml
 ivysettings.xml
+out/
+target/
