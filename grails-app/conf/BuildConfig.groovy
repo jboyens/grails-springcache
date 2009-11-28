@@ -20,6 +20,6 @@ grails.project.dependency.resolution = {
 //            excludes 'jms', 'commons-logging', 'servlet-api'
 //        }
 		test "org.gmock:gmock:0.8.0"
-		test "org.hamcrest:hamcrest-all:1.0"
+//		test "org.hamcrest:hamcrest-all:1.2"
 	}
 }

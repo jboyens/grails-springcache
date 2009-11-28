@@ -27,6 +27,17 @@ public class CacheAspect {
 
 		CacheKey key = toCacheKey(pjp);
 
+		return getFromCacheOrProceed(pjp, cache, key);
+	}
+
+	CacheKey toCacheKey(ProceedingJoinPoint pjp) {
+		List<Object> values = new ArrayList<Object>();
+		values.add(pjp.getSignature().getName());
+		values.addAll(Arrays.asList(pjp.getArgs()));
+		return new DefaultCacheKey(values);
+	}
+
+	Object getFromCacheOrProceed(ProceedingJoinPoint pjp, Cache cache, CacheKey key) throws Throwable {
 		Object value;
 		if (cache.containsKey(key)) {
 			log.debug("Cache hit for %s", key.toString());
@@ -37,13 +48,6 @@ public class CacheAspect {
 			cache.put(key, value);
 		}
 		return value;
-	}
-
-	CacheKey toCacheKey(ProceedingJoinPoint pjp) {
-		List<Object> values = new ArrayList<Object>();
-		values.add(pjp.getSignature().getName());
-		values.addAll(Arrays.asList(pjp.getArgs()));
-		return new DefaultCacheKey(values);
 	}
 
 	@Autowired(required = true)
