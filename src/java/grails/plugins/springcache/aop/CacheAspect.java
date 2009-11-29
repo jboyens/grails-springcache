@@ -1,5 +1,6 @@
-package grails.plugins.springcache.annotations;
+package grails.plugins.springcache.aop;
 
+import grails.plugins.springcache.annotations.Cacheable;
 import grails.plugins.springcache.cache.CacheFacade;
 import grails.plugins.springcache.cache.CacheKey;
 import grails.plugins.springcache.cache.CacheProvider;

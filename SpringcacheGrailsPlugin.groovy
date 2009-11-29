@@ -1,7 +1,7 @@
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator
 import org.slf4j.LoggerFactory
-import grails.plugins.springcache.implementations.ehcache.EhCacheProvider
+import grails.plugins.springcache.providers.ehcache.EhCacheProvider
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean
 
 class SpringcacheGrailsPlugin {

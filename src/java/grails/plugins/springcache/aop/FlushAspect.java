@@ -1,5 +1,6 @@
-package grails.plugins.springcache.annotations;
+package grails.plugins.springcache.aop;
 
+import grails.plugins.springcache.annotations.CacheFlush;
 import grails.plugins.springcache.cache.CacheProvider;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;

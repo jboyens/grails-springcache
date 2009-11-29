@@ -1,10 +1,10 @@
-package grails.plugins.springcache.implementations.ehcache;
+package grails.plugins.springcache.providers.ehcache;
 
-import grails.plugins.springcache.cache.CacheProvider;
 import grails.plugins.springcache.cache.CacheFacade;
 import grails.plugins.springcache.cache.CacheNotFoundException;
-import net.sf.ehcache.CacheManager;
+import grails.plugins.springcache.cache.CacheProvider;
 import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
 
 public class EhCacheProvider implements CacheProvider {
 

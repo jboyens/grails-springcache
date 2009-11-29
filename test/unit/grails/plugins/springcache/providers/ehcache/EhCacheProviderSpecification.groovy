@@ -1,7 +1,7 @@
-package grails.plugins.springcache.implementations.ehcache
+package grails.plugins.springcache.providers.ehcache
 
 import grails.plugins.springcache.cache.CacheNotFoundException
-import grails.plugins.springcache.implementations.ehcache.EhCacheProvider
+import grails.plugins.springcache.providers.ehcache.EhCacheProvider
 import net.sf.ehcache.CacheManager
 import spock.lang.Specification
 

@@ -1,4 +1,4 @@
-package grails.plugins.springcache.implementations.ehcache;
+package grails.plugins.springcache.providers.ehcache;
 
 import grails.plugins.springcache.cache.CacheFacade;
 import grails.plugins.springcache.cache.CacheKey;
