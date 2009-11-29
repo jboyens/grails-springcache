@@ -6,15 +6,13 @@ import org.aspectj.lang.JoinPoint;
 
 public final class CacheKey {
 
-	private final int hashCode;
+	private final int hash;
 
 	public static CacheKey generate(JoinPoint joinPoint) {
 		HashCodeBuilder builder = new HashCodeBuilder();
 		builder.append(joinPoint.getTarget());
 		builder.append(joinPoint.getSignature().getName());
-		for (Object arg : joinPoint.getArgs()) {
-			builder.append(arg);
-		}
+		builder.append(joinPoint.getArgs());
 		return new CacheKey(builder.toHashCode());
 	}
 
@@ -27,18 +25,18 @@ public final class CacheKey {
 	}
 
 	private CacheKey(int hashCode) {
-		this.hashCode = hashCode;
+		this.hash = hashCode;
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		return hashCode == ((CacheKey) o).hashCode;
+		return hash == ((CacheKey) o).hash;
 	}
 
 	@Override
 	public int hashCode() {
-		return hashCode;
+		return hash;
 	}
 }
