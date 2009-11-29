@@ -1,7 +1,8 @@
 package grails.plugins.springcache.cache;
 
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class DefaultCacheKey implements CacheKey {
 
@@ -28,6 +29,6 @@ public class DefaultCacheKey implements CacheKey {
 
 	@Override
 	public String toString() {
-		return String.format("DefaultCacheKey:%s", values);
+		return new ToStringBuilder(this).append(values).toString();
 	}
 }
