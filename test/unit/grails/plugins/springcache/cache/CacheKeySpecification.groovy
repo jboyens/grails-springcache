@@ -1,4 +1,4 @@
-package grails.plugins.springcache.annotations
+package grails.plugins.springcache.cache
 
 import grails.plugins.springcache.cache.CacheKey
 import org.aspectj.lang.JoinPoint

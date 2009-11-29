@@ -1,7 +1,6 @@
-package grails.plugins.springcache.annotations
+package grails.plugins.springcache.aop
 
 import grails.plugins.springcache.annotations.CacheFlush
-import grails.plugins.springcache.aop.FlushAspect
 import grails.plugins.springcache.cache.CacheFacade
 import grails.plugins.springcache.cache.CacheProvider
 import spock.lang.Specification
