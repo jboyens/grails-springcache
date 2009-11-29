@@ -9,16 +9,22 @@ class CachingSpecification extends IntegrationSpecification {
 	def piracyService
 	def cacheManager
 
+	void setupSpec() {
+		Pirate.build(name: "Blackbeard")
+		Pirate.build(name: "Calico Jack")
+		Pirate.build(name: "Black Bart")
+	}
+
 	void cleanup() {
 		cacheManager.removalAll()
+	}
+
+	void cleanupSpec() {
 		Pirate.list()*.delete()
 	}
 
 	void "Cached results should be returned for subsequent method calls"() {
-		given: "Some data exists"
-		Pirate.build(name: "Blackbeard")
-
-		and: "A cache exists"
+		given: "A cache exists"
 		def cache = new Cache("PirateCache", 100, false, true, 0, 0)
 		cacheManager.addCache(cache)
 
@@ -33,17 +39,12 @@ class CachingSpecification extends IntegrationSpecification {
 		cache.statistics.cacheHits == 1
 
 		and: "The same result is returned by both calls"
-		result1 == ["Blackbeard"]
+		result1 == ["Black Bart", "Blackbeard", "Calico Jack"]
 		result1 == result2
 	}
 
 	void "Cached results should not be returned for a subsequent call with different arguments"() {
-		given: "Some data exists"
-		Pirate.build(name: "Blackbeard")
-		Pirate.build(name: "Calico Jack")
-		Pirate.build(name: "Black Bart")
-
-		and: "A cache exists"
+		given: "A cache exists"
 		def cache = new Cache("PirateCache", 100, false, true, 0, 0)
 		cacheManager.addCache(cache)
 
