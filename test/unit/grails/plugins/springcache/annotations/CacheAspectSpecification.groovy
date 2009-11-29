@@ -2,16 +2,15 @@ package grails.plugins.springcache.annotations
 
 import grails.plugins.springcache.annotations.CacheAspect
 import grails.plugins.springcache.cache.CacheFacade
-import grails.plugins.springcache.cache.DefaultCacheKey
+import grails.plugins.springcache.cache.CacheKey
 import org.aspectj.lang.ProceedingJoinPoint
-import org.aspectj.lang.Signature
 import spock.lang.Specification
 
 class CacheAspectSpecification extends Specification {
 
 	private static final UNCACHED_VALUE = "UNCACHED"
 	private static final CACHED_VALUE = "CACHED"
-	private static final KEY = new DefaultCacheKey([])
+	private static final KEY = CacheKey.generate([])
 
 	void "The intercepted method is invoked if the cache does not contain the result of a previous call"() {
 		given: "the cache is empty"

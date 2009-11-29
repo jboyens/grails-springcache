@@ -1,6 +1,6 @@
 package grails.plugins.springcache.annotations
 
-import grails.plugins.springcache.cache.InvocationCacheKey
+import grails.plugins.springcache.cache.CacheKey
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.Signature
 import spock.lang.Specification
@@ -9,11 +9,11 @@ class CacheKeySpecification extends Specification {
 
 	static final TARGET_1 = new Object()
 	static final TARGET_2 = new Object()
-	
+
 	void "Cache keys are distinguished by the name and arguments of the invoked method"() {
 		when: "cache keys are generated"
-		def key1 = new InvocationCacheKey(joinPoint1)
-		def key2 = new InvocationCacheKey(joinPoint2)
+		def key1 = CacheKey.generate(joinPoint1)
+		def key2 = CacheKey.generate(joinPoint2)
 
 		then: "the keys should not be equal for different method name and argument combinations"
 		key1 != key2
@@ -28,8 +28,8 @@ class CacheKeySpecification extends Specification {
 
 	void "Cache keys are consistent for repeated method calls"() {
 		when: "cache keys are generated"
-		def key1 = new InvocationCacheKey(joinPoint1)
-		def key2 = new InvocationCacheKey(joinPoint2)
+		def key1 = CacheKey.generate(joinPoint1)
+		def key2 = CacheKey.generate(joinPoint2)
 
 		then: "the keys should be equal for multiple method calls with the same arguments"
 		key1 == key2

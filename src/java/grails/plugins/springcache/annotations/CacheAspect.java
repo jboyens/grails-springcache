@@ -3,7 +3,6 @@ package grails.plugins.springcache.annotations;
 import grails.plugins.springcache.cache.CacheFacade;
 import grails.plugins.springcache.cache.CacheKey;
 import grails.plugins.springcache.cache.CacheProvider;
-import grails.plugins.springcache.cache.InvocationCacheKey;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -23,7 +22,7 @@ public class CacheAspect {
 	@Around("@annotation(cacheable)")
 	public Object invokeCachedMethod(ProceedingJoinPoint pjp, Cacheable cacheable) throws Throwable {
 		CacheFacade cache = cacheProvider.getCache(cacheable.cacheName());
-		CacheKey key = new InvocationCacheKey(pjp);
+		CacheKey key = CacheKey.generate(pjp);
 		return getFromCacheOrInvoke(pjp, cache, key);
 	}
 

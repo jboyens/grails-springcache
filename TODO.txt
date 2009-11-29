@@ -1,6 +1,5 @@
 - support other cache providers
 - allow cacheManager (or equiv) to be defined by client project
-- hash objects in keys instead of holding references
 
 Long Term...
 - caching tag lib
