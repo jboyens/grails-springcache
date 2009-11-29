@@ -1,11 +1,6 @@
-test/reports
 *.log
-*.launch
 *.iws
-.classpath
-.project
-build.xml
-ivy.xml
-ivysettings.xml
+web-app/
 out/
 target/
+test/reports

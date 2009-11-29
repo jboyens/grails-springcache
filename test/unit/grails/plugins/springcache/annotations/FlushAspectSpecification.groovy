@@ -21,7 +21,7 @@ class FlushAspectSpecification extends Specification {
 		when: "the flush aspect is triggered"
 		def annotation = [cacheNames: {-> ["cache1", "cache2"] as String[] }] as CacheFlush
 		def aspect = new FlushAspect()
-		aspect.cacheManager = cacheManager
+		aspect.cacheProvider = cacheManager
 		aspect.flushCaches(annotation)
 
 		then: "the specified caches are flushed"

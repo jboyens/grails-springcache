@@ -10,18 +10,18 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class FlushAspect {
 
-	private CacheProvider cacheManager;
+	private CacheProvider cacheProvider;
 
 	@After("@annotation(cacheFlush)")
 	public void flushCaches(CacheFlush cacheFlush) throws Throwable {
 		for (String cacheName : cacheFlush.cacheNames()) {
-			cacheManager.getCache(cacheName).flush();
+			cacheProvider.getCache(cacheName).flush();
 		}
 	}
 
 	@Autowired(required = true)
-	public void setCacheManager(CacheProvider cacheManager) {
-		this.cacheManager = cacheManager;
+	public void setCacheProvider(CacheProvider cacheProvider) {
+		this.cacheProvider = cacheProvider;
 	}
 
 }

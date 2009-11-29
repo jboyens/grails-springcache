@@ -21,11 +21,11 @@ public class CacheAspect {
 
 	private final Logger log = LoggerFactory.getLogger(CacheAspect.class);
 
-	private CacheProvider cacheManager;
+	private CacheProvider cacheProvider;
 
 	@Around("@annotation(cacheable)")
 	public Object invokeCachedMethod(ProceedingJoinPoint pjp, Cacheable cacheable) throws Throwable {
-		CacheFacade cache = cacheManager.getCache(cacheable.cacheName());
+		CacheFacade cache = cacheProvider.getCache(cacheable.cacheName());
 		CacheKey key = generateCacheKey(pjp);
 		return getFromCacheOrInvoke(pjp, cache, key);
 	}
@@ -51,8 +51,8 @@ public class CacheAspect {
 	}
 
 	@Autowired(required = true)
-	public void setCacheManager(CacheProvider cacheManager) {
-		this.cacheManager = cacheManager;
+	public void setCacheProvider(CacheProvider cacheProvider) {
+		this.cacheProvider = cacheProvider;
 	}
 
 }
