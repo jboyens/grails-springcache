@@ -7,6 +7,9 @@ import spock.lang.Specification
 
 class CacheKeySpecification extends Specification {
 
+	static final TARGET_1 = new Object()
+	static final TARGET_2 = new Object()
+	
 	void "Cache keys are distinguished by the name and arguments of the invoked method"() {
 		when: "cache keys are generated"
 		def key1 = new InvocationCacheKey(joinPoint1)
@@ -19,8 +22,8 @@ class CacheKeySpecification extends Specification {
 		key1.hashCode() != key2.hashCode()
 
 		where:
-		joinPoint1 << [mockJoinPoint("method1"), mockJoinPoint("method", ["a"]), mockJoinPoint("method", ["a", "b"]), mockJoinPoint("method")]
-		joinPoint2 << [mockJoinPoint("method2"), mockJoinPoint("method", ["b"]), mockJoinPoint("method", ["a", "c"]), mockJoinPoint("method", ["x"])]
+		joinPoint1 << [mockJoinPoint(TARGET_1, "method1"), mockJoinPoint(TARGET_1, "method", ["a"]), mockJoinPoint(TARGET_1, "method", ["a", "b"]), mockJoinPoint(TARGET_1, "method"), mockJoinPoint(TARGET_1, "method")]
+		joinPoint2 << [mockJoinPoint(TARGET_1, "method2"), mockJoinPoint(TARGET_1, "method", ["b"]), mockJoinPoint(TARGET_1, "method", ["a", "c"]), mockJoinPoint(TARGET_1, "method", ["x"]), mockJoinPoint(TARGET_2, "method")]
 	}
 
 	void "Cache keys are consistent for repeated method calls"() {
@@ -35,12 +38,13 @@ class CacheKeySpecification extends Specification {
 		key1.hashCode() == key2.hashCode()
 
 		where:
-		joinPoint1 << [mockJoinPoint("method"), mockJoinPoint("method", ["a", "b"])]
-		joinPoint2 << [mockJoinPoint("method"), mockJoinPoint("method", ["a", "b"])]
+		joinPoint1 << [mockJoinPoint(TARGET_1, "method"), mockJoinPoint(TARGET_1, "method", ["a", "b"])]
+		joinPoint2 << [mockJoinPoint(TARGET_1, "method"), mockJoinPoint(TARGET_1, "method", ["a", "b"])]
 	}
 
-	static JoinPoint mockJoinPoint(String methodName, List args = []) {
+	static JoinPoint mockJoinPoint(Object target, String methodName, List args = []) {
 		def joinPoint = [:]
+		joinPoint.getTarget = {-> target }
 		joinPoint.getSignature = {-> [getName: {-> methodName }] as Signature }
 		joinPoint.getArgs = {-> args as Object[] }
 		return joinPoint as JoinPoint
