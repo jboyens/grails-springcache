@@ -2803,8 +2803,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="GMock 0.8.0" level="application" />
-    <orderEntry type="library" name="Hamcrest 1.2" level="application" />
     <orderEntry type="library" name="Spock 0.3-SNAPSHOT" level="application" />
   </component>
 </module>

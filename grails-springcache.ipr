@@ -265,11 +265,12 @@
   </component>
   <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectKey">
-    <option name="state" value="project:///home/rob/workspace/grails-springcache/grails-springcache.ipr" />
+    <option name="state" value="project:///Users/rob/IdeaProjects/grails-springcache/grails-springcache.ipr" />
   </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/grails-springcache.iml" filepath="$PROJECT_DIR$/grails-springcache.iml" />
+      <module fileurl="file://$PROJECT_DIR$/test/projects/springcache-test/springcache-test.iml" filepath="$PROJECT_DIR$/test/projects/springcache-test/springcache-test.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
@@ -297,5 +298,8 @@
     <mapping directory="" vcs="Git" />
   </component>
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
+  <UsedPathMacros>
+    <macro name="USER_HOME" description="" />
+  </UsedPathMacros>
 </project>
 
