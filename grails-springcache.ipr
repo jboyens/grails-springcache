@@ -269,8 +269,8 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/test/projects/oscache-impl/alt-cache-impl.iml" filepath="$PROJECT_DIR$/test/projects/oscache-impl/alt-cache-impl.iml" />
       <module fileurl="file://$PROJECT_DIR$/grails-springcache.iml" filepath="$PROJECT_DIR$/grails-springcache.iml" />
-      <module fileurl="file://$PROJECT_DIR$/test/projects/oscache-impl/oscache-impl.iml" filepath="$PROJECT_DIR$/test/projects/oscache-impl/oscache-impl.iml" />
       <module fileurl="file://$PROJECT_DIR$/test/projects/springcache-test/springcache-test.iml" filepath="$PROJECT_DIR$/test/projects/springcache-test/springcache-test.iml" />
     </modules>
   </component>

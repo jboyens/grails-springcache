@@ -77,5 +77,5 @@ log4j = {
     warn   'org.mortbay.log'
 }
 
-
+springcache.provider.bean = "simpleCacheProvider"
      

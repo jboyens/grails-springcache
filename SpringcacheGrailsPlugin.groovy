@@ -24,11 +24,13 @@ class SpringcacheGrailsPlugin {
 				proxyTargetClass = true
 			}
 
-			cacheProvider(EhCacheProvider) {
-				cacheManager = ref("cacheManager")
-			}
+			if (!ConfigurationHolder.config.springcache.provider.bean) {
+				cacheProvider(EhCacheProvider) {
+					cacheManager = ref("cacheManager")
+				}
 
-			cacheManager(EhCacheManagerFactoryBean)
+				cacheManager(EhCacheManagerFactoryBean)
+			}
 		}
 	}
 

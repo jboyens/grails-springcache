@@ -9,5 +9,9 @@ public interface CacheFacade {
 	void put(CacheKey key, Object value);
 
 	void flush();
+
+	String getName();
+
+	Number getSize();
 	
 }
