@@ -62,15 +62,6 @@
   </component>
   <component name="FacetAutodetectingManager">
     <autodetection-disabled>
-      <facet-type id="Grails">
-        <modules>
-          <module name="testEhCache">
-            <files>
-              <file url="file://$PROJECT_DIR$/test/projects/testEhCache/application.properties" />
-            </files>
-          </module>
-        </modules>
-      </facet-type>
       <facet-type id="Spring">
         <modules>
           <module name="testEhCache">
@@ -269,7 +260,7 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/test/projects/oscache-impl/alt-cache-impl.iml" filepath="$PROJECT_DIR$/test/projects/oscache-impl/alt-cache-impl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/test/projects/alt-cache-impl/alt-cache-impl.iml" filepath="$PROJECT_DIR$/test/projects/alt-cache-impl/alt-cache-impl.iml" />
       <module fileurl="file://$PROJECT_DIR$/grails-springcache.iml" filepath="$PROJECT_DIR$/grails-springcache.iml" />
       <module fileurl="file://$PROJECT_DIR$/test/projects/springcache-test/springcache-test.iml" filepath="$PROJECT_DIR$/test/projects/springcache-test/springcache-test.iml" />
     </modules>
