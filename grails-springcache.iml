@@ -2798,9 +2798,12 @@
     <orderEntry type="library" name="grails-1.2-M4" level="application" />
     <orderEntry type="module-library">
       <library name="Grails User Library">
-        <CLASSES />
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/lib" />
+        </CLASSES>
         <JAVADOC />
         <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
       </library>
     </orderEntry>
     <orderEntry type="library" name="Spock 0.3-SNAPSHOT" level="application" />

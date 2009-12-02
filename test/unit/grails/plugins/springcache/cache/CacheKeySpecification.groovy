@@ -1,6 +1,5 @@
 package grails.plugins.springcache.cache
 
-import grails.plugins.springcache.cache.CacheKey
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.Signature
 import spock.lang.Specification
