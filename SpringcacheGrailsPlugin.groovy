@@ -44,6 +44,6 @@ class SpringcacheGrailsPlugin {
 	def onConfigChange = {event ->
 	}
 
-	private static final log = LoggerFactory.getLogger("springcache.SpringcacheGrailsPlugin")
+	private static final log = LoggerFactory.getLogger("grails.plugins.springcache.SpringcacheGrailsPlugin")
 
 }

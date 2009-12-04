@@ -40,7 +40,7 @@ public class CacheAspect {
 		return value;
 	}
 
-	@Autowired(required = true)
+	@Autowired
 	public void setCacheProvider(CacheProvider cacheProvider) {
 		this.cacheProvider = cacheProvider;
 	}
