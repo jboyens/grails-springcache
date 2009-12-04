@@ -2,10 +2,10 @@ package grails.plugins.springcache.cache;
 
 import java.util.Collection;
 
-public interface CacheProvider<C extends CachingModel, F extends FlushingModel> {
+public interface CacheProvider {
 
-	CacheFacade getCache(C model) throws CacheNotFoundException;
+	CacheFacade getCache(String cacheModelId) throws CacheNotFoundException;
 
-	Collection<CacheFacade> getCaches(F model) throws CacheNotFoundException;
+	Collection<CacheFacade> getCaches(String flushModelId) throws CacheNotFoundException;
 
 }

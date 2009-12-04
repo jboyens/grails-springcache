@@ -1,11 +1,9 @@
 package grails.plugins.springcache.aop;
 
-import java.util.Map;
 import grails.plugins.springcache.annotations.Cacheable;
 import grails.plugins.springcache.cache.CacheFacade;
 import grails.plugins.springcache.cache.CacheKey;
 import grails.plugins.springcache.cache.CacheProvider;
-import grails.plugins.springcache.cache.CachingModel;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -21,12 +19,10 @@ public class CacheAspect {
 	private final Logger log = LoggerFactory.getLogger(CacheAspect.class);
 
 	private CacheProvider cacheProvider;
-	private Map<String, CachingModel> models;
 
 	@Around("@annotation(cacheable)")
 	public Object invokeCachedMethod(ProceedingJoinPoint pjp, Cacheable cacheable) throws Throwable {
-		CachingModel model = models.get(cacheable.model());
-		CacheFacade cache = cacheProvider.getCache(model);
+		CacheFacade cache = cacheProvider.getCache(cacheable.model());
 		CacheKey key = CacheKey.generate(pjp);
 		return getFromCacheOrInvoke(pjp, cache, key);
 	}
@@ -47,10 +43,5 @@ public class CacheAspect {
 	@Autowired
 	public void setCacheProvider(CacheProvider cacheProvider) {
 		this.cacheProvider = cacheProvider;
-	}
-
-	@Autowired
-	public void setModels(Map<String, CachingModel> models) {
-		this.models = models;
 	}
 }

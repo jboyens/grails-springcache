@@ -1,8 +1,6 @@
 package grails.plugins.springcache.providers.ehcache;
 
-import grails.plugins.springcache.cache.CachingModel;
-
-public class EhCacheCachingModel implements CachingModel {
+public class EhCacheCachingModel {
 
 	private final String cacheName;
 

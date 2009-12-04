@@ -1,16 +1,14 @@
 package grails.plugins.springcache.aop;
 
-import java.util.Map;
 import grails.plugins.springcache.annotations.CacheFlush;
-import grails.plugins.springcache.cache.CacheProvider;
 import grails.plugins.springcache.cache.CacheFacade;
-import grails.plugins.springcache.cache.FlushingModel;
+import grails.plugins.springcache.cache.CacheProvider;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 @Aspect
@@ -19,12 +17,10 @@ public class FlushAspect {
 	private final Logger log = LoggerFactory.getLogger(FlushAspect.class);
 
 	private CacheProvider cacheProvider;
-	private Map<String, FlushingModel> models;
 
 	@After("@annotation(cacheFlush)")
 	public void flushCaches(CacheFlush cacheFlush) throws Throwable {
-		FlushingModel model = models.get(cacheFlush.model());
-		for (CacheFacade cache : cacheProvider.getCaches(model)) {
+		for (CacheFacade cache : cacheProvider.getCaches(cacheFlush.model())) {
 			try {
 				cache.flush();
 			} catch (Exception e) {
@@ -37,10 +33,5 @@ public class FlushAspect {
 	@Autowired
 	public void setCacheProvider(CacheProvider cacheProvider) {
 		this.cacheProvider = cacheProvider;
-	}
-
-	@Autowired
-	public void setModels(Map<String, FlushingModel> models) {
-		this.models = models;
 	}
 }
