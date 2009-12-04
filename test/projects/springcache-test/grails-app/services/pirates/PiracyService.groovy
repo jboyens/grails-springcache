@@ -7,7 +7,7 @@ class PiracyService {
 
 	static transactional = false
 
-	@Cacheable(cacheName = "PirateCache")
+	@Cacheable(model = "PirateCache")
 	List listPirateNames() {
 		Pirate.withCriteria {
 			projections {
@@ -17,7 +17,7 @@ class PiracyService {
 		}
 	}
 
-	@Cacheable(cacheName = "PirateCache")
+	@Cacheable(model = "PirateCache")
 	List findPirateNames(String name) {
 		Pirate.withCriteria {
 			projections {
@@ -28,7 +28,7 @@ class PiracyService {
 		}
 	}
 
-	@Cacheable(cacheName = "ShipCache")
+	@Cacheable(model = "ShipCache")
 	List listShipNames() {
 		Ship.withCriteria {
 			projections {
@@ -38,12 +38,12 @@ class PiracyService {
 		}
 	}
 
-	@CacheFlush(cacheNames = "PirateCache")
+	@CacheFlush(model = "PirateCache")
 	void newPirate(String name) {
 		new Pirate(name: name).save(failOnError: true)
 	}
 
-	@CacheFlush(cacheNames = ["PirateCache", "ShipCache"])
+	@CacheFlush(model = ["PirateCache", "ShipCache"])
 	void newShip(String name, List crewNames) {
 		new Ship(name: name, crew: crewNames.collect {
 			Pirate.findByName(it) ?: new Pirate(name: it)

@@ -14,7 +14,7 @@ class EhCacheProviderSpecification extends Specification {
 		when: "The provider tries to find a cache that does not exist"
 		def provider = new EhCacheProvider()
 		provider.cacheManager = cacheManager
-		provider.getCache("cacheName")
+		provider.getCache(new EhCacheCachingModel("cacheName"))
 
 		then: "An exception is thrown"
 		thrown(CacheNotFoundException)

@@ -4,6 +4,7 @@ import grails.plugins.springcache.annotations.CacheFlush
 import grails.plugins.springcache.cache.CacheFacade
 import grails.plugins.springcache.cache.CacheProvider
 import spock.lang.Specification
+import grails.plugins.springcache.cache.FlushingModel
 
 class FlushAspectSpecification extends Specification {
 
@@ -12,15 +13,15 @@ class FlushAspectSpecification extends Specification {
 		def cache1 = Mock(CacheFacade)
 		def cache2 = Mock(CacheFacade)
 		def cache3 = Mock(CacheFacade)
+		def flushingModel = Mock(FlushingModel)
 		def cacheManager = Mock(CacheProvider)
-		cacheManager.getCache("cache1") >> cache1
-		cacheManager.getCache("cache2") >> cache2
-		cacheManager.getCache("cache3") >> cache3
+		cacheManager.getCaches(flushingModel) >> [cache1, cache2]
 
 		when: "the flush aspect is triggered"
-		def annotation = [cacheNames: {-> ["cache1", "cache2"] as String[] }] as CacheFlush
+		def annotation = [model: {-> "model1" }] as CacheFlush
 		def aspect = new FlushAspect()
 		aspect.cacheProvider = cacheManager
+		aspect.models = [model1: flushingModel]
 		aspect.flushCaches(annotation)
 
 		then: "the specified caches are flushed"

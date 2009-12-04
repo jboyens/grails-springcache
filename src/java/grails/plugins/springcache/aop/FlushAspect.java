@@ -1,8 +1,10 @@
 package grails.plugins.springcache.aop;
 
+import java.util.Map;
 import grails.plugins.springcache.annotations.CacheFlush;
 import grails.plugins.springcache.cache.CacheProvider;
 import grails.plugins.springcache.cache.CacheFacade;
+import grails.plugins.springcache.cache.FlushingModel;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +19,12 @@ public class FlushAspect {
 	private final Logger log = LoggerFactory.getLogger(FlushAspect.class);
 
 	private CacheProvider cacheProvider;
+	private Map<String, FlushingModel> models;
 
 	@After("@annotation(cacheFlush)")
 	public void flushCaches(CacheFlush cacheFlush) throws Throwable {
-		for (String cacheName : cacheFlush.cacheNames()) {
-			CacheFacade cache = cacheProvider.getCache(cacheName);
+		FlushingModel model = models.get(cacheFlush.model());
+		for (CacheFacade cache : cacheProvider.getCaches(model)) {
 			try {
 				cache.flush();
 			} catch (Exception e) {
@@ -36,4 +39,8 @@ public class FlushAspect {
 		this.cacheProvider = cacheProvider;
 	}
 
+	@Autowired
+	public void setModels(Map<String, FlushingModel> models) {
+		this.models = models;
+	}
 }
