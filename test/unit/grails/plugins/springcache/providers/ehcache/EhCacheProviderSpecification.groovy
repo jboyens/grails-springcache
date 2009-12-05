@@ -38,7 +38,7 @@ class EhCacheProviderSpecification extends Specification {
 		provider.cacheManager.cacheExists("cacheName") >> false
 
 		and: "A caching model is configured"
-		provider.addCachingModel "modelId", new EhCacheCachingModel("cacheName")
+		provider.addCachingModel new EhCacheCachingModel("modelId", "cacheName")
 
 		when: "The provider tries to find a cache that does not exist"
 		provider.getCache "modelId"

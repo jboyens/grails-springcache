@@ -15,14 +15,14 @@ class SimpleCacheProviderTests extends GroovyTestCase {
 	void testCacheableMethodUsesConfiguredCacheProvider() {
 		assertEquals 0, testService.elements.size()
 
-		CacheFacade cache = simpleCacheProvider.getCache("testCache")
+		CacheFacade cache = simpleCacheProvider.caches.testCache
 		assertEquals 1, cache.size
 	}
 
 	void testCacheFlushMethodUsesConfiguredCacheProvider() {
 		assertEquals 0, testService.elements.size()
 
-		CacheFacade cache = simpleCacheProvider.getCache("testCache")
+		CacheFacade cache = simpleCacheProvider.caches.testCache
 		assertEquals "Cache should be primed after first call to cacheable method", 1, cache.size
 
 		testService.addElement "FOO"

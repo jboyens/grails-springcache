@@ -1,58 +1,43 @@
 package grails.plugins.springcache.providers.simple;
 
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import grails.plugins.springcache.cache.AbstractCacheProvider;
 import grails.plugins.springcache.cache.CacheFacade;
-import grails.plugins.springcache.cache.CacheKey;
 import grails.plugins.springcache.cache.CacheNotFoundException;
-import grails.plugins.springcache.cache.CacheProvider;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.map.LazyMap;
+import org.apache.commons.lang.StringUtils;
 
-public class SimpleCacheProvider implements CacheProvider {
+public class SimpleCacheProvider extends AbstractCacheProvider<SimpleCachingModel, SimpleFlushingModel> {
 
 	@SuppressWarnings({"unchecked"})
-	private Map<String, CacheFacade> caches = LazyMap.decorate(new ConcurrentHashMap(), new Transformer() {
+	final Map<String, CacheFacade> caches = LazyMap.decorate(new ConcurrentHashMap(), new Transformer() {
 		public Object transform(Object o) {
 			return new SimpleCacheFacade(o.toString());
 		}
 	});
 
-	public CacheFacade getCache(String name) throws CacheNotFoundException {
-		return caches.get(name);
+	public CacheFacade getCache(SimpleCachingModel cachingModel) throws CacheNotFoundException {
+		String cacheName = cachingModel.getCacheName();
+		return caches.get(cacheName);
 	}
 
-	private static class SimpleCacheFacade implements CacheFacade {
-
-		private final String name;
-		private final Map<CacheKey, Object> map = new ConcurrentHashMap<CacheKey, Object>();
-
-		public SimpleCacheFacade(String name) {
-			this.name = name;
+	public Collection<CacheFacade> getCaches(SimpleFlushingModel flushingModel) throws CacheNotFoundException {
+		Collection<CacheFacade> cachesToFlush = new ArrayList<CacheFacade>();
+		for (String cacheName : flushingModel.getCacheNames()) {
+			cachesToFlush.add(caches.get(cacheName));
 		}
-
-		public boolean containsKey(CacheKey key) {
-			return map.containsKey(key);
-		}
-
-		public Object get(CacheKey key) {
-			return map.get(key);
-		}
-
-		public void put(CacheKey key, Object value) {
-			map.put(key, value);
-		}
-
-		public void flush() {
-			map.clear();
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public Number getSize() {
-			return map.size();
-		}
+		return Collections.unmodifiableCollection(cachesToFlush);
 	}
+
+	public void addCachingModel(String id, Properties properties) {
+		cachingModels.put(id, new SimpleCachingModel(id, getRequiredProperty(properties, "cacheName")));
+	}
+
+	public void addFlushingModel(String id, Properties properties) {
+		List<String> cacheNames = Arrays.asList(StringUtils.split(getRequiredProperty(properties, "cacheNames"), ","));
+		flushingModels.put(id, new SimpleFlushingModel(id, cacheNames));
+	}
+
 }

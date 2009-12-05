@@ -77,5 +77,13 @@ log4j = {
     warn   'org.mortbay.log'
 }
 
-springcache.provider.bean = "simpleCacheProvider"
+springcache {
+	provider.bean = "simpleCacheProvider"
+	cachingModels {
+		TestCachingModel.cacheName = "testCache"
+	}
+	flushingModels {
+		TestFlushingModel.cacheNames = "testCache"
+	}
+}
      

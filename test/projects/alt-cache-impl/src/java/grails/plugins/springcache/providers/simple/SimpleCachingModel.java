@@ -1,12 +1,12 @@
-package grails.plugins.springcache.providers.ehcache;
+package grails.plugins.springcache.providers.simple;
 
 import grails.plugins.springcache.cache.CachingModel;
 
-class EhCacheCachingModel extends CachingModel {
+class SimpleCachingModel extends CachingModel {
 
 	private final String cacheName;
 
-	public EhCacheCachingModel(String id, String cacheName) {
+	public SimpleCachingModel(String id, String cacheName) {
 		super(id);
 		this.cacheName = cacheName;
 	}

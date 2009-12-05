@@ -1,4 +1,4 @@
-<project xmlns:ivy="antlib:org.apache.ivy.ant" name="springcache-test" default="test">
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="grails-springcache" default="test">
     <property environment="env"/>
   	<property name="ivy.install.version" value="2.0.0" />
     <condition property="ivy.home" value="${env.IVY_HOME}">
@@ -72,7 +72,9 @@
         <ivy:report conf="*"/>
     </target>
 
- 	<target name="clean" description="--> Cleans a Grails application">
+	<target name="clean" depends="-clean-plugin,-clean-apps" description="--> Cleans a Grails application"/>
+
+ 	<target name="-clean-plugin">
 		<delete failonerror="false">
 		<fileset dir="${lib.dir}/build" includes="*/"/>
 		<fileset dir="${lib.dir}/compile" includes="*/"/>
@@ -87,7 +89,24 @@
 		<grails script="Clean"/>
 	</target>
 
-    <target name="test" depends="-init-grails" description="--> Run a Grails applications unit tests">
-        <grails script="TestApp" args="-integration"/>
+	<target name="-clean-apps">
+		<ant antfile="${basedir}/test/projects/springcache-test/build.xml" target="clean"/>
+		<ant antfile="${basedir}/test/projects/alt-cache-impl/build.xml" target="clean"/>
+	</target>
+
+    <target name="test" depends="-test-plugin,-test-apps" description="--> Run a Grails applications unit tests"/>
+
+	<target name="-test-plugin" depends="-init-grails">
+        <grails script="TestApp" args="-unit"/>
     </target>
+
+	<target name="-test-apps" depends="-init-grails">
+		<ant antfile="${basedir}/test/projects/springcache-test/build.xml" target="test"/>
+		<ant antfile="${basedir}/test/projects/alt-cache-impl/build.xml" target="test"/>
+    </target>
+
+	<target name="package-plugin" depends="-init-grails" description="--> Package the plugin">
+		<grails script="PackagePlugin"/>
+	</target>
+
 </project>

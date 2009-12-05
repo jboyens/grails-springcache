@@ -1,14 +1,14 @@
-package grails.plugins.springcache.providers.ehcache;
+package grails.plugins.springcache.providers.simple;
 
 import java.util.Collection;
 import java.util.Collections;
 import grails.plugins.springcache.cache.FlushingModel;
 
-class EhCacheFlushingModel extends FlushingModel {
+class SimpleFlushingModel extends FlushingModel {
 
 	private final Collection<String> cacheNames;
 
-	public EhCacheFlushingModel(String id, Collection<String> cacheNames) {
+	public SimpleFlushingModel(String id, Collection<String> cacheNames) {
 		super(id);
 		this.cacheNames = Collections.unmodifiableCollection(cacheNames);
 	}
@@ -16,5 +16,4 @@ class EhCacheFlushingModel extends FlushingModel {
 	public Collection<String> getCacheNames() {
 		return cacheNames;
 	}
-
 }

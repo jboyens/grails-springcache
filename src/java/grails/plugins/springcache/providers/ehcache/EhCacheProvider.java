@@ -1,27 +1,25 @@
 package grails.plugins.springcache.providers.ehcache;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Properties;
+import grails.plugins.springcache.cache.AbstractCacheProvider;
 import grails.plugins.springcache.cache.CacheFacade;
 import grails.plugins.springcache.cache.CacheNotFoundException;
-import grails.plugins.springcache.cache.CacheProvider;
-import grails.plugins.springcache.cache.CacheConfigurationException;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import org.apache.commons.lang.StringUtils;
 
-public class EhCacheProvider implements CacheProvider {
+public class EhCacheProvider extends AbstractCacheProvider<EhCacheCachingModel, EhCacheFlushingModel> {
 
 	private CacheManager cacheManager;
-	private final Map<String, EhCacheCachingModel> cachingModels = new HashMap<String, EhCacheCachingModel>();
-	private final Map<String, EhCacheFlushingModel> flushingModels = new HashMap<String, EhCacheFlushingModel>();
 
-	public CacheFacade getCache(String cacheModelId) throws CacheNotFoundException {
-		EhCacheCachingModel cachingModel = cachingModels.get(cacheModelId);
+	protected CacheFacade getCache(EhCacheCachingModel cachingModel) {
 		return getCacheByName(cachingModel.getCacheName());
 	}
 
-	public Collection<CacheFacade> getCaches(String flushModelId) throws CacheNotFoundException {
-		EhCacheFlushingModel flushingModel = flushingModels.get(flushModelId);
+	protected Collection<CacheFacade> getCaches(EhCacheFlushingModel flushingModel) {
 		Collection<CacheFacade> caches = new HashSet<CacheFacade>();
 		for (String cacheName : flushingModel.getCacheNames()) {
 			caches.add(getCacheByName(cacheName));
@@ -38,34 +36,20 @@ public class EhCacheProvider implements CacheProvider {
 		}
 	}
 
-	public void setCacheManager(CacheManager cacheManager) {
-		this.cacheManager = cacheManager;
-	}
-
-	public void addCachingModel(String id, EhCacheCachingModel cachingModel) {
-		cachingModels.put(id, cachingModel);
-	}
-
-	public void addFlushingModel(String id, EhCacheFlushingModel flushingModel) {
-		flushingModels.put(id, flushingModel);
-	}
-
 	public void addCachingModel(String id, Properties properties) {
 		String cacheName = getRequiredProperty(properties, "cacheName");
-		EhCacheCachingModel cachingModel = new EhCacheCachingModel(cacheName);
-		addCachingModel(id, cachingModel);
+		EhCacheCachingModel cachingModel = new EhCacheCachingModel(id, cacheName);
+		addCachingModel(cachingModel);
 	}
 
 	public void addFlushingModel(String id, Properties properties) {
 		String cacheNames = getRequiredProperty(properties, "cacheNames");
-		EhCacheFlushingModel flushingModel = new EhCacheFlushingModel(Arrays.asList(StringUtils.split(cacheNames, ",")));
-		addFlushingModel(id, flushingModel);
+		EhCacheFlushingModel flushingModel = new EhCacheFlushingModel(id, Arrays.asList(StringUtils.split(cacheNames, ",")));
+		addFlushingModel(flushingModel);
 	}
 
-	private String getRequiredProperty(Properties properties, String propertyName) {
-		String cacheName = properties.getProperty(propertyName);
-		if (cacheName == null) throw new CacheConfigurationException(String.format("Required property %s not found in %s", propertyName, properties));
-		return cacheName;
+	public void setCacheManager(CacheManager cacheManager) {
+		this.cacheManager = cacheManager;
 	}
 
 }
