@@ -1,24 +1,33 @@
 package grails.plugins.springcache.providers.ehcache;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import grails.plugins.springcache.cache.CacheFacade;
-import grails.plugins.springcache.cache.CacheKey;
 import grails.plugins.springcache.cache.CacheNotFoundException;
 import grails.plugins.springcache.cache.CacheProvider;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
 
 public class EhCacheProvider implements CacheProvider {
 
 	private CacheManager cacheManager;
+	private final Map<String, EhCacheCachingModel> cachingModels = new HashMap<String, EhCacheCachingModel>();
+	private final Map<String, EhCacheFlushingModel> flushingModels = new HashMap<String, EhCacheFlushingModel>();
 
 	public CacheFacade getCache(String cacheModelId) throws CacheNotFoundException {
-		throw new UnsupportedOperationException();
+		EhCacheCachingModel cachingModel = cachingModels.get(cacheModelId);
+		return getCacheByName(cachingModel.getCacheName());
 	}
 
 	public Collection<CacheFacade> getCaches(String flushModelId) throws CacheNotFoundException {
-		throw new UnsupportedOperationException();
+		EhCacheFlushingModel flushingModel = flushingModels.get(flushModelId);
+		Collection<CacheFacade> caches = new HashSet<CacheFacade>();
+		for (String cacheName : flushingModel.getCacheNames()) {
+			caches.add(getCacheByName(cacheName));
+		}
+		return caches;
 	}
 
 	private CacheFacade getCacheByName(String name) {
@@ -34,38 +43,11 @@ public class EhCacheProvider implements CacheProvider {
 		this.cacheManager = cacheManager;
 	}
 
-	private static class EhCacheFacade implements CacheFacade {
+	public void addCachingModel(String id, EhCacheCachingModel cachingModel) {
+		cachingModels.put(id, cachingModel);
+	}
 
-		private final Cache cache;
-
-		public EhCacheFacade(Cache cache) {
-			this.cache = cache;
-		}
-
-		public boolean containsKey(CacheKey key) {
-			return cache.isKeyInCache(key);
-		}
-
-		public Object get(CacheKey key) {
-			Element element = cache.get(key);
-			return element == null ? null : element.getValue();
-		}
-
-		public void put(CacheKey key, Object value) {
-			Element element = new Element(key, value);
-			cache.put(element);
-		}
-
-		public void flush() {
-			cache.flush();
-		}
-
-		public String getName() {
-			return cache.getName();
-		}
-
-		public Number getSize() {
-			return cache.getStatistics().getObjectCount();
-		}
+	public void addFlushingModel(String id, EhCacheFlushingModel flushingModel) {
+		flushingModels.put(id, flushingModel);
 	}
 }

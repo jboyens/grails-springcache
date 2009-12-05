@@ -3,7 +3,7 @@ package grails.plugins.springcache.providers.ehcache;
 import java.util.Collection;
 import java.util.Collections;
 
-public class EhCacheFlushingModel {
+class EhCacheFlushingModel {
 
 	private final Collection<String> cacheNames;
 

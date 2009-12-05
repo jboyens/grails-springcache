@@ -10,14 +10,17 @@ class EhCacheProviderSpecification extends Specification {
 		given: "An EHCache provider instance exists"
 		def cacheManager = Mock(CacheManager)
 		cacheManager.cacheExists("cacheName") >> false
-
-		when: "The provider tries to find a cache that does not exist"
 		def provider = new EhCacheProvider()
 		provider.cacheManager = cacheManager
-		provider.getCache("cacheName")
+
+		and: "A caching model is configured"
+		provider.addCachingModel "modelId", new EhCacheCachingModel("cacheName")
+
+		when: "The provider tries to find a cache that does not exist"
+		provider.getCache "modelId"
 
 		then: "An exception is thrown"
-		thrown(CacheNotFoundException)
+		thrown CacheNotFoundException
 	}
 
 }
