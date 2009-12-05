@@ -1,14 +1,13 @@
 package grails.plugins.springcache.providers.ehcache;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import grails.plugins.springcache.cache.CacheFacade;
 import grails.plugins.springcache.cache.CacheNotFoundException;
 import grails.plugins.springcache.cache.CacheProvider;
+import grails.plugins.springcache.cache.CacheConfigurationException;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
+import org.apache.commons.lang.StringUtils;
 
 public class EhCacheProvider implements CacheProvider {
 
@@ -50,4 +49,23 @@ public class EhCacheProvider implements CacheProvider {
 	public void addFlushingModel(String id, EhCacheFlushingModel flushingModel) {
 		flushingModels.put(id, flushingModel);
 	}
+
+	public void addCachingModel(String id, Properties properties) {
+		String cacheName = getRequiredProperty(properties, "cacheName");
+		EhCacheCachingModel cachingModel = new EhCacheCachingModel(cacheName);
+		addCachingModel(id, cachingModel);
+	}
+
+	public void addFlushingModel(String id, Properties properties) {
+		String cacheNames = getRequiredProperty(properties, "cacheNames");
+		EhCacheFlushingModel flushingModel = new EhCacheFlushingModel(Arrays.asList(StringUtils.split(cacheNames, ",")));
+		addFlushingModel(id, flushingModel);
+	}
+
+	private String getRequiredProperty(Properties properties, String propertyName) {
+		String cacheName = properties.getProperty(propertyName);
+		if (cacheName == null) throw new CacheConfigurationException(String.format("Required property %s not found in %s", propertyName, properties));
+		return cacheName;
+	}
+
 }

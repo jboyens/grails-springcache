@@ -3,6 +3,7 @@ import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProx
 import org.slf4j.LoggerFactory
 import grails.plugins.springcache.providers.ehcache.EhCacheProvider
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean
+import grails.plugins.springcache.cache.CacheProvider
 
 class SpringcacheGrailsPlugin {
 	def version = "1.1-SNAPSHOT"
@@ -35,6 +36,16 @@ class SpringcacheGrailsPlugin {
 	}
 
 	def doWithApplicationContext = { applicationContext ->
+		String providerBeanName = ConfigurationHolder.config.springcache.provider.bean ?: "cacheProvider"
+		CacheProvider provider = applicationContext.getBean(providerBeanName)
+		ConfigurationHolder.config.springcache.cachingModels.each { String modelId, ConfigObject modelConfig ->
+			log.debug "cachingModel id = $modelId, config = ${modelConfig.toProperties()}"
+			provider.addCachingModel modelId, modelConfig.toProperties()
+		}
+		ConfigurationHolder.config.springcache.flushingModels.each { String modelId, ConfigObject modelConfig ->
+			log.debug "flushingModel id = $modelId, config = ${modelConfig.toProperties()}"
+			provider.addFlushingModel modelId, modelConfig.toProperties()
+		}
 	}
 
 	def onChange = {event ->

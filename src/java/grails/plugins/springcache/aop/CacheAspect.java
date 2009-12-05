@@ -30,10 +30,10 @@ public class CacheAspect {
 	Object getFromCacheOrInvoke(ProceedingJoinPoint pjp, CacheFacade cache, CacheKey key) throws Throwable {
 		Object value;
 		if (cache.containsKey(key)) {
-			log.debug("Cache hit for %s", key.toString());
+			if (log.isDebugEnabled()) log.debug(String.format("Cache hit for %s", key.toString()));
 			value = cache.get(key);
 		} else {
-			log.debug("Cache miss for %s", key.toString());
+			if (log.isDebugEnabled()) log.debug(String.format("Cache miss for %s", key.toString()));
 			value = pjp.proceed();
 			cache.put(key, value);
 		}

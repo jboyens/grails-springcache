@@ -24,8 +24,7 @@ public class FlushAspect {
 			try {
 				cache.flush();
 			} catch (Exception e) {
-				System.err.printf("Exception caught when flushing cache '%s'%n", cache.getName());
-				log.error("Exception caught when flushing cache '%s'", cache.getName(), e);
+				log.error(String.format("Exception caught when flushing cache '%s'", cache.getName()), e);
 			}
 		}
 	}
