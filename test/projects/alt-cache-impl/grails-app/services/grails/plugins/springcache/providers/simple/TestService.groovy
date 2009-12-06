@@ -1,3 +1,5 @@
+package grails.plugins.springcache.providers.simple
+
 import grails.plugins.springcache.annotations.Cacheable
 import grails.plugins.springcache.annotations.CacheFlush
 

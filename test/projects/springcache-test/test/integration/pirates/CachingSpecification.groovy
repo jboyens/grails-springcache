@@ -8,7 +8,7 @@ import grails.validation.ValidationException
 class CachingSpecification extends IntegrationSpecification {
 
 	def piracyService
-	def cacheManager
+	def springcacheCacheManager
 
 	void setupSpec() {
 		Pirate.build(name: "Blackbeard")
@@ -18,7 +18,7 @@ class CachingSpecification extends IntegrationSpecification {
 	}
 
 	void cleanup() {
-		cacheManager.removalAll()
+		springcacheCacheManager.removalAll()
 	}
 
 	void cleanupSpec() {
@@ -29,7 +29,7 @@ class CachingSpecification extends IntegrationSpecification {
 	void "Cached results should be returned for subsequent method calls"() {
 		given: "A cache exists"
 		def cache = new Cache("PirateCache", 100, false, true, 0, 0)
-		cacheManager.addCache(cache)
+		springcacheCacheManager.addCache(cache)
 
 		when: "A cachable method is called twice"
 		def result1 = piracyService.listPirateNames()
@@ -49,7 +49,7 @@ class CachingSpecification extends IntegrationSpecification {
 	void "Cached results should not be returned for a subsequent call with different arguments"() {
 		given: "A cache exists"
 		def cache = new Cache("PirateCache", 100, false, true, 0, 0)
-		cacheManager.addCache(cache)
+		springcacheCacheManager.addCache(cache)
 
 		when: "A cacheable method is called twice with different arguments"
 		def result1 = piracyService.findPirateNames("jack")
@@ -69,7 +69,7 @@ class CachingSpecification extends IntegrationSpecification {
 	void "The cache can be flushed"() {
 		given: "A cache exists"
 		def cache = new Cache("PirateCache", 100, false, true, 0, 0)
-		cacheManager.addCache(cache)
+		springcacheCacheManager.addCache(cache)
 
 		when: "A cacheable method is called"
 		def result1 = piracyService.listPirateNames()
@@ -91,7 +91,7 @@ class CachingSpecification extends IntegrationSpecification {
 	void "The cache is flushed even if the flushing method fails"() {
 		given: "A cache exists"
 		def cache = new Cache("PirateCache", 100, false, true, 0, 0)
-		cacheManager.addCache(cache)
+		springcacheCacheManager.addCache(cache)
 
 		and: "The cache is primed"
 		piracyService.listPirateNames()
@@ -112,8 +112,8 @@ class CachingSpecification extends IntegrationSpecification {
 		given: "Multiple caches exist"
 		def cache1 = new Cache("PirateCache", 100, false, true, 0, 0)
 		def cache2 = new Cache("ShipCache", 100, false, true, 0, 0)
-		cacheManager.addCache(cache1)
-		cacheManager.addCache(cache2)
+		springcacheCacheManager.addCache(cache1)
+		springcacheCacheManager.addCache(cache2)
 
 		and: "Both caches are primed"
 		piracyService.listPirateNames()

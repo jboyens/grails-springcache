@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ivy-module version="2.0">
-    <info organisation="org.example" module="springcache-test"/>
+    <info organisation="org.example" module="alt-cache-impl"/>
     <configurations defaultconfmapping="build->default">
         <conf name="build"/>
     </configurations>
     <dependencies>
-        <dependency org="org.grails" name="grails-bootstrap" rev="1.2-M4" conf="build"/>
+        <dependency org="org.grails" name="grails-bootstrap" rev="1.2.0.RC1" conf="build"/>
     </dependencies>
 </ivy-module>

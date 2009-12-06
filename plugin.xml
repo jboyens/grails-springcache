@@ -13,6 +13,10 @@
       <resolver type='mavenLocal' />
       <resolver type='mavenCentral' />
       <resolver type='mavenLocal' />
+      <resolver type='mavenCentral' />
+      <resolver type='mavenRepo' root='http://m2repo.spockframework.org/snapshots' name='http://m2repo.spockframework.org/snapshots' m2compatbile='true' />
+      <resolver type='mavenRepo' root='http://m2repo.spockframework.org/releases' name='http://m2repo.spockframework.org/releases' m2compatbile='true' />
+      <resolver type='mavenRepo' root='http://oss.sonatype.org/content/groups/jetty' name='http://oss.sonatype.org/content/groups/jetty' m2compatbile='true' />
       <resolver type='mavenRepo' root='http://download.java.net/maven/2/' name='http://download.java.net/maven/2/' m2compatbile='true' />
     </resolvers>
   </dependencies>

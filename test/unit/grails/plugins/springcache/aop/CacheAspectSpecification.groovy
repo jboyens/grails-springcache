@@ -18,7 +18,7 @@ class CacheAspectSpecification extends Specification {
 		cache.containsKey(KEY) >> false
 
 		when: "a method call is intercepted"
-		def result = new CacheAspect().getFromCacheOrInvoke(joinPoint, cache, KEY)
+		def result = new CachingAspect().getFromCacheOrInvoke(joinPoint, cache, KEY)
 
 		then: "the method is invoked"
 		1 * joinPoint.proceed() >> UNCACHED_VALUE
@@ -38,7 +38,7 @@ class CacheAspectSpecification extends Specification {
 		cache.get(KEY) >> CACHED_VALUE
 
 		when: "a method call is intercepted"
-		def result = new CacheAspect().getFromCacheOrInvoke(joinPoint, cache, KEY)
+		def result = new CachingAspect().getFromCacheOrInvoke(joinPoint, cache, KEY)
 
 		then: "the cached value is returned"
 		result == CACHED_VALUE

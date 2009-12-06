@@ -17,7 +17,7 @@ class FlushAspectSpecification extends Specification {
 
 		when: "the flush aspect is triggered"
 		def annotation = [model: {-> "modelId" }] as CacheFlush
-		def aspect = new FlushAspect()
+		def aspect = new FlushingAspect()
 		aspect.cacheProvider = cacheManager
 		aspect.flushCaches(annotation)
 

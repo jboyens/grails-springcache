@@ -16,7 +16,7 @@ class SimpleCacheProviderTests extends GroovyTestCase {
 		assertEquals 0, testService.elements.size()
 
 		CacheFacade cache = simpleCacheProvider.caches.testCache
-		assertEquals 1, cache.size
+		assertEquals "Cache should be primed after call to cacheable method", 1, cache.size
 	}
 
 	void testCacheFlushMethodUsesConfiguredCacheProvider() {

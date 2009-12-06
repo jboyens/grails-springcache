@@ -9,19 +9,17 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 @Aspect
-public class CacheAspect {
+public class CachingAspect {
 
-	private final Logger log = LoggerFactory.getLogger(CacheAspect.class);
+	private final Logger log = LoggerFactory.getLogger(CachingAspect.class);
 
 	private CacheProvider cacheProvider;
 
 	@Around("@annotation(cacheable)")
 	public Object invokeCachedMethod(ProceedingJoinPoint pjp, Cacheable cacheable) throws Throwable {
+		if (log.isDebugEnabled()) log.debug(String.format("Intercepted %s", pjp.toLongString()));
 		CacheFacade cache = cacheProvider.getCache(cacheable.model());
 		CacheKey key = CacheKey.generate(pjp);
 		return getFromCacheOrInvoke(pjp, cache, key);
@@ -40,7 +38,6 @@ public class CacheAspect {
 		return value;
 	}
 
-	@Autowired
 	public void setCacheProvider(CacheProvider cacheProvider) {
 		this.cacheProvider = cacheProvider;
 	}
