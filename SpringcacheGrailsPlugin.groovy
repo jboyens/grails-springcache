@@ -6,8 +6,6 @@ import org.springframework.cache.ehcache.EhCacheManagerFactoryBean
 import grails.plugins.springcache.cache.CacheProvider
 import grails.plugins.springcache.aop.CachingAspect
 import grails.plugins.springcache.aop.FlushingAspect
-import grails.plugins.springcache.aop.CachingAspect
-import grails.plugins.springcache.aop.FlushingAspect
 
 class SpringcacheGrailsPlugin {
 	def version = "1.1-SNAPSHOT"
@@ -58,8 +56,6 @@ class SpringcacheGrailsPlugin {
 			log.debug "flushingModel id = $modelId, config = ${modelConfig.toProperties()}"
 			provider.addFlushingModel modelId, modelConfig.toProperties()
 		}
-
-//		ConfigurationHolder.config.grails.spring.bean.packages = ["grails.plugins.springcache.aop"]
 	}
 
 	def onChange = {event ->

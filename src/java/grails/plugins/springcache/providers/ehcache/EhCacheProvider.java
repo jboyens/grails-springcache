@@ -51,16 +51,14 @@ public class EhCacheProvider extends AbstractCacheProvider<EhCacheCachingModel, 
 		}
 	}
 
-	public void addCachingModel(String id, Properties properties) {
+	public EhCacheCachingModel createCachingModel(String id, Properties properties) {
 		String cacheName = getRequiredProperty(properties, "cacheName");
-		EhCacheCachingModel cachingModel = new EhCacheCachingModel(id, cacheName);
-		addCachingModel(cachingModel);
+		return new EhCacheCachingModel(id, cacheName);
 	}
 
-	public void addFlushingModel(String id, Properties properties) {
+	public EhCacheFlushingModel createFlushingModel(String id, Properties properties) {
 		String cacheNames = getRequiredProperty(properties, "cacheNames");
-		EhCacheFlushingModel flushingModel = new EhCacheFlushingModel(id, Arrays.asList(StringUtils.split(cacheNames, ",")));
-		addFlushingModel(flushingModel);
+		return new EhCacheFlushingModel(id, Arrays.asList(StringUtils.split(cacheNames, ",")));
 	}
 
 	public void setCacheManager(CacheManager cacheManager) {

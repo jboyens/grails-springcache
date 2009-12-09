@@ -33,18 +33,6 @@ public abstract class AbstractCacheProvider<C extends CachingModel, F extends Fl
 	protected final Map<String, F> flushingModels = new HashMap<String, F>();
 
 	/**
-	 * Implementations should create a new CachingModel, applying the specified properties and then call {@link
-	 * #addCachingModel(CachingModel)}.
-	 */
-	public abstract void addCachingModel(String id, Properties properties);
-
-	/**
-	 * Implementations should create a new FlushingModel, applying the specified properties and then call {@link
-	 * #addFlushingModel(FlushingModel)}.
-	 */
-	public abstract void addFlushingModel(String id, Properties properties);
-
-	/**
 	 * Implementations should return the cache associated with the specified CachingModel.
 	 */
 	protected abstract CacheFacade getCache(C cachingModel);
@@ -53,6 +41,26 @@ public abstract class AbstractCacheProvider<C extends CachingModel, F extends Fl
 	 * Implementations should return the caches associated with the specified FlushingModel.
 	 */
 	protected abstract Collection<CacheFacade> getCaches(F flushingModel);
+
+	/**
+	 * Implementations should create and return a caching model initialized with the specified properties.
+	 */
+	protected abstract C createCachingModel(String id, Properties properties);
+
+	/**
+	 * Implementations should create and return a flushing model initialized with the specified properties.
+	 */
+	protected abstract F createFlushingModel(String id, Properties properties);
+
+	public final void addCachingModel(String id, Properties properties) {
+		C cachingModel = createCachingModel(id, properties);
+		addCachingModel(cachingModel);
+	}
+
+	public final void addFlushingModel(String id, Properties properties) {
+		F flushingModel = createFlushingModel(id, properties);
+		addFlushingModel(flushingModel);
+	}
 
 	public final void addCachingModel(C cachingModel) {
 		cachingModels.put(cachingModel.getId(), cachingModel);

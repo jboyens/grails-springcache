@@ -31,13 +31,13 @@ public class SimpleCacheProvider extends AbstractCacheProvider<SimpleCachingMode
 		return Collections.unmodifiableCollection(cachesToFlush);
 	}
 
-	public void addCachingModel(String id, Properties properties) {
-		cachingModels.put(id, new SimpleCachingModel(id, getRequiredProperty(properties, "cacheName")));
+	public SimpleCachingModel createCachingModel(String id, Properties properties) {
+		return new SimpleCachingModel(id, getRequiredProperty(properties, "cacheName"));
 	}
 
-	public void addFlushingModel(String id, Properties properties) {
+	public SimpleFlushingModel createFlushingModel(String id, Properties properties) {
 		List<String> cacheNames = Arrays.asList(StringUtils.split(getRequiredProperty(properties, "cacheNames"), ","));
-		flushingModels.put(id, new SimpleFlushingModel(id, cacheNames));
+		return new SimpleFlushingModel(id, cacheNames);
 	}
 
 }
