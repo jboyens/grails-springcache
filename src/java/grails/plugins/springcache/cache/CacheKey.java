@@ -15,37 +15,47 @@
  */
 package grails.plugins.springcache.cache;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import java.io.Serializable;
 import org.aspectj.lang.JoinPoint;
 
 /**
  * A generic key for storing items in and retrieving them from a cache.
  */
-public final class CacheKey {
+public final class CacheKey implements Serializable {
 
 	private final int hash;
+	private final long checksum;
 
 	public static CacheKey generate(JoinPoint joinPoint) {
-		HashCodeBuilder builder = new HashCodeBuilder();
+		CacheKeyBuilder builder = new CacheKeyBuilder();
 		builder.append(joinPoint.getTarget());
 		builder.append(joinPoint.getSignature().getName());
 		builder.append(joinPoint.getArgs());
-		return new CacheKey(builder.toHashCode());
+		return builder.toCacheKey();
 	}
 
-	CacheKey(int hashCode) {
+	CacheKey(int hashCode, long checksum) {
 		this.hash = hashCode;
+		this.checksum = checksum;
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		return hash == ((CacheKey) o).hash;
+		CacheKey that = (CacheKey) o;
+		return hash == that.hash && checksum == that.checksum;
 	}
 
 	@Override
 	public int hashCode() {
-		return hash;
+		int result = hash;
+		result = 31 * result + (int) (checksum ^ (checksum >>> 32));
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("CacheKey[%d|%d]", hash, checksum);
 	}
 }
