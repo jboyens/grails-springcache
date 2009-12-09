@@ -21,6 +21,7 @@ class EhCacheFacadeSpecification extends Specification {
 		then: "The null value is cached"
 		cacheFacade.size == 1
 		cacheFacade.containsKey(key)
+		cacheFacade.get(key) == null
 	}
 
 }
