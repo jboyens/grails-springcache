@@ -24,7 +24,7 @@ class CacheAspectSpecification extends Specification {
 
 	private static final UNCACHED_VALUE = "UNCACHED"
 	private static final CACHED_VALUE = "CACHED"
-	private static final KEY = CacheKey.generate([])
+	private static final KEY = new CacheKey(0)
 
 	void "The intercepted method is invoked if the cache does not contain the result of a previous call"() {
 		given: "the cache is empty"

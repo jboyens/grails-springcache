@@ -15,6 +15,9 @@
  */
 package grails.plugins.springcache.cache;
 
+/**
+ * Thrown by a CacheProvider to indicate that a flushing model id was not recognised.
+ */
 public class InvalidFlushingModelException extends RuntimeException {
 
 	public InvalidFlushingModelException(String flushingModelId) {

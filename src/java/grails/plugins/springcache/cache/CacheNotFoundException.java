@@ -15,6 +15,10 @@
  */
 package grails.plugins.springcache.cache;
 
+/**
+ * Thrown by CacheProvider implementations to indicate that a cache that was expected to exist could not be retrieved
+ * from the underlying provider.
+ */
 public class CacheNotFoundException extends RuntimeException {
 
 	public CacheNotFoundException(String name) {

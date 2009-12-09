@@ -15,10 +15,12 @@
  */
 package grails.plugins.springcache.cache;
 
-import java.util.Collection;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.aspectj.lang.JoinPoint;
 
+/**
+ * A generic key for storing items in and retrieving them from a cache.
+ */
 public final class CacheKey {
 
 	private final int hash;
@@ -31,15 +33,7 @@ public final class CacheKey {
 		return new CacheKey(builder.toHashCode());
 	}
 
-	public static CacheKey generate(Collection c) {
-		HashCodeBuilder builder = new HashCodeBuilder();
-		for (Object element : c) {
-			builder.append(element);
-		}
-		return new CacheKey(builder.toHashCode());
-	}
-
-	private CacheKey(int hashCode) {
+	CacheKey(int hashCode) {
 		this.hash = hashCode;
 	}
 

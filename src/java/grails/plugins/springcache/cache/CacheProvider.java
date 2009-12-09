@@ -18,14 +18,29 @@ package grails.plugins.springcache.cache;
 import java.util.Collection;
 import java.util.Properties;
 
+/**
+ * An interface decorating a specific caching implementation such as EHCache.
+ */
 public interface CacheProvider {
 
-	CacheFacade getCache(String cacheModelId) throws CacheNotFoundException;
+	/**
+	 * Retrieves a cache based on a caching model.
+	 */
+	CacheFacade getCache(String cachingModelId) throws CacheNotFoundException, InvalidCachingModelException;
 
-	Collection<CacheFacade> getCaches(String flushModelId) throws CacheNotFoundException;
+	/**
+	 * Retrieves all the caches that should be flushed by a particular flushing model.
+	 */
+	Collection<CacheFacade> getCaches(String flushingModelId) throws CacheNotFoundException, InvalidFlushingModelException;
 
+	/**
+	 * Registers a caching model using properties from Grails configuration.
+	 */
 	void addCachingModel(String id, Properties properties);
 
+	/**
+	 * Registers a flushing model using properties from Grails configuration.
+	 */
 	void addFlushingModel(String id, Properties properties);
 
 }

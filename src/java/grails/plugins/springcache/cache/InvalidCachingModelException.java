@@ -15,6 +15,9 @@
  */
 package grails.plugins.springcache.cache;
 
+/**
+ * Thrown by a CacheProvider to indicate that a caching model id was not recognised.
+ */
 public class InvalidCachingModelException extends RuntimeException {
 
 	public InvalidCachingModelException(String cachingModelId) {

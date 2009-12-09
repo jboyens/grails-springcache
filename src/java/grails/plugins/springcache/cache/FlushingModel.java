@@ -18,6 +18,11 @@ package grails.plugins.springcache.cache;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
+/**
+ * Represents a particular flushing model that can be used with a CacheProvider to retrieve one or more individual
+ * caches. Different providers will have different strategies for identifying caches (EHCache uses names, OSCache uses
+ * groups, etc.) so this class provides a level of abstraction.
+ */
 public abstract class FlushingModel {
 
 	private final String id;

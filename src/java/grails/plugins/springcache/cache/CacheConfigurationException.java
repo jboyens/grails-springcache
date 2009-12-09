@@ -15,6 +15,9 @@
  */
 package grails.plugins.springcache.cache;
 
+/**
+ * Thrown by CacheProvider implementations to indicate a problem in configuring the cache provider.
+ */
 public class CacheConfigurationException extends RuntimeException {
 
 	public CacheConfigurationException(String message) {
