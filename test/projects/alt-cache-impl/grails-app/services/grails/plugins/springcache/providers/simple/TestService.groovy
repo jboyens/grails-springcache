@@ -7,17 +7,17 @@ class TestService {
 
 	private final List elements = []
 
-	@Cacheable(model = "TestCachingModel")
+	@Cacheable(modelId = "TestCachingModel")
 	List getElements() {
 		elements.asImmutable()
 	}
 
-	@CacheFlush(model = "TestFlushingModel")
+	@CacheFlush(modelId = "TestFlushingModel")
 	void addElement(element) {
 		elements << element
 	}
 
-	@CacheFlush(model = "TestFlushingModel")
+	@CacheFlush(modelId = "TestFlushingModel")
 	void clearElements() {
 		elements.clear()
 	}

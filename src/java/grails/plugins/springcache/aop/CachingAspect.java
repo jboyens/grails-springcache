@@ -35,7 +35,7 @@ public class CachingAspect {
 	@Around("@annotation(cacheable)")
 	public Object invokeCachedMethod(ProceedingJoinPoint pjp, Cacheable cacheable) throws Throwable {
 		if (log.isDebugEnabled()) log.debug(String.format("Intercepted %s", pjp.toLongString()));
-		CacheFacade cache = cacheProvider.getCache(cacheable.model());
+		CacheFacade cache = cacheProvider.getCache(cacheable.modelId());
 		CacheKey key = CacheKey.generate(pjp);
 		return getFromCacheOrInvoke(pjp, cache, key);
 	}

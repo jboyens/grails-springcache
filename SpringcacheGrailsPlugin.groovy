@@ -8,7 +8,7 @@ import grails.plugins.springcache.aop.CachingAspect
 import grails.plugins.springcache.aop.FlushingAspect
 
 class SpringcacheGrailsPlugin {
-	def version = "1.1-SNAPSHOT"
+	def version = "1.1"
 	def grailsVersion = "1.2-M3 > *"
 	def dependsOn = [:]
 

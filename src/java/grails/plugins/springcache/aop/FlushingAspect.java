@@ -32,7 +32,7 @@ public class FlushingAspect {
 
 	@After("@annotation(cacheFlush)")
 	public void flushCaches(CacheFlush cacheFlush) throws Throwable {
-		for (CacheFacade cache : cacheProvider.getCaches(cacheFlush.model())) {
+		for (CacheFacade cache : cacheProvider.getCaches(cacheFlush.modelId())) {
 			try {
 				cache.flush();
 			} catch (Exception e) {
