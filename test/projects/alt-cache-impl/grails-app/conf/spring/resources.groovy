@@ -1,4 +1,4 @@
-import grails.plugins.springcache.providers.simple.SimpleCacheProvider
+import grails.plugin.springcache.providers.simple.SimpleCacheProvider
 
 beans = {
 

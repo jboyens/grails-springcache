@@ -1,7 +1,7 @@
 package pirates
 
-import grails.plugins.springcache.annotations.CacheFlush
-import grails.plugins.springcache.annotations.Cacheable
+import grails.plugin.springcache.annotations.CacheFlush
+import grails.plugin.springcache.annotations.Cacheable
 import pirates.Pirate
 import pirates.Ship
 
