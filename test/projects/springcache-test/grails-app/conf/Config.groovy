@@ -81,22 +81,12 @@ log4j = {
 
 springcache {
 	cachingModels {
-		PirateCachingModel {
-			cacheName = "PirateCache"
-		}
-		ShipCachingModel {
-			cacheName = "ShipCache"
-		}
+		Pirates.cacheName = "PirateCache"
+		Ships.cacheName = "ShipCache"
 	}
 	flushingModels {
-		PirateFlushingModel {
-			cacheNames = "PirateCache"
-		}
-		ShipFlushingModel {
-			cacheNames = "ShipCache"
-		}
-		AllFlushingModel {
-			cacheNames = "PirateCache,ShipCache"
-		}
+		Pirates.cacheNames = "PirateCache"
+		Ships.cacheNames = "ShipCache"
+		All.cacheNames = "PirateCache,ShipCache"
 	}
 }
