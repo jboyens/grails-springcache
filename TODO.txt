@@ -1,3 +1,4 @@
 - caching tag lib
 - expose a cache service
 - expose caching statistics (JMX?)
+- support reloading via onChange and onConfigChange

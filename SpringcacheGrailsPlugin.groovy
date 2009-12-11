@@ -49,22 +49,21 @@ class SpringcacheGrailsPlugin {
 		String providerBeanName = ConfigurationHolder.config.springcache.provider.bean ?: "springcacheCacheProvider"
 		CacheProvider provider = applicationContext.getBean(providerBeanName)
 		ConfigurationHolder.config.springcache.cachingModels.each {String modelId, ConfigObject modelConfig ->
-			log.debug "cachingModel id = $modelId, config = ${modelConfig.toProperties()}"
+			if (log.isDebugEnabled()) log.debug "cachingModel id = $modelId, config = ${modelConfig.toProperties()}"
 			provider.addCachingModel modelId, modelConfig.toProperties()
 		}
 		ConfigurationHolder.config.springcache.flushingModels.each {String modelId, ConfigObject modelConfig ->
-			log.debug "flushingModel id = $modelId, config = ${modelConfig.toProperties()}"
+			if (log.isDebugEnabled()) log.debug "flushingModel id = $modelId, config = ${modelConfig.toProperties()}"
 			provider.addFlushingModel modelId, modelConfig.toProperties()
 		}
 	}
 
 	def onChange = {event ->
-		// TODO: make sure we decorate changed / newly created annotated beans
 	}
 
 	def onConfigChange = {event ->
 	}
 
-	private static final log = LoggerFactory.getLogger("grails.plugins.springcache.SpringcacheGrailsPlugin")
+	private static final log = LoggerFactory.getLogger("grails.plugin.springcache.SpringcacheGrailsPlugin")
 
 }

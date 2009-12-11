@@ -76,7 +76,7 @@ log4j = {
 
     warn   	'org.mortbay.log'
 
-//	debug	'grails.plugins.springcache'
+//	debug	'grails.plugin.springcache'
 }
 
 springcache {
