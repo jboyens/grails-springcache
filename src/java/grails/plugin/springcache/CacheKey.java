@@ -17,6 +17,7 @@ package grails.plugin.springcache;
 
 import java.io.Serializable;
 import org.aspectj.lang.JoinPoint;
+import grails.plugin.springcache.key.CacheKeyBuilder;
 
 /**
  * A generic key for storing items in and retrieving them from a cache.
@@ -34,7 +35,7 @@ public final class CacheKey implements Serializable {
 		return builder.toCacheKey();
 	}
 
-	CacheKey(int hashCode, long checksum) {
+	public CacheKey(int hashCode, long checksum) {
 		this.hash = hashCode;
 		this.checksum = checksum;
 	}
