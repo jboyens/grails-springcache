@@ -1,4 +1,4 @@
-<plugin name='springcache' version='1.1-SNAPSHOT' grailsVersion='1.2-M3 &gt; *'>
+<plugin name='springcache' version='1.1' grailsVersion='1.2-M3 &gt; *'>
   <author>Rob Fletcher</author>
   <authorEmail>rob@energizedwork.com</authorEmail>
   <title>Spring Cache Plugin</title>
