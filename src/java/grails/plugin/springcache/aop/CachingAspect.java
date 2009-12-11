@@ -16,9 +16,9 @@
 package grails.plugin.springcache.aop;
 
 import grails.plugin.springcache.annotations.Cacheable;
-import grails.plugin.springcache.cache.CacheFacade;
-import grails.plugin.springcache.cache.CacheKey;
-import grails.plugin.springcache.cache.CacheProvider;
+import grails.plugin.springcache.CacheProvider;
+import grails.plugin.springcache.CacheFacade;
+import grails.plugin.springcache.CacheKey;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

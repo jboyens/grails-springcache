@@ -16,8 +16,8 @@
 package grails.plugin.springcache.aop;
 
 import grails.plugin.springcache.annotations.CacheFlush;
-import grails.plugin.springcache.cache.CacheFacade;
-import grails.plugin.springcache.cache.CacheProvider;
+import grails.plugin.springcache.CacheFacade;
+import grails.plugin.springcache.CacheProvider;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;

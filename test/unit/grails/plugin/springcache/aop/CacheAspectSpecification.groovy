@@ -15,8 +15,8 @@
  */
 package grails.plugin.springcache.aop
 
-import grails.plugin.springcache.cache.CacheFacade
-import grails.plugin.springcache.cache.CacheKey
+import grails.plugin.springcache.CacheFacade
+import grails.plugin.springcache.CacheKey
 import org.aspectj.lang.ProceedingJoinPoint
 import spock.lang.Specification
 

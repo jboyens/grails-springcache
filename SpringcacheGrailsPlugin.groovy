@@ -1,11 +1,12 @@
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator
 import org.slf4j.LoggerFactory
-import grails.plugin.springcache.providers.ehcache.EhCacheProvider
+import grails.plugin.springcache.provider.ehcache.EhCacheProvider
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean
-import grails.plugin.springcache.cache.CacheProvider
+import grails.plugin.springcache.CacheProvider
 import grails.plugin.springcache.aop.CachingAspect
 import grails.plugin.springcache.aop.FlushingAspect
+import grails.plugin.springcache.CacheProvider
 
 class SpringcacheGrailsPlugin {
 	def version = "1.1"

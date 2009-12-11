@@ -19,7 +19,7 @@ If you are upgrading from an earlier version of the Springcache plugin there are
 
  * You will need to change the import statements for your @Cacheable@ and @CacheFlush@ annotations to point to the @grails.plugin.springcache.annotations@ package.
  * The default map cache is no more. Grails includes EHCache and it's very easy to configure so that is now the default.
- * If you were using a cache provider other than EHCache you will need to write some code to implement your own @grails.plugin.springcache.cache.CacheProvider@ - see below.
+ * If you were using a cache provider other than EHCache you will need to write some code to implement your own @grails.plugin.springcache.CacheProvider@ - see below.
  * Caching and flushing model configuration has changed slightly and is now simpler. It should be no more than a couple of minutes work to adapt your existing config. See the examples below.
 
 h2. Applying Caching and Flushing Behaviour to Methods
@@ -123,13 +123,13 @@ h2. Using a Different Cache Provider
 
 EHCache is the default cache provider for the Springcache plugin but it is straightforward to substitute a different caching library if you would prefer. Basically you need to:
 
- * Implement @grails.plugin.springcache.cache.CacheProvider@, @grails.plugin.springcache.cache.CacheFacade@, @grails.plugin.springcache.cache.CachingModel@ and @grails.plugin.springcache.cache.FlushingModel@ to provide an adapter for your caching library.
+ * Implement @grails.plugin.springcache.CacheProvider@, @grails.plugin.springcache.CacheFacade@, @grails.plugin.springcache.CachingModel@ and @grails.plugin.springcache.FlushingModel@ to provide an adapter for your caching library.
  * Register your @CacheProvider@ implementation as a bean in the Spring context.
  * Set the config value @springcache.provider.bean@ to the name of the bean.
  * Configure caching and flushing models using properties appropriate to your caching library.
  * Ensure any external configuration your caching library requires is present.
 
-There is a useful abstract base class @grails.plugin.springcache.cache.AbstractCacheProvider@ that you can extend. This will handle mapping of model Ids to @CachingModel@ and @FlushingModel@ instances. You only need to add the following method implementations:
+There is a useful abstract base class @grails.plugin.springcache.AbstractCacheProvider@ that you can extend. This will handle mapping of model Ids to @CachingModel@ and @FlushingModel@ instances. You only need to add the following method implementations:
 
  * @createCachingModel(String, Properties)@ - creates a configured @CachingModel@ instance. The method is passed the model id and properties from Config.groovy.
  * @createFlushingModel(String, Properties)@ - the equivalent method for creating a configured @FlushingModel@ instance.
@@ -152,7 +152,7 @@ springcache {
 
 In this example your @CacheProvider@ implementation's @createCachingModel@ method would be called with the String "myCachingModel" and a Properties object containing [cacheName: "someCache", group: "someGroup", ttl: "300"].
 
-The default EHCache provider classes in the package @grails.plugin.springcache.providers.ehcache@ are a good example of how to implement the required classes.
+The default EHCache provider classes in the package @grails.plugin.springcache.provider.ehcache@ are a good example of how to implement the required classes.
 
 h2. Tips
 
