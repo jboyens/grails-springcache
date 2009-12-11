@@ -1,5 +1,3 @@
-- support other cache providers
-- allow cacheManager (or equiv) to be defined by client project
-- more robust hash algorithm in CacheKey.generate
 - caching tag lib
 - expose a cache service
+- expose caching statistics (JMX?)
