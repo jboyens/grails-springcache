@@ -37,19 +37,19 @@ The model Ids you specify on your annotations should match models configured in 
 
 {code}
 springcache {
-    cachingModels {
-        myCachingModel1 {
-        	cacheName = "CACHE_1"
+	caching	Models {
+		myCachingModel1 {
+			cacheName = "CACHE_1"
 		}
-        myCachingModel2 {
-        	cacheName = "CACHE_2"
+		myCachingModel2 {
+			cacheName = "CACHE_2"
 		}
-    }
-    flushingModels {
-        myFlushingModel {
-        	cacheNames = "CACHE_1,CACHE_2"
+	}
+	flushingModels {
+		myFlushingModel {
+			cacheNames = "CACHE_1,CACHE_2"
 		}
-    }
+	}
 }
 {code}
 
@@ -63,7 +63,7 @@ h4. PiracyService.groovy
 {code}
 @Cacheable(modelId="Pirates")
 def getPirates() {
-    Pirate.list()
+	Pirate.list()
 }
 
 @Cacheable(modelId="Pirates")
@@ -73,23 +73,23 @@ def findPirates(name) {
 
 @Cacheable(modelId="Ships")
 def getShips() {
-    Ship.list()
+	Ship.list()
 }
 
 @CacheFlush(modelId="Pirates")
 void registerNewPirate(Pirate sailor) {
-    sailor.save(failOnError: true)
+	sailor.save(failOnError: true)
 }
 
 @CacheFlush(modelId="Ships")
 void registerNewShip(Ship ship) {
-    ship.save(failOnError: true)
+	ship.save(failOnError: true)
 }
 
 @CacheFlush(modelId="All")
 void registerNewShipWithCrew(Ship ship, Collection<Sailor> crew) {
-    ship.save(failOnError: true)
-    crew*.save(failOnError: true)
+	ship.save(failOnError: true)
+	crew*.save(failOnError: true)
 }
 {code}
 
@@ -123,7 +123,7 @@ h2. Using a Different Cache Provider
 
 EHCache is the default cache provider for the Springcache plugin but it is straightforward to substitute a different caching library if you would prefer. Basically you need to:
 
- * Implement @grails.plugin.springcache.CacheProvider@, @grails.plugin.springcache.CacheFacade@, @grails.plugin.springcache.CachingModel@ and @grails.plugin.springcache.FlushingModel@ to provide an adapter for your caching library.
+ * Implement @grails.plugin.springcache.CacheProvider, grails.plugin.springcache.CacheFacade, grails.plugin.springcache.CachingModel@ and @grails.plugin.springcache.FlushingModel@ to provide an adapter for your caching library.
  * Register your @CacheProvider@ implementation as a bean in the Spring context.
  * Set the config value @springcache.provider.bean@ to the name of the bean.
  * Configure caching and flushing models using properties appropriate to your caching library.
@@ -131,26 +131,26 @@ EHCache is the default cache provider for the Springcache plugin but it is strai
 
 There is a useful abstract base class @grails.plugin.springcache.AbstractCacheProvider@ that you can extend. This will handle mapping of model Ids to @CachingModel@ and @FlushingModel@ instances. You only need to add the following method implementations:
 
- * @createCachingModel(String, Properties)@ - creates a configured @CachingModel@ instance. The method is passed the model id and properties from Config.groovy.
- * @createFlushingModel(String, Properties)@ - the equivalent method for creating a configured @FlushingModel@ instance.
- * @getCache(CachingModel)@ - returns a @CacheFacade@ instance appropriate for the @CachingModel@ passed in.
- * @getCaches(FlushingModel)@ - returns a Collection of @CacheFacade@ instances appropriate for the @FlushingModel@ passed in.
+ * createCachingModel(String, Properties) - creates a configured @CachingModel@ instance. The method is passed the model id and properties from Config.groovy.
+ * createFlushingModel(String, Properties) - the equivalent method for creating a configured @FlushingModel@ instance.
+ * getCache(CachingModel) - returns a @CacheFacade@ instance appropriate for the @CachingModel@ passed in.
+ * getCaches(FlushingModel) - returns a Collection of @CacheFacade@ instances appropriate for the @FlushingModel@ passed in.
 
 Different caching providers may require or allow additional properties for caching and flushing models. The Config.groovy entries can be extended e.g.:
 
 {code}
 springcache {
-    cachingModels {
-        myCachingModel {
+	cachingModels {
+		myCachingModel {
 			cacheName = "someCache"
 			group = "someGroup"
 			ttl = 300
 		}
-    }
+	}
 }
 {code}
 
-In this example your @CacheProvider@ implementation's @createCachingModel@ method would be called with the String "myCachingModel" and a Properties object containing [cacheName: "someCache", group: "someGroup", ttl: "300"].
+In this example your @CacheProvider@ implementation's @createCachingModel@ method would be called with the String "myCachingModel" and a Properties object containing \[cacheName: "someCache", group: "someGroup", ttl: "300"\].
 
 The default EHCache provider classes in the package @grails.plugin.springcache.provider.ehcache@ are a good example of how to implement the required classes.
 
