@@ -141,7 +141,7 @@ Different caching providers may require or allow additional properties for cachi
 {code}
 springcache {
     cachingModels {
-        myCachingModel1 {
+        myCachingModel {
 			cacheName = "someCache"
 			group = "someGroup"
 			ttl = 300
@@ -150,7 +150,7 @@ springcache {
 }
 {code}
 
-In this example your @CacheProvider@ implementation's @createCachingModel@ method would be called with the String "myCachingModel1" and a Properties object containing [cacheName: "someCache", group: "someGroup", ttl: "300"].
+In this example your @CacheProvider@ implementation's @createCachingModel@ method would be called with the String "myCachingModel" and a Properties object containing [cacheName: "someCache", group: "someGroup", ttl: "300"].
 
 The default EHCache provider classes in the package @grails.plugin.springcache.providers.ehcache@ are a good example of how to implement the required classes.
 
@@ -190,4 +190,6 @@ h2. Contact
 
 The plugin code is hosted on [GitHub|http://github.com/robfletcher/grails-springcache]. Please feel free to fork the plugin and contribute patches.
 
-Questions, comments, bug reports, suggestions? [rob@energizedwork.com |mailto:rob@energizedwork.com].
+Please raise defects or enhancements on [JIRA|http://jira.codehaus.org/browse/GRAILSPLUGINS/component/14010].
+
+Questions, comments? [rob@energizedwork.com|mailto:rob@energizedwork.com].

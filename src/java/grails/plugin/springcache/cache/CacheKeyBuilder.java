@@ -15,6 +15,12 @@
  */
 package grails.plugin.springcache.cache;
 
+/**
+ * Builder used to compute the hash and checksum used for an immutable cache key.
+ * <p/>
+ * Based on org.springmodules.cache.key.HashCodeCalculator from Spring Modules Cache (see
+ * https://springmodules.dev.java.net/) by Omar Irbouh and Alex Ruiz.
+ */
 public class CacheKeyBuilder {
 
 	private static final int INITIAL_HASH = 17;
