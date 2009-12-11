@@ -12,6 +12,11 @@ class SpringcacheGrailsPlugin {
 	def version = "1.1"
 	def grailsVersion = "1.2-M3 > *"
 	def dependsOn = [:]
+	def pluginExcludes = [
+			"grails-app/views/**",
+			"web-app/**",
+			"**/.gitignore"
+	]
 
 	def author = "Rob Fletcher"
 	def authorEmail = "rob@energizedwork.com"
@@ -19,6 +24,9 @@ class SpringcacheGrailsPlugin {
 	def description = "Allows caching and flushing aspects to be added to Grails services using annotations."
 
 	def documentation = "http://grails.org/Springcache+Plugin"
+
+	def doWithWebDescriptor = {xml ->
+	}
 
 	def doWithSpring = {
 		if (ConfigurationHolder.config.springcache.disabled) {
@@ -44,6 +52,9 @@ class SpringcacheGrailsPlugin {
 				cacheProvider = ref(ConfigurationHolder.config.springcache.provider.bean ?: "springcacheCacheProvider")
 			}
 		}
+	}
+
+	def doWithDynamicMethods = {ctx ->
 	}
 
 	def doWithApplicationContext = {applicationContext ->
