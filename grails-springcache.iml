@@ -2777,10 +2777,6 @@
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$USER_HOME$/.grails/1.2.0.RC1/projects/grails-springcache/plugins">
-      <sourceFolder url="file://$USER_HOME$/.grails/1.2.0.RC1/projects/grails-springcache/plugins/spock-0.4-SNAPSHOT/src/groovy" isTestSource="false" />
-      <sourceFolder url="file://$USER_HOME$/.grails/1.2.0.RC1/projects/grails-springcache/plugins/spock-0.4-SNAPSHOT/src/java" isTestSource="false" />
-    </content>
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/grails-app/conf" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/grails-app/conf/hibernate" isTestSource="false" />
@@ -2799,7 +2795,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="grails-1.2.0.RC1" level="application" />
+    <orderEntry type="library" name="grails-1.2.0" level="application" />
     <orderEntry type="library" name="groovy-1.6.3" level="application" />
     <orderEntry type="module-library">
       <library name="Grails User Library">

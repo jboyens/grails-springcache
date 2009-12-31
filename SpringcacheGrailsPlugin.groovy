@@ -9,7 +9,7 @@ import grails.plugin.springcache.aop.FlushingAspect
 import grails.plugin.springcache.CacheProvider
 
 class SpringcacheGrailsPlugin {
-	def version = "1.1"
+	def version = "1.1.1"
 	def grailsVersion = "1.2-M3 > *"
 	def dependsOn = [:]
 	def pluginExcludes = [
@@ -37,11 +37,14 @@ class SpringcacheGrailsPlugin {
 			}
 
 			if (!ConfigurationHolder.config.springcache.provider.bean) {
+			    log.info "No springcache provider configured; using default..."
 				springcacheCacheProvider(EhCacheProvider) {
 					cacheManager = ref("springcacheCacheManager")
 				}
 
 				springcacheCacheManager(EhCacheManagerFactoryBean)
+			} else {
+			    log.info "Using ${ConfigurationHolder.config.springcache.provider.bean} as springcache provider..."
 			}
 
 			springcacheCachingAspect(CachingAspect) {
@@ -58,15 +61,17 @@ class SpringcacheGrailsPlugin {
 	}
 
 	def doWithApplicationContext = {applicationContext ->
-		String providerBeanName = ConfigurationHolder.config.springcache.provider.bean ?: "springcacheCacheProvider"
-		CacheProvider provider = applicationContext.getBean(providerBeanName)
-		ConfigurationHolder.config.springcache.cachingModels.each {String modelId, ConfigObject modelConfig ->
-			if (log.isDebugEnabled()) log.debug "cachingModel id = $modelId, config = ${modelConfig.toProperties()}"
-			provider.addCachingModel modelId, modelConfig.toProperties()
-		}
-		ConfigurationHolder.config.springcache.flushingModels.each {String modelId, ConfigObject modelConfig ->
-			if (log.isDebugEnabled()) log.debug "flushingModel id = $modelId, config = ${modelConfig.toProperties()}"
-			provider.addFlushingModel modelId, modelConfig.toProperties()
+		if (!ConfigurationHolder.config.springcache.disabled) {
+		    String providerBeanName = ConfigurationHolder.config.springcache.provider.bean ?: "springcacheCacheProvider"
+		    CacheProvider provider = applicationContext.getBean(providerBeanName)
+		    ConfigurationHolder.config.springcache.cachingModels.each {String modelId, ConfigObject modelConfig ->
+			    if (log.isDebugEnabled()) log.debug "cachingModel id = $modelId, config = ${modelConfig.toProperties()}"
+			    provider.addCachingModel modelId, modelConfig.toProperties()
+		    }
+		    ConfigurationHolder.config.springcache.flushingModels.each {String modelId, ConfigObject modelConfig ->
+			    if (log.isDebugEnabled()) log.debug "flushingModel id = $modelId, config = ${modelConfig.toProperties()}"
+			    provider.addFlushingModel modelId, modelConfig.toProperties()
+		    }
 		}
 	}
 
@@ -79,3 +84,4 @@ class SpringcacheGrailsPlugin {
 	private static final log = LoggerFactory.getLogger("grails.plugin.springcache.SpringcacheGrailsPlugin")
 
 }
+
