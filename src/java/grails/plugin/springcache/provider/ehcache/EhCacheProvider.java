@@ -29,6 +29,7 @@ import org.apache.commons.lang.StringUtils;
 public class EhCacheProvider extends AbstractCacheProvider<EhCacheCachingModel, EhCacheFlushingModel> {
 
 	private CacheManager cacheManager;
+	private boolean createCachesOnDemand;
 
 	protected CacheFacade getCache(EhCacheCachingModel cachingModel) {
 		return getCacheByName(cachingModel.getCacheName());
@@ -43,6 +44,10 @@ public class EhCacheProvider extends AbstractCacheProvider<EhCacheCachingModel, 
 	}
 
 	private CacheFacade getCacheByName(String name) {
+		if (createCachesOnDemand && !cacheManager.cacheExists(name)) {
+			cacheManager.addCache(name);
+		}		
+
 		if (cacheManager.cacheExists(name)) {
 			Cache cache = cacheManager.getCache(name);
 			return new EhCacheFacade(cache);
@@ -63,6 +68,10 @@ public class EhCacheProvider extends AbstractCacheProvider<EhCacheCachingModel, 
 
 	public void setCacheManager(CacheManager cacheManager) {
 		this.cacheManager = cacheManager;
+	}
+	
+	public void setCreateCachesOnDemand(boolean createCachesOnDemand) {
+		this.createCachesOnDemand = createCachesOnDemand;
 	}
 
 }

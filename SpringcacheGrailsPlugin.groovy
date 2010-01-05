@@ -40,9 +40,12 @@ class SpringcacheGrailsPlugin {
 			    log.info "No springcache provider configured; using default..."
 				springcacheCacheProvider(EhCacheProvider) {
 					cacheManager = ref("springcacheCacheManager")
+					createCachesOnDemand = true
 				}
 
-				springcacheCacheManager(EhCacheManagerFactoryBean)
+				springcacheCacheManager(EhCacheManagerFactoryBean) {
+					cacheManagerName = "Springcache Plugin Cache Manager"
+				}
 			} else {
 			    log.info "Using ${ConfigurationHolder.config.springcache.provider.bean} as springcache provider..."
 			}

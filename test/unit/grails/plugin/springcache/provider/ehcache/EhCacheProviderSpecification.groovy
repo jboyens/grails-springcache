@@ -47,7 +47,7 @@ class EhCacheProviderSpecification extends Specification {
 		thrown CacheConfigurationException
 	}
 
-	void "Provider throws exception if named cache does not exist"() {
+	void "Provider throws exception if named cache does not exist and caches are not being created on demand"() {
 		given: "An EHCache provider instance exists"
 		def provider = new EhCacheProvider()
 		provider.cacheManager = Mock(CacheManager)
@@ -61,6 +61,25 @@ class EhCacheProviderSpecification extends Specification {
 
 		then: "An exception is thrown"
 		thrown CacheNotFoundException
+	}
+	
+	void "Provider creates caches on demand if configured to do so"() {
+		given: "An EHCache provider instance exists"
+		def provider = new EhCacheProvider()
+		provider.cacheManager = Mock(CacheManager)
+		
+		and: "A caching model is configured"
+		provider.addCachingModel new EhCacheCachingModel("modelId", "cacheName")
+
+		and: "The provider is configured to create caches on demand"
+		provider.createCachesOnDemand = true
+
+		when: "The provider tries to find a cache that does not exist"
+		def cache = provider.getCache("modelId")
+
+		then: "An cache is created and returned"
+		2 * provider.cacheManager.cacheExists("cacheName") >>> [false, true]
+		1 * provider.cacheManager.addCache("cacheName")
 	}
 
 }
