@@ -119,6 +119,10 @@ confusion when using the same caches on multiple methods.
 There are various strategies you can adopt in naming and grouping caches and their associated caching and flushing models, this example shouldn't be seen as
 definitive.
 
+h2. Configuring EHCache
+
+You can configure the caches used by the plugin using an @ehcache.xml@ file anywhere in the classpath. Generally @grails-app/conf@ is the normal place to store such config files. If you do not configure caches individually they will be created on demand using the default cache configuration from the @ehcache.xml@ file.
+
 h2. Using a Different Cache Provider
 
 EHCache is the default cache provider for the Springcache plugin but it is straightforward to substitute a different caching library if you would prefer. Basically you need to:
@@ -171,6 +175,10 @@ h3. My cache config doesn't seem to be working.
 Ensure all your config for the Springcache plugin is nested inside a single 'springcache' block in Config.groovy otherwise only the last block will take effect.
 
 h2. Release Notes
+h4. 1.1.2
+ * Automatically create ehcache caches if they are not explicitly configured in @ehcache.xml@
+h4. 1.1.1
+ * Fixes bug where plugin crashes if disabled
 h4. 1.1
  * Complete rewrite to support Grails 1.2 and Spring 3.0.
 h4. 1.0.1
