@@ -131,4 +131,14 @@ class CachingSpecification extends IntegrationSpecification {
 		cache2.statistics.objectCount == 0
 	}
 
+	void "Caches are created on demand if they do not exist"() {
+		when: "A cachable method is called twice when no cache exists"
+		piracyService.listPirateNames()
+
+		then: "The cache is created when first used"
+		def cache = springcacheCacheManager.getCache("PirateCache")
+		cache != null
+		cache.statistics.objectCount == 1
+	}
+
 }
