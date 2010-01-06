@@ -9,7 +9,7 @@ import grails.plugin.springcache.aop.FlushingAspect
 import grails.plugin.springcache.CacheProvider
 
 class SpringcacheGrailsPlugin {
-	def version = "1.1.1"
+	def version = "1.1.2"
 	def grailsVersion = "1.2-M3 > *"
 	def dependsOn = [:]
 	def pluginExcludes = [

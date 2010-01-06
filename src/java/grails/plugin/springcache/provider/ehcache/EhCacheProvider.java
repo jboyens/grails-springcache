@@ -45,6 +45,7 @@ public class EhCacheProvider extends AbstractCacheProvider<EhCacheCachingModel, 
 
 	private CacheFacade getCacheByName(String name) {
 		if (createCachesOnDemand && !cacheManager.cacheExists(name)) {
+			log.info("No logger named '%s' found - creating using defaults");
 			cacheManager.addCache(name);
 		}		
 

@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import org.slf4j.*;
 
 /**
  * An abstract base class for cache provider implementations. Implementations just need to define how caching and
@@ -31,6 +32,8 @@ public abstract class AbstractCacheProvider<C extends CachingModel, F extends Fl
 
 	protected final Map<String, C> cachingModels = new HashMap<String, C>();
 	protected final Map<String, F> flushingModels = new HashMap<String, F>();
+	
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * Implementations should return the cache associated with the specified CachingModel.
