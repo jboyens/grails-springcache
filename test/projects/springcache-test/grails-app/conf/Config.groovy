@@ -79,6 +79,7 @@ log4j = {
 
     warn   'org.mortbay.log'
 
+	info	'net.sf.ehcache'
 	debug	'grails.plugin.springcache'
 }
 

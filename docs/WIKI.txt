@@ -175,6 +175,8 @@ h3. My cache config doesn't seem to be working.
 Ensure all your config for the Springcache plugin is nested inside a single 'springcache' block in Config.groovy otherwise only the last block will take effect.
 
 h2. Release Notes
+h4. 1.1.3
+ * Fixes bug where an expired ehcache element whose key is still in the cache can cause the plugin to think the key still maps to a valid value.
 h4. 1.1.2
  * Automatically create ehcache caches if they are not explicitly configured in @ehcache.xml@
 h4. 1.1.1

@@ -10,7 +10,7 @@ import grails.plugin.springcache.CacheProvider
 import grails.util.*
 
 class SpringcacheGrailsPlugin {
-	def version = "1.1.3"
+	def version = "1.1.3-SNAPSHOT"
 	def grailsVersion = "1.2-M3 > *"
 	def dependsOn = [:]
 	def pluginExcludes = [
