@@ -28,13 +28,10 @@ class EhCacheFacade implements CacheFacade {
 		this.cache = cache;
 	}
 
-	public boolean containsKey(CacheKey key) {
-		return cache.isKeyInCache(key);
-	}
-
 	public Object get(CacheKey key) {
 		Element element = cache.get(key);
-		return element == null ? null : element.getValue();
+		if (element == null || cache.isExpired(element)) return null;
+		return element.getValue();
 	}
 
 	public void put(CacheKey key, Object value) {

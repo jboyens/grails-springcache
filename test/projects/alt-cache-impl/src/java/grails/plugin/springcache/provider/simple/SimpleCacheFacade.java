@@ -14,10 +14,6 @@ class SimpleCacheFacade implements CacheFacade {
 		this.name = name;
 	}
 
-	public boolean containsKey(CacheKey key) {
-		return map.containsKey(key);
-	}
-
 	public Object get(CacheKey key) {
 		return map.get(key);
 	}

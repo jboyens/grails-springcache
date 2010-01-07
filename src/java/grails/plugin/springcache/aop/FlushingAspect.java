@@ -34,6 +34,7 @@ public class FlushingAspect {
 	public void flushCaches(CacheFlush cacheFlush) throws Throwable {
 		for (CacheFacade cache : cacheProvider.getCaches(cacheFlush.modelId())) {
 			try {
+				if (log.isDebugEnabled()) log.debug(String.format("Flushing cache %s", cache.getName()));
 				cache.flush();
 			} catch (Exception e) {
 				log.error(String.format("Exception caught when flushing cache '%s'", cache.getName()), e);

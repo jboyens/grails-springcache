@@ -21,12 +21,7 @@ package grails.plugin.springcache;
 public interface CacheFacade {
 
 	/**
-	 * Returns true if the cache contains a value for the specified key, false otherwise.
-	 */
-	boolean containsKey(CacheKey key);
-
-	/**
-	 * Retrieves a value from the cache, returning null if no value exists for the specified key.
+	 * Retrieves a value from the cache, returning null if no value exists for the specified key or the value is expired.
 	 */
 	Object get(CacheKey key);
 

@@ -24,12 +24,13 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static org.apache.commons.lang.ObjectUtils.NULL;
 
 @Aspect
 public class CachingAspect {
 
 	private final Logger log = LoggerFactory.getLogger(CachingAspect.class);
-
+	
 	private CacheProvider cacheProvider;
 
 	@Around("@annotation(cacheable)")
@@ -41,16 +42,15 @@ public class CachingAspect {
 	}
 
 	Object getFromCacheOrInvoke(ProceedingJoinPoint pjp, CacheFacade cache, CacheKey key) throws Throwable {
-		Object value;
-		if (cache.containsKey(key)) {
-			if (log.isDebugEnabled()) log.debug(String.format("Cache hit for %s", key.toString()));
-			value = cache.get(key);
-		} else {
+		Object value = cache.get(key);
+		if (value == null) {
 			if (log.isDebugEnabled()) log.debug(String.format("Cache miss for %s", key.toString()));
 			value = pjp.proceed();
-			cache.put(key, value);
+			cache.put(key, value == null ? NULL : value);
+		} else {
+			if (log.isDebugEnabled()) log.debug(String.format("Cache hit for %s", key.toString()));
 		}
-		return value;
+		return value == NULL ? null : value;
 	}
 
 	public void setCacheProvider(CacheProvider cacheProvider) {
