@@ -93,4 +93,9 @@ springcache {
 		Ships.cacheNames = "ShipCache"
 		All.cacheNames = "PirateCache,ShipCache"
 	}
+	caches {
+		ConfiguredCache {
+			eternal = true
+		}
+	}
 }

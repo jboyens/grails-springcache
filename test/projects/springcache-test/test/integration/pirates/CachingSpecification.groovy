@@ -18,7 +18,8 @@ class CachingSpecification extends IntegrationSpecification {
 	}
 
 	void cleanup() {
-		springcacheCacheManager.removalAll()
+		springcacheCacheManager.removeCache("PirateCache")
+		springcacheCacheManager.removeCache("ShipCache")
 	}
 
 	void cleanupSpec() {

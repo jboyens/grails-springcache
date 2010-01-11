@@ -2,7 +2,7 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator
 import org.slf4j.LoggerFactory
 import grails.plugin.springcache.provider.ehcache.EhCacheProvider
-import org.springframework.cache.ehcache.EhCacheManagerFactoryBean
+import org.springframework.cache.ehcache.*
 import grails.plugin.springcache.CacheProvider
 import grails.plugin.springcache.aop.CachingAspect
 import grails.plugin.springcache.aop.FlushingAspect
@@ -38,7 +38,7 @@ class SpringcacheGrailsPlugin {
 			}
 
 			if (!ConfigurationHolder.config.springcache.provider.bean) {
-			    log.info "No springcache provider configured; using default..."
+			    log.info "No springcache provider configured; using default EhCacheProvider..."
 				springcacheCacheProvider(EhCacheProvider) {
 					cacheManager = ref("springcacheCacheManager")
 					createCachesOnDemand = true
@@ -46,6 +46,16 @@ class SpringcacheGrailsPlugin {
 
 				springcacheCacheManager(EhCacheManagerFactoryBean) {
 					cacheManagerName = "Springcache Plugin Cache Manager"
+				}
+				
+				ConfigurationHolder.config.springcache.caches.each { String name, ConfigObject cacheConfig ->
+					"$name"(EhCacheFactoryBean) { bean ->
+						cacheManager = ref("springcacheCacheManager")
+						cacheName = name
+						cacheConfig.each {
+							bean.setPropertyValue it.key, it.value
+						}
+					}
 				}
 			} else {
 			    log.info "Using ${ConfigurationHolder.config.springcache.provider.bean} as springcache provider..."
@@ -76,6 +86,10 @@ class SpringcacheGrailsPlugin {
 			    if (log.isDebugEnabled()) log.debug "flushingModel id = $modelId, config = ${modelConfig.toProperties()}"
 			    provider.addFlushingModel modelId, modelConfig.toProperties()
 		    }
+		
+			if (log.isDebugEnabled()) {
+				log.debug "Configured caches: ${applicationContext.getBeansOfType(EhCacheFactoryBean).values().cacheName}"
+			}
 		}
 	}
 	
