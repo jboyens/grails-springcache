@@ -121,7 +121,27 @@ definitive.
 
 h2. Configuring EHCache
 
-You can configure the caches used by the plugin using an @ehcache.xml@ file anywhere in the classpath. Generally @grails-app/conf@ is the normal place to store such config files. If you do not configure caches individually they will be created on demand using the default cache configuration from the @ehcache.xml@ file.
+You can configure the caches used by the plugin in @Config.groovy@ (see below) or with an @ehcache.xml@ file anywhere in the classpath. Generally @grails-app/conf@ is the normal place to store such config files. If you do not configure caches individually they will be created on demand using the default cache configuration from the @ehcache.xml@ file.
+
+EHCache caches can be defined in @Config.groovy@ alongside your caching and flushing model definitions. For example:
+{code}
+springcache {
+	cachingModels {
+	    // ...
+	}
+	flushingModels {
+    	// ...
+	}
+	caches {
+		PirateCache {
+			eternal = true
+			diskPersistent = true
+			memoryStoreEvictionPolicy = "LFU"
+		}
+	}
+}
+{code}
+This will configure a single cache named "PirateCache" in the plugin's cache manager. Properties correspond to those available on [EhCacheFactoryBean|http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/cache/ehcache/EhCacheFactoryBean.html]
 
 h2. Using a Different Cache Provider
 
