@@ -7,7 +7,6 @@ import grails.plugin.springcache.CacheProvider
 import grails.plugin.springcache.aop.CachingAspect
 import grails.plugin.springcache.aop.FlushingAspect
 import grails.plugin.springcache.CacheProvider
-import grails.util.*
 
 class SpringcacheGrailsPlugin {
 	def version = "1.1.3-SNAPSHOT"
@@ -93,13 +92,7 @@ class SpringcacheGrailsPlugin {
 		}
 	}
 	
-	def observe = ["services"]
-
 	def onChange = {event ->
-		def serviceName = GrailsNameUtils.getPropertyName(event.source)
-		def service = event.ctx.getBean(serviceName)
-		log.debug "reloading $serviceName: $service"
-		def autoProxy = event.ctx.getBean("springcacheAutoProxyCreator")
 	}
 
 	def onConfigChange = {event ->
