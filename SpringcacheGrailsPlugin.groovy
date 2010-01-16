@@ -2,6 +2,7 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator
 import org.slf4j.LoggerFactory
 import grails.plugin.springcache.provider.ehcache.EhCacheProvider
+import grails.util.*
 import org.springframework.cache.ehcache.*
 import grails.plugin.springcache.CacheProvider
 import grails.plugin.springcache.aop.CachingAspect
@@ -92,7 +93,15 @@ class SpringcacheGrailsPlugin {
 		}
 	}
 	
+	def observe = ["services"]
+
 	def onChange = {event ->
+		def serviceName = GrailsNameUtils.getPropertyName(event.source)
+		def service = event.ctx.getBean(serviceName)
+		log.debug "reloading $serviceName: $service"
+		def autoProxy = event.ctx.getBean("springcacheAutoProxyCreator")
+		autoProxy.postProcessBeforeInitialization(service, serviceName)
+		autoProxy.postProcessAfterInitialization(service, serviceName)
 	}
 
 	def onConfigChange = {event ->

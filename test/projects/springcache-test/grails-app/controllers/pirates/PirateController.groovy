@@ -2,6 +2,8 @@ package pirates
 
 class PirateController {
 
+	static defaultAction = "list"
+
 	def piracyService
 
 	def list = {
