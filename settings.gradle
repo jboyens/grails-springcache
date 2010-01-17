@@ -1,0 +1,1 @@
+include "test:projects:springcache-test", "test:projects:alt-cache-impl"

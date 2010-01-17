@@ -1,0 +1,28 @@
+task clean << {
+	grails "clean"
+	project("test:projects:springcache-test") {
+		grails "clean", projectDir
+	}
+	project("test:projects:alt-cache-impl") {
+		grails "clean", projectDir
+	}
+}
+
+task test << {
+	grails "test-app unit:"
+	project("test:projects:springcache-test") {
+		grails "test-app integration:", projectDir
+	}
+	project("test:projects:alt-cache-impl") {
+		grails "test-app integration:", projectDir
+	}
+}
+
+private grails(String command, File workingDir = projectDir) {
+	println "running grails $command in $workingDir"
+	def grailsProcess = "grails $command".execute([], workingDir)
+	def ins = grailsProcess.inputStream.eachLine {
+		println it
+	}
+	assert grailsProcess.waitFor() == 0, "grails $command failed"
+}
