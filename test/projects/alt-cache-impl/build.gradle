@@ -1,5 +1,5 @@
 task test << {
-	ant.exec(executable: "grails", dir: "$projectDir", failonerror: true, failifexecutionfails: true) {
+	ant.exec(executable: "grails", dir: "$projectDir", failonerror: true) {
 	    arg line: "test-app integration:"
 	}
 }

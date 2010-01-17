@@ -1,13 +1,13 @@
 allprojects {
 	task clean << { task ->
-	    ant.exec(executable: "grails", dir: "$task.project.projectDir", failonerror: true, failifexecutionfails: true) {
+	    ant.exec(executable: "grails", dir: "$task.project.projectDir", failonerror: true) {
 	        arg line: "clean"
 	    }
 	}
 }
 
-task test << { task ->
-	ant.exec(executable: "grails", dir: "$task.project.projectDir", failonerror: true, failifexecutionfails: true) {
+task test << {
+	ant.exec(executable: "grails", dir: "$projectDir", failonerror: true) {
 	    arg line: "test-app unit:"
 	}
 }
