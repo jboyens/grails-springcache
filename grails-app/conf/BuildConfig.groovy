@@ -12,8 +12,11 @@ grails.project.dependency.resolution = {
 		mavenCentral()
 	}
 	dependencies {
-		compile ("net.sf.ehcache:ehcache:1.7.0") {
+		compile ("net.sf.ehcache:ehcache:1.7.1") {
 			excludes "jms", "commons-logging", "servlet-api"
+		}
+		compile("net.sf.ehcache:ehcache-web:2.0.0") {
+			excludes "ehcache-core"
 		}
 	}
 }

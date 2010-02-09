@@ -26,6 +26,25 @@ class SpringcacheGrailsPlugin {
 	def documentation = "http://grails.org/Springcache+Plugin"
 
 	def doWithWebDescriptor = {xml ->
+		def filterElement = xml.filter
+		def lastFilter = filterElement[filterElement.size()-1]
+		lastFilter + {
+			filter {
+				"filter-name" "springcacheContentCache"
+				"filter-class" "grails.plugin.springcache.web.ContentCachingFilter"
+			}
+		}
+
+		def mappingElement = xml."filter-mapping"
+		def lastMapping = mappingElement[mappingElement.size()-1]
+		lastMapping + {
+			"filter-mapping" {
+				"filter-name" "springcacheContentCache"
+				"url-pattern" "/*"
+				dispatcher "FORWARD"
+				dispatcher "REQUEST"
+			}
+		}
 	}
 
 	def doWithSpring = {
