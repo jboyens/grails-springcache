@@ -45,12 +45,9 @@
     <orderEntry type="library" name="grails-1.2.1" level="application" />
     <orderEntry type="module-library">
       <library name="Grails User Library">
-        <CLASSES>
-          <root url="file://$MODULE_DIR$/lib" />
-        </CLASSES>
+        <CLASSES />
         <JAVADOC />
         <SOURCES />
-        <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="grails-springcache" />
