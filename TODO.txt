@@ -1,4 +1,7 @@
+- put ehcache dependency back to default once pom is fixed
 - caching tag lib
 - expose a cache service
 - expose caching statistics (JMX?)
 - support reloading via onChange and onConfigChange
+
+- check caching of service methods with defaulted params

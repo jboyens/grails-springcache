@@ -43,6 +43,7 @@ class SpringcacheGrailsPlugin {
 				"url-pattern" "/*"
 				dispatcher "FORWARD"
 				dispatcher "REQUEST"
+				dispatcher "INCLUDE"
 			}
 		}
 	}
