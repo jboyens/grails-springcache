@@ -29,10 +29,11 @@ class ContentCachingFilter extends GenericFilterBean {
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 
 		def context = new CachingFilterContext()
-
-		log.debug "Using caching filter for $request.method:$request.requestURI"
-		log.debug "    alreadyFiltered = ${isAlreadyFiltered(request)}"
-		log.debug context.toString()
+		if (context.controllerArtefact) {
+			log.debug "Using caching filter for $request.method:$request.requestURI"
+			log.debug "    alreadyFiltered = ${isAlreadyFiltered(request)}"
+			log.debug context.toString()
+		}
 
 		request.setAttribute(ALREADY_FILTERED_ATTR, Boolean.TRUE)
 		filterChain.doFilter request, response
