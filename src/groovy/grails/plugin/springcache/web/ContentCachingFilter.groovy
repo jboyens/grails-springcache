@@ -1,57 +1,45 @@
 package grails.plugin.springcache.web
 
 import javax.servlet.FilterChain
-import javax.servlet.FilterConfig
+import javax.servlet.ServletException
+import javax.servlet.ServletRequest
+import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import net.sf.ehcache.CacheManager
-import net.sf.ehcache.constructs.web.filter.SimplePageCachingFilter
-import org.codehaus.groovy.grails.web.context.ServletContextHolder
 import org.slf4j.LoggerFactory
-import org.springframework.context.ApplicationContext
 import org.springframework.web.context.request.RequestContextHolder
-import org.springframework.web.context.support.WebApplicationContextUtils
+import org.springframework.web.filter.GenericFilterBean
+import org.apache.commons.collections.EnumerationUtils
+import org.codehaus.groovy.grails.commons.ApplicationHolder
+import java.lang.reflect.Field
+import org.codehaus.groovy.grails.commons.GrailsControllerClass
 
-class ContentCachingFilter extends SimplePageCachingFilter {
+class ContentCachingFilter extends GenericFilterBean {
 
 	private final log = LoggerFactory.getLogger(getClass())
 
-	private CacheManager cacheManager
+	private static final ALREADY_FILTERED_ATTR = "ContentCachingFilter.FILTERED"
 
-	void doInit(FilterConfig filterConfig) {
-		cacheManager = applicationContext.getBean("springcacheCacheManager")
-		super.doInit(filterConfig)
-	}
+	public final void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) {
 
-	@Override void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
-		if (!(request.requestURI =~ /^\/(css|js|images)/)) {
-			log.debug "Using caching filter for $request.method:$request.requestURI"
-			log.debug "    controller = $controllerName, action = $actionName"
+		if (!(servletRequest instanceof HttpServletRequest) || !(servletResponse instanceof HttpServletResponse)) {
+			throw new ServletException("OncePerRequestFilter just supports HTTP requests");
 		}
-		super.doFilter request, response, chain
+		HttpServletRequest request = (HttpServletRequest) servletRequest;
+		HttpServletResponse response = (HttpServletResponse) servletResponse;
+
+		def context = new CachingFilterContext()
+
+		log.debug "Using caching filter for $request.method:$request.requestURI"
+		log.debug "    alreadyFiltered = ${isAlreadyFiltered(request)}"
+		log.debug context.toString()
+
+		request.setAttribute(ALREADY_FILTERED_ATTR, Boolean.TRUE)
+		filterChain.doFilter request, response
 	}
 
-	@Override CacheManager getCacheManager() {
-		return cacheManager
-	}
-
-	@Override String getCacheName() {
-		return "SpringcacheCachingFilter"
-	}
-
-	@Override boolean acceptsGzipEncoding(HttpServletRequest request) {
-		return false
-	}
-
-	@Override String calculateKey(HttpServletRequest request) {
-		def buffer = new StringBuffer()
-		buffer << request.method
-		buffer << request.requestURI
-		return buffer as String
-	}
-
-	private ApplicationContext getApplicationContext() {
-		return WebApplicationContextUtils.getWebApplicationContext(ServletContextHolder.servletContext)
+	boolean isAlreadyFiltered(HttpServletRequest request) {
+		return request.getAttribute(ALREADY_FILTERED_ATTR) != null
 	}
 
 	private String getControllerName() {
@@ -60,5 +48,32 @@ class ContentCachingFilter extends SimplePageCachingFilter {
 
 	private String getActionName() {
 		return RequestContextHolder.requestAttributes?.actionName
+	}
+
+	private String getDefaultActionName() {
+		return controllerArtefact?.defaultAction
+	}
+
+	private GrailsControllerClass getControllerArtefact() {
+		def controllerClass = null
+		if (controllerName) {
+			controllerClass = ApplicationHolder.application.getArtefactByLogicalPropertyName("Controller", controllerName)
+		}
+		return controllerClass
+	}
+
+	private Field getActionClosure() {
+		def action = null
+		if (controllerArtefact) {
+			def localActionName = actionName ?: defaultActionName
+			if (localActionName) {
+				try {
+					action = controllerArtefact.clazz.getDeclaredField(localActionName)
+				} catch (NoSuchFieldException e) {
+					// dynamic scaffolding
+				}
+			}
+		}
+		return action
 	}
 }

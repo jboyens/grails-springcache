@@ -8,6 +8,7 @@
       <configuration>
         <webroots>
           <root url="file://$MODULE_DIR$/web-app" relative="/" />
+          <root url="file://$MODULE_DIR$/web-app" relative="/" />
         </webroots>
         <sourceRoots />
         <building>
@@ -23,12 +24,16 @@
       <configuration>
         <fileset id="Grails" name="Grails" removed="false">
           <file>file://$MODULE_DIR$/web-app/WEB-INF/applicationContext.xml</file>
+          <file>file://$MODULE_DIR$/web-app/WEB-INF/applicationContext.xml</file>
         </fileset>
       </configuration>
     </facet>
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
+    <content url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins">
+      <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/tomcat-1.2.1/src/groovy" isTestSource="false" />
+    </content>
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/grails-app/conf/hibernate" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/grails-app/controllers" isTestSource="false" />
@@ -45,9 +50,14 @@
     <orderEntry type="library" name="grails-1.2.1" level="application" />
     <orderEntry type="module-library">
       <library name="Grails User Library">
-        <CLASSES />
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/lib" />
+          <root url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/tomcat-1.2.1/lib" />
+        </CLASSES>
         <JAVADOC />
         <SOURCES />
+        <jarDirectory url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/tomcat-1.2.1/lib" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="grails-springcache" />

@@ -20,5 +20,9 @@ grails.project.dependency.resolution = {
 		compile("net.sf.ehcache:ehcache-web:2.0.0") {
 			excludes "ehcache-core"
 		}
+		test("org.gmock:gmock:0.8.0") {
+			excludes "junit"
+		}
+		test "org.hamcrest:hamcrest-all:1.1"
 	}
 }

@@ -6,7 +6,7 @@ import org.springframework.cache.ehcache.*
 import grails.plugin.springcache.CacheProvider
 import grails.plugin.springcache.aop.CachingAspect
 import grails.plugin.springcache.aop.FlushingAspect
-import grails.plugin.springcache.CacheProvider
+import grails.plugin.springcache.web.ContentCachingFilter
 
 class SpringcacheGrailsPlugin {
 	def version = "1.1.3"
@@ -26,18 +26,22 @@ class SpringcacheGrailsPlugin {
 	def documentation = "http://grails.org/Springcache+Plugin"
 
 	def doWithWebDescriptor = {xml ->
-		def filterElement = xml.filter
-		def lastFilter = filterElement[filterElement.size()-1]
+		def filters = xml.filter
+		def lastFilter = filters[filters.size() - 1]
 		lastFilter + {
 			filter {
 				"filter-name" "springcacheContentCache"
-				"filter-class" "grails.plugin.springcache.web.ContentCachingFilter"
+				"filter-class" ContentCachingFilter.name
 			}
 		}
 
-		def mappingElement = xml."filter-mapping"
-		def lastMapping = mappingElement[mappingElement.size()-1]
-		lastMapping + {
+		def filterMappings = xml."filter-mapping"
+		println "**** filter mappings *****"
+		println filterMappings.collect { it."filter-name" }
+		println "***** end of filter mappings *****"
+		def lastMapping = filterMappings[filterMappings.size() - 1]
+		def charEncodingFilterMapping = filterMappings.find {it."filter-name".text() == "charEncodingFilter"}
+		def cachingFilterMapping = {
 			"filter-mapping" {
 				"filter-name" "springcacheContentCache"
 				"url-pattern" "/*"
@@ -45,6 +49,11 @@ class SpringcacheGrailsPlugin {
 				dispatcher "REQUEST"
 				dispatcher "INCLUDE"
 			}
+		}
+		if (charEncodingFilterMapping) {
+			charEncodingFilterMapping + cachingFilterMapping
+		} else {
+			lastMapping + cachingFilterMapping
 		}
 	}
 
@@ -57,7 +66,7 @@ class SpringcacheGrailsPlugin {
 			}
 
 			if (!ConfigurationHolder.config.springcache.provider.bean) {
-			    log.info "No springcache provider configured; using default EhCacheProvider..."
+				log.info "No springcache provider configured; using default EhCacheProvider..."
 				springcacheCacheProvider(EhCacheProvider) {
 					cacheManager = ref("springcacheCacheManager")
 					createCachesOnDemand = true
@@ -66,9 +75,9 @@ class SpringcacheGrailsPlugin {
 				springcacheCacheManager(EhCacheManagerFactoryBean) {
 					cacheManagerName = "Springcache Plugin Cache Manager"
 				}
-				
-				ConfigurationHolder.config.springcache.caches.each { String name, ConfigObject cacheConfig ->
-					"$name"(EhCacheFactoryBean) { bean ->
+
+				ConfigurationHolder.config.springcache.caches.each {String name, ConfigObject cacheConfig ->
+					"$name"(EhCacheFactoryBean) {bean ->
 						cacheManager = ref("springcacheCacheManager")
 						cacheName = name
 						cacheConfig.each {
@@ -77,7 +86,7 @@ class SpringcacheGrailsPlugin {
 					}
 				}
 			} else {
-			    log.info "Using ${ConfigurationHolder.config.springcache.provider.bean} as springcache provider..."
+				log.info "Using ${ConfigurationHolder.config.springcache.provider.bean} as springcache provider..."
 			}
 
 			springcacheCachingAspect(CachingAspect) {
@@ -95,23 +104,23 @@ class SpringcacheGrailsPlugin {
 
 	def doWithApplicationContext = {applicationContext ->
 		if (!ConfigurationHolder.config.springcache.disabled) {
-		    String providerBeanName = ConfigurationHolder.config.springcache.provider.bean ?: "springcacheCacheProvider"
-		    CacheProvider provider = applicationContext.getBean(providerBeanName)
-		    ConfigurationHolder.config.springcache.cachingModels.each {String modelId, ConfigObject modelConfig ->
-			    if (log.isDebugEnabled()) log.debug "cachingModel id = $modelId, config = ${modelConfig.toProperties()}"
-			    provider.addCachingModel modelId, modelConfig.toProperties()
-		    }
-		    ConfigurationHolder.config.springcache.flushingModels.each {String modelId, ConfigObject modelConfig ->
-			    if (log.isDebugEnabled()) log.debug "flushingModel id = $modelId, config = ${modelConfig.toProperties()}"
-			    provider.addFlushingModel modelId, modelConfig.toProperties()
-		    }
-		
+			String providerBeanName = ConfigurationHolder.config.springcache.provider.bean ?: "springcacheCacheProvider"
+			CacheProvider provider = applicationContext.getBean(providerBeanName)
+			ConfigurationHolder.config.springcache.cachingModels.each {String modelId, ConfigObject modelConfig ->
+				if (log.isDebugEnabled()) log.debug "cachingModel id = $modelId, config = ${modelConfig.toProperties()}"
+				provider.addCachingModel modelId, modelConfig.toProperties()
+			}
+			ConfigurationHolder.config.springcache.flushingModels.each {String modelId, ConfigObject modelConfig ->
+				if (log.isDebugEnabled()) log.debug "flushingModel id = $modelId, config = ${modelConfig.toProperties()}"
+				provider.addFlushingModel modelId, modelConfig.toProperties()
+			}
+
 			if (log.isDebugEnabled()) {
 				log.debug "Configured caches: ${applicationContext.getBeansOfType(EhCacheFactoryBean).values().cacheName}"
 			}
 		}
 	}
-	
+
 	def onChange = {event ->
 	}
 
