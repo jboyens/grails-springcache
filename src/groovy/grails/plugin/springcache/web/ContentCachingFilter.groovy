@@ -23,22 +23,20 @@ class ContentCachingFilter extends SimplePageCachingFilter {
 		super.doInit(filterConfig)
 	}
 
-//	@Override void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
-//		if (controllerName) {
-//			log.debug "Using caching filter for $controllerName"
-//			super.doFilter request, response, chain
-//		} else {
-//			log.debug "Not caching $request.requestURI"
-//			chain.doFilter request, response
-//		}
-//	}
+	@Override void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
+		if (!(request.requestURI =~ /^\/(css|js|images)/)) {
+			log.debug "Using caching filter for $request.method:$request.requestURI"
+			log.debug "    controller = $controllerName, action = $actionName"
+		}
+		super.doFilter request, response, chain
+	}
 
 	@Override CacheManager getCacheManager() {
 		return cacheManager
 	}
 
 	@Override String getCacheName() {
-		return super.getCacheName()
+		return "SpringcacheCachingFilter"
 	}
 
 	@Override boolean acceptsGzipEncoding(HttpServletRequest request) {
@@ -57,10 +55,10 @@ class ContentCachingFilter extends SimplePageCachingFilter {
 	}
 
 	private String getControllerName() {
-		return RequestContextHolder.requestAttributes.controllerName
+		return RequestContextHolder.requestAttributes?.controllerName
 	}
 
 	private String getActionName() {
-		return RequestContextHolder.requestAttributes.actionName
+		return RequestContextHolder.requestAttributes?.actionName
 	}
 }

@@ -1,6 +1,5 @@
 *.log
 *.iws
-web-app/
 out/
 target/
 test/reports

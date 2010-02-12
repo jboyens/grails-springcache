@@ -68,7 +68,7 @@ log4j = {
 	//}
 
 
-	error 'org.codehaus.groovy.grails.web.servlet',  //  controllers
+	error	'org.codehaus.groovy.grails.web.servlet',  //  controllers
 			'org.codehaus.groovy.grails.web.pages', //  GSP
 			'org.codehaus.groovy.grails.web.sitemesh', //  layouts
 			'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
@@ -82,16 +82,16 @@ log4j = {
 
 	warn	'org.mortbay.log'
 
+	info	'net.sf.ehcache.constructs.web.filter'
+
 	debug	'grails.plugin.springcache',
-			'net.sf.ehcache.constructs.web.filter'
+			'grails.app.controller.test.PirateController'
+
 }
 
 springcache {
 	caches {
-		SimplePageFragmentCachingFilter {
-			blocking = true
-		}
-		SimplePageCachingFilter {
+		SpringcacheCachingFilter {
 			blocking = true
 		}
 	}

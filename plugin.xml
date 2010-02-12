@@ -1,4 +1,4 @@
-<plugin name='springcache' version='1.1' grailsVersion='1.2-M3 &gt; *'>
+<plugin name='springcache' version='1.1.3-SNAPSHOT' grailsVersion='1.2-M3 &gt; *'>
   <author>Rob Fletcher</author>
   <authorEmail>rob@energizedwork.com</authorEmail>
   <title>Spring Cache Plugin</title>
@@ -14,8 +14,6 @@
       <resolver type='mavenCentral' />
       <resolver type='mavenLocal' />
       <resolver type='mavenRepo' root='http://m2repo.spockframework.org/snapshots' name='http://m2repo.spockframework.org/snapshots' m2compatbile='true' />
-      <resolver type='mavenRepo' root='http://m2repo.spockframework.org/releases' name='http://m2repo.spockframework.org/releases' m2compatbile='true' />
-      <resolver type='mavenRepo' root='http://oss.sonatype.org/content/groups/jetty' name='http://oss.sonatype.org/content/groups/jetty' m2compatbile='true' />
     </resolvers>
     <dependency group='net.sf.ehcache' name='ehcache' version='1.7.0' conf='compile' transitive='true'>
       <excludes group='*' name='jms' />
