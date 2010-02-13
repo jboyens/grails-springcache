@@ -17,14 +17,14 @@ package grails.plugin.springcache.provider.ehcache;
 
 import grails.plugin.springcache.CacheFacade;
 import grails.plugin.springcache.CacheKey;
-import net.sf.ehcache.Cache;
+import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 
 class EhCacheFacade implements CacheFacade {
 
-	private final Cache cache;
+	private final Ehcache cache;
 
-	public EhCacheFacade(Cache cache) {
+	public EhCacheFacade(Ehcache cache) {
 		this.cache = cache;
 	}
 
