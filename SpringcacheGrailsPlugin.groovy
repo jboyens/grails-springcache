@@ -7,6 +7,7 @@ import grails.plugin.springcache.CacheProvider
 import grails.plugin.springcache.aop.CachingAspect
 import grails.plugin.springcache.aop.FlushingAspect
 import grails.plugin.springcache.web.ContentCachingFilter
+import org.springframework.web.filter.DelegatingFilterProxy
 
 class SpringcacheGrailsPlugin {
 	def version = "1.2-SNAPSHOT"
@@ -31,7 +32,15 @@ class SpringcacheGrailsPlugin {
 		lastFilter + {
 			filter {
 				"filter-name" "springcacheContentCache"
-				"filter-class" ContentCachingFilter.name
+				"filter-class" DelegatingFilterProxy.name
+				"init-param" {
+					"param-name" "targetBeanName"
+					"param-value" "springcacheFilter"
+				}
+				"init-param" {
+					"param-name" "targetFilterLifecycle"
+					"param-value" "true"
+				}
 			}
 		}
 
@@ -84,6 +93,10 @@ class SpringcacheGrailsPlugin {
 			}
 
 			springcacheFlushingAspect(FlushingAspect) {
+				cacheProvider = ref(ConfigurationHolder.config.springcache.provider.bean ?: "springcacheCacheProvider")
+			}
+			
+			springcacheFilter(ContentCachingFilter) {
 				cacheProvider = ref(ConfigurationHolder.config.springcache.provider.bean ?: "springcacheCacheProvider")
 			}
 		}
