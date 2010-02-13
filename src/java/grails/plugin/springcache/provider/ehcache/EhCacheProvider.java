@@ -22,8 +22,8 @@ import java.util.Properties;
 import grails.plugin.springcache.AbstractCacheProvider;
 import grails.plugin.springcache.CacheFacade;
 import grails.plugin.springcache.CacheNotFoundException;
-import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Ehcache;
 import org.apache.commons.lang.StringUtils;
 
 public class EhCacheProvider extends AbstractCacheProvider<EhCacheCachingModel, EhCacheFlushingModel> {
@@ -50,7 +50,7 @@ public class EhCacheProvider extends AbstractCacheProvider<EhCacheCachingModel, 
 		}		
 
 		if (cacheManager.cacheExists(name)) {
-			Cache cache = cacheManager.getCache(name);
+			Ehcache cache = cacheManager.getEhcache(name);
 			return new EhCacheFacade(cache);
 		} else {
 			throw new CacheNotFoundException(name);
