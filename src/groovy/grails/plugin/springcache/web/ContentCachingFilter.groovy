@@ -1,5 +1,7 @@
 package grails.plugin.springcache.web
 
+import grails.plugin.springcache.annotations.Cacheable
+import grails.plugin.springcache.web.CachingFilterContext
 import javax.servlet.FilterChain
 import javax.servlet.ServletException
 import javax.servlet.ServletRequest
@@ -7,12 +9,7 @@ import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
-import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.filter.GenericFilterBean
-import org.apache.commons.collections.EnumerationUtils
-import org.codehaus.groovy.grails.commons.ApplicationHolder
-import java.lang.reflect.Field
-import org.codehaus.groovy.grails.commons.GrailsControllerClass
 
 class ContentCachingFilter extends GenericFilterBean {
 
@@ -21,18 +18,19 @@ class ContentCachingFilter extends GenericFilterBean {
 	private static final ALREADY_FILTERED_ATTR = "ContentCachingFilter.FILTERED"
 
 	public final void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) {
-
 		if (!(servletRequest instanceof HttpServletRequest) || !(servletResponse instanceof HttpServletResponse)) {
 			throw new ServletException("OncePerRequestFilter just supports HTTP requests");
 		}
-		HttpServletRequest request = (HttpServletRequest) servletRequest;
-		HttpServletResponse response = (HttpServletResponse) servletResponse;
+		doFilterInternal(servletRequest, servletResponse, filterChain)
+	}
 
+	private void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
 		def context = new CachingFilterContext()
-		if (context.controllerArtefact) {
-			log.debug "Using caching filter for $request.method:$request.requestURI"
-			log.debug "    alreadyFiltered = ${isAlreadyFiltered(request)}"
-			log.debug context.toString()
+		def annotation = getCacheableAnnotation(context)
+		if (annotation) {
+			log.debug "Using caching filter for $request.method:$request.requestURI $context"
+		} else {
+			log.debug "No cacheable annotation found for $request.method:$request.requestURI $context"
 		}
 
 		request.setAttribute(ALREADY_FILTERED_ATTR, Boolean.TRUE)
@@ -43,38 +41,11 @@ class ContentCachingFilter extends GenericFilterBean {
 		return request.getAttribute(ALREADY_FILTERED_ATTR) != null
 	}
 
-	private String getControllerName() {
-		return RequestContextHolder.requestAttributes?.controllerName
-	}
-
-	private String getActionName() {
-		return RequestContextHolder.requestAttributes?.actionName
-	}
-
-	private String getDefaultActionName() {
-		return controllerArtefact?.defaultAction
-	}
-
-	private GrailsControllerClass getControllerArtefact() {
-		def controllerClass = null
-		if (controllerName) {
-			controllerClass = ApplicationHolder.application.getArtefactByLogicalPropertyName("Controller", controllerName)
+	Cacheable getCacheableAnnotation(CachingFilterContext context) {
+		Cacheable annotation = context.actionClosure?.getAnnotation(Cacheable)
+		if (!annotation) {
+			annotation = context.controllerArtefact?.clazz?.getAnnotation(Cacheable)
 		}
-		return controllerClass
-	}
-
-	private Field getActionClosure() {
-		def action = null
-		if (controllerArtefact) {
-			def localActionName = actionName ?: defaultActionName
-			if (localActionName) {
-				try {
-					action = controllerArtefact.clazz.getDeclaredField(localActionName)
-				} catch (NoSuchFieldException e) {
-					// dynamic scaffolding
-				}
-			}
-		}
-		return action
+		return annotation
 	}
 }

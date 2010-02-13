@@ -9,7 +9,7 @@ import grails.plugin.springcache.aop.FlushingAspect
 import grails.plugin.springcache.web.ContentCachingFilter
 
 class SpringcacheGrailsPlugin {
-	def version = "1.1.3"
+	def version = "1.2-SNAPSHOT"
 	def grailsVersion = "1.2-M3 > *"
 	def dependsOn = [:]
 	def pluginExcludes = [
@@ -40,8 +40,7 @@ class SpringcacheGrailsPlugin {
 		println filterMappings.collect { it."filter-name" }
 		println "***** end of filter mappings *****"
 		def lastMapping = filterMappings[filterMappings.size() - 1]
-		def charEncodingFilterMapping = filterMappings.find {it."filter-name".text() == "charEncodingFilter"}
-		def cachingFilterMapping = {
+		lastMapping + {
 			"filter-mapping" {
 				"filter-name" "springcacheContentCache"
 				"url-pattern" "/*"
@@ -49,11 +48,6 @@ class SpringcacheGrailsPlugin {
 				dispatcher "REQUEST"
 				dispatcher "INCLUDE"
 			}
-		}
-		if (charEncodingFilterMapping) {
-			charEncodingFilterMapping + cachingFilterMapping
-		} else {
-			lastMapping + cachingFilterMapping
 		}
 	}
 

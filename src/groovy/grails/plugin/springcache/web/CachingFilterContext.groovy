@@ -18,7 +18,7 @@ class CachingFilterContext {
 		controllerArtefact = controllerName ? ApplicationHolder.application.getArtefactByLogicalPropertyName("Controller", controllerName) : null
 		actionName = RequestContextHolder.requestAttributes?.actionName ?: controllerArtefact?.defaultAction
 		try {
-			actionClosure = actionName ? controllerArtefact.clazz.getDeclaredField(actionName) : null
+			actionClosure = actionName ? controllerArtefact?.clazz?.getDeclaredField(actionName) : null
 		} catch (NoSuchFieldException e) {
 			// happens with dynamic scaffolded controllers
 		}
@@ -33,12 +33,13 @@ class CachingFilterContext {
 	}
 
 	String toString() {
-		def builder = new ToStringBuilder(this)
-		builder.append("controllerName", controllerName)
-		builder.append("actionName", actionName)
-		builder.append("controller", controllerArtefact)
-		builder.append("action", actionClosure)
-		return builder.toString()
+		def buffer = new StringBuilder("[")
+		buffer << "controller=" << controllerName
+		if (controllerArtefact == null) buffer << "?"
+		buffer << ", action=" << actionName
+		if (actionClosure == null) buffer << "?"
+		buffer << "]"
+		return buffer.toString()
 	}
 
 }

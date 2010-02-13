@@ -25,7 +25,7 @@ import java.lang.annotation.*;
  * @author Alex Ruiz
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.TYPE, ElementType.FIELD})
 @Inherited
 @Documented
 public @interface Cacheable {

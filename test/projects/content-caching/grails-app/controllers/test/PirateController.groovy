@@ -1,5 +1,8 @@
 package test
 
+import grails.plugin.springcache.annotations.Cacheable
+
+@Cacheable (modelId = "PirateController")
 class PirateController {
 
 	def beforeInterceptor = {
