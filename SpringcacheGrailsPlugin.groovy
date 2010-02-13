@@ -45,7 +45,6 @@ class SpringcacheGrailsPlugin {
 				"filter-name" "springcacheContentCache"
 				"url-pattern" "/*"
 				dispatcher "FORWARD"
-				dispatcher "REQUEST"
 				dispatcher "INCLUDE"
 			}
 		}
