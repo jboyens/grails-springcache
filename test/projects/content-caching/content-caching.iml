@@ -32,6 +32,8 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins">
+      <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/selenium-rc-1.0-SNAPSHOT/src/groovy" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/selenium-rc-1.0-SNAPSHOT/src/java" isTestSource="false" />
       <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/tomcat-1.2.1/src/groovy" isTestSource="false" />
     </content>
     <content url="file://$MODULE_DIR$">
@@ -43,6 +45,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/groovy" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test/integration" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/test/selenium" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/test/unit" isTestSource="true" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -53,14 +56,17 @@
         <CLASSES>
           <root url="file://$MODULE_DIR$/lib" />
           <root url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/tomcat-1.2.1/lib" />
+          <root url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/selenium-rc-1.0-SNAPSHOT/lib" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
+        <jarDirectory url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/selenium-rc-1.0-SNAPSHOT/lib" recursive="false" />
         <jarDirectory url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/tomcat-1.2.1/lib" recursive="false" />
         <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="grails-springcache" />
+    <orderEntry type="library" name="selenium-java-client-driver-1.0.1" level="application" />
   </component>
 </module>
 

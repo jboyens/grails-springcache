@@ -1,12 +1,12 @@
 package grails.plugin.springcache.web
 
-import org.springframework.web.context.request.RequestContextHolder
+import grails.plugin.springcache.web.CachingFilterContext
+import org.codehaus.groovy.grails.commons.ApplicationHolder
+import org.codehaus.groovy.grails.commons.DefaultGrailsControllerClass
+import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest
 import org.gmock.WithGMock
-import org.codehaus.groovy.grails.commons.ApplicationHolder
-import org.codehaus.groovy.grails.commons.GrailsApplication
-import org.codehaus.groovy.grails.commons.GrailsControllerClass
-import org.codehaus.groovy.grails.commons.DefaultGrailsControllerClass
+import org.springframework.web.context.request.RequestContextHolder
 
 @WithGMock
 class CachingFilterContextTests extends GroovyTestCase {
@@ -25,12 +25,12 @@ class CachingFilterContextTests extends GroovyTestCase {
 
 	void testControllerArtefactIsLookedUp() {
 		RequestContextHolder.requestAttributes = mock(GrailsWebRequest) {
-			getControllerName().returns("pirate")
+			getControllerName().returns("test")
 			getActionName().returns(null)
 		}
 		def mockArtefact = new DefaultGrailsControllerClass(TestController)
 		ApplicationHolder.application = mock(GrailsApplication) {
-			getArtefactByLogicalPropertyName("Controller", "pirate").returns(mockArtefact)
+			getArtefactByLogicalPropertyName("Controller", "test").returns(mockArtefact)
 		}
 
 		play {
@@ -53,12 +53,12 @@ class CachingFilterContextTests extends GroovyTestCase {
 
 	void testActionClosureFoundOnControllerClass() {
 		RequestContextHolder.requestAttributes = mock(GrailsWebRequest) {
-			getControllerName().returns("pirate")
+			getControllerName().returns("test")
 			getActionName().returns("list")
 		}
 		def mockArtefact = new DefaultGrailsControllerClass(TestController)
 		ApplicationHolder.application = mock(GrailsApplication) {
-			getArtefactByLogicalPropertyName("Controller", "pirate").returns(mockArtefact)
+			getArtefactByLogicalPropertyName("Controller", "test").returns(mockArtefact)
 		}
 
 		play {
@@ -69,12 +69,12 @@ class CachingFilterContextTests extends GroovyTestCase {
 
 	void testActionClosureTakenFromDefaultActionIfNoActionNamePresent() {
 		RequestContextHolder.requestAttributes = mock(GrailsWebRequest) {
-			getControllerName().returns("pirate")
+			getControllerName().returns("test")
 			getActionName().returns(null)
 		}
 		def mockArtefact = new DefaultGrailsControllerClass(TestController)
 		ApplicationHolder.application = mock(GrailsApplication) {
-			getArtefactByLogicalPropertyName("Controller", "pirate").returns(mockArtefact)
+			getArtefactByLogicalPropertyName("Controller", "test").returns(mockArtefact)
 		}
 
 		play {
@@ -85,12 +85,12 @@ class CachingFilterContextTests extends GroovyTestCase {
 
 	void testActionClosureIsNullIfActionNotFoundOnControllerClass() {
 		RequestContextHolder.requestAttributes = mock(GrailsWebRequest) {
-			getControllerName().returns("pirate")
+			getControllerName().returns("test")
 			getActionName().returns("scaffold")
 		}
 		def mockArtefact = new DefaultGrailsControllerClass(TestController)
 		ApplicationHolder.application = mock(GrailsApplication) {
-			getArtefactByLogicalPropertyName("Controller", "pirate").returns(mockArtefact)
+			getArtefactByLogicalPropertyName("Controller", "test").returns(mockArtefact)
 		}
 
 		play {

@@ -36,9 +36,6 @@ class SpringcacheGrailsPlugin {
 		}
 
 		def filterMappings = xml."filter-mapping"
-		println "**** filter mappings *****"
-		println filterMappings.collect { it."filter-name" }
-		println "***** end of filter mappings *****"
 		def lastMapping = filterMappings[filterMappings.size() - 1]
 		lastMapping + {
 			"filter-mapping" {
