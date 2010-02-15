@@ -95,7 +95,7 @@ class SpringcacheGrailsPlugin {
 			springcacheFlushingAspect(FlushingAspect) {
 				cacheProvider = ref(ConfigurationHolder.config.springcache.provider.bean ?: "springcacheCacheProvider")
 			}
-			
+
 			springcacheFilter(ContentCachingFilter) {
 				cacheProvider = ref(ConfigurationHolder.config.springcache.provider.bean ?: "springcacheCacheProvider")
 			}

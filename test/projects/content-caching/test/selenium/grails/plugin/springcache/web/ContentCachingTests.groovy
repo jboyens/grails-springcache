@@ -19,6 +19,7 @@ class ContentCachingTests extends GroovyTestCase {
 	void tearDown() {
 		super.tearDown()
 		pirateControllerCache?.statistics?.clearStatistics()
+		pirateControllerCache?.removeAll()
 	}
 
 	void testOpeningListPageWithEmptyCache() {
@@ -29,13 +30,28 @@ class ContentCachingTests extends GroovyTestCase {
 		assertEquals 1, pirateControllerCache.statistics.cacheMisses
 	}
 
+	void testReloadingListPageHitsCache() {
+		def page = PirateListPage.open()
+		assertEquals "Pirate List", page.title
+
+		page = page.refresh()
+		assertEquals "Pirate List", page.title
+
+		assertEquals 1, pirateControllerCache.statistics.cacheHits
+	}
+
 }
 
 class PirateListPage extends GrailsListPage {
-	static GrailsListPage open() {
+	static PirateListPage open() {
 		def page = new PirateListPage()
 		page.selenium.open "/pirate/list"
 		return page
+	}
+
+	PirateListPage refresh() {
+		selenium.refreshAndWait()
+		return new PirateListPage()
 	}
 
 	String getTitle() { selenium.title }

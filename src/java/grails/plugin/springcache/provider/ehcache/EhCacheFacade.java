@@ -50,4 +50,8 @@ class EhCacheFacade implements CacheFacade {
 	public Number getSize() {
 		return cache.getStatistics().getObjectCount();
 	}
+
+	public Ehcache getWrappedCache() {
+		return cache;
+	}
 }
