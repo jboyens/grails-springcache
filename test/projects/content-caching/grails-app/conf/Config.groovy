@@ -98,9 +98,11 @@ springcache {
 	caches {
 		PirateControllerCache {
 			blocking = true
+			eternal = true
 		}
 		CurrentTimeControllerCache {
 			blocking = true
+			eternal = true
 		}
 	}
 }

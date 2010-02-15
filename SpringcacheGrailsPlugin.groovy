@@ -49,7 +49,7 @@ class SpringcacheGrailsPlugin {
 		lastMapping + {
 			"filter-mapping" {
 				"filter-name" "springcacheContentCache"
-				"url-pattern" "/*"
+				"url-pattern" "*.dispatch"
 				dispatcher "FORWARD"
 				dispatcher "INCLUDE"
 			}

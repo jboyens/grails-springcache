@@ -2,7 +2,6 @@ package grails.plugin.springcache.web
 
 import grails.plugins.selenium.pageobjects.GrailsListPage
 import net.sf.ehcache.CacheManager
-import net.sf.ehcache.Cache
 import net.sf.ehcache.Ehcache
 
 class ContentCachingTests extends GroovyTestCase {
