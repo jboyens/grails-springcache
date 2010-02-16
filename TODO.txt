@@ -1,7 +1,12 @@
+BUGS
+- check caching of service methods with defaulted params
+
+NEXT RELEASE
 - put ehcache dependency back to default once pom is fixed
+- ensure caches for content are blocking
+
+BACKLOG
 - caching tag lib
 - expose a cache service
 - expose caching statistics (JMX?)
 - support reloading via onChange and onConfigChange
-
-- check caching of service methods with defaulted params
