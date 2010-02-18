@@ -24,13 +24,10 @@ class CachingFilterContext {
 		}
 	}
 
-	GrailsControllerClass getControllerArtefact() {
-		return controllerArtefact
-	}
-
-	Field getActionClosure() {
-		return actionClosure
-	}
+	GrailsControllerClass getControllerArtefact() { controllerArtefact }
+	Field getActionClosure() { actionClosure }
+	String getControllerName() { controllerName }
+	String getActionName() { actionName }
 
 	String toString() {
 		def buffer = new StringBuilder("[")

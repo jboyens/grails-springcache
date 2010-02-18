@@ -16,6 +16,9 @@ import net.sf.ehcache.constructs.web.GenericResponseWrapper
 import net.sf.ehcache.constructs.web.PageInfo
 import net.sf.ehcache.constructs.web.filter.PageFragmentCachingFilter
 import org.slf4j.LoggerFactory
+import org.codehaus.groovy.grails.web.sitemesh.GrailsPageFilter
+import org.codehaus.groovy.grails.web.sitemesh.GSPSitemeshPage
+import org.codehaus.groovy.grails.web.sitemesh.GrailsContentBufferingResponse
 
 class ContentCachingFilter extends PageFragmentCachingFilter {
 
@@ -29,15 +32,10 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 	}
 
 	protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
-		def context = new CachingFilterContext()
-		Cacheable cacheable = getAnnotation(context, Cacheable)
-		if (cacheable) {
-			log.debug "Using caching filter for $request.method:$request.requestURI $context"
-			def cache = cacheProvider.getCache(cacheable.modelId()).wrappedCache
-			setCache(request, cache)
-			super.doFilter(request, response, chain)
+		if (shouldCache(request)) {
+			PageInfo pageInfo = buildPageInfo(request, response, chain)
+			writeResponse(request, response, pageInfo)
 		} else {
-			log.debug "No cacheable annotation found for $request.method:$request.requestURI $context"
 			chain.doFilter(request, response)
 		}
 	}
@@ -46,7 +44,7 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 		// Look up the cached page
 		BlockingCache cache = getCache(request)
 		final key = calculateKey(request)
-		PageInfo pageInfo = null
+		GrailsSitemeshPageInfo pageInfo = null
 		try {
 			Element element = cache.get(key)
 			if (element == null || element.getObjectValue() == null) {
@@ -86,7 +84,12 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 		boolean storeGzipped = false
 		long timeToLiveSeconds = getCache(request).cacheConfiguration.timeToLiveSeconds
 
-		return new PageInfo(wrapper.status, wrapper.contentType, wrapper.headers, wrapper.cookies, outstr.toByteArray(), storeGzipped, timeToLiveSeconds)
+		def gspSitemeshPage = request.getAttribute(GrailsPageFilter.GSP_SITEMESH_PAGE)
+		if (gspSitemeshPage) log.debug "Got GSP_SITEMESH_PAGE: $gspSitemeshPage"
+
+		def pageInfo = new GrailsSitemeshPageInfo(wrapper.status, wrapper.contentType, wrapper.headers, wrapper.cookies, outstr.toByteArray(), storeGzipped, timeToLiveSeconds)
+		pageInfo.gspSitemeshPage = copyOf(gspSitemeshPage)
+		return pageInfo
 	}
 
 	protected CacheManager getCacheManager() {
@@ -96,8 +99,18 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 	protected String calculateKey(HttpServletRequest request) {
 		def buffer = new StringBuilder()
 		buffer << request.requestURI
-		buffer << request.queryString
+		if (request.queryString) {
+			buffer << request.queryString
+		}
 		return buffer.toString()
+	}
+
+	protected void writeResponse(HttpServletRequest request, HttpServletResponse response, PageInfo pageInfo) {
+		if (pageInfo.gspSitemeshPage) {
+			request.setAttribute(GrailsPageFilter.GSP_SITEMESH_PAGE, pageInfo.gspSitemeshPage)
+		} else {
+			super.writeResponse(response, pageInfo)
+		}
 	}
 
 	private BlockingCache getCache(HttpServletRequest request) {
@@ -108,6 +121,27 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 		request.setAttribute(REQUEST_CACHE_ATTR, cache)
 	}
 
+	private boolean shouldCache(HttpServletRequest request) {
+		def context = new CachingFilterContext()
+		Cacheable cacheable = getAnnotation(context, Cacheable)
+		if (cacheable) {
+			if (log.isDebugEnabled()) {
+			log.debug "Caching filter intercepting request..."
+				log.debug "    method = $request.method"
+				log.debug "    requestURI = $request.requestURI"
+				log.debug "    controller = $context.controllerName"
+				log.debug "    action = $context.actionName"
+				log.debug "    forwardURI = $request.forwardURI"
+			}
+			def cache = cacheProvider.getCache(cacheable.modelId()).wrappedCache
+			setCache(request, cache)
+			return true
+		} else {
+			log.debug "No cacheable annotation found for $request.method:$request.requestURI $context"
+			return false
+		}
+	}
+
 	private Annotation getAnnotation(CachingFilterContext context, Class type) {
 		// TODO: cache this by controller/action
 		def annotation = context.actionClosure?.getAnnotation(type)
@@ -116,4 +150,30 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 		}
 		return annotation
 	}
+
+	private GSPSitemeshPage copyOf(GSPSitemeshPage original) {
+		def copy = new GSPSitemeshPage()
+		copy.@headBuffer = original.@headBuffer
+		copy.@bodyBuffer = original.@bodyBuffer
+		copy.@pageBuffer = original.@pageBuffer
+		copy.@used = original.@used
+		copy.@titleCaptured = original.@titleCaptured
+		copy.@contentBuffers = original.@contentBuffers?.clone()
+		copy.properties.putAll(original.properties)
+		copy.@pageData = original.@pageData
+		if (original.request) {
+			copy.request = original.request
+		}
+		return copy
+	}
+}
+
+class GrailsSitemeshPageInfo extends PageInfo {
+
+	GSPSitemeshPage gspSitemeshPage
+
+	GrailsSitemeshPageInfo(int statusCode, String contentType, Collection headers, Collection cookies, byte[] body, boolean storeGzipped, long timeToLiveSeconds) {
+		super(statusCode, contentType, headers, cookies, body, storeGzipped, timeToLiveSeconds)
+	}
+
 }
