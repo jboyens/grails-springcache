@@ -134,7 +134,7 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 				log.debug "    method = $request.method"
 				log.debug "    requestURI = $request.requestURI"
 				log.debug "    forwardURI = $request.forwardURI"
-				if (request.getAttribute(WebUtils.INCLUDE_REQUEST_URI_ATTRIBUTE)) {
+				if (WebUtils.isIncludeRequest(request)) {
 					log.debug "    includeURI = ${request.getAttribute(WebUtils.INCLUDE_REQUEST_URI_ATTRIBUTE)}"
 				}
 				log.debug "    controller = $context.controllerName"
