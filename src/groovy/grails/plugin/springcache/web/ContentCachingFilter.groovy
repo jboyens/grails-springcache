@@ -16,9 +16,6 @@ import net.sf.ehcache.constructs.web.GenericResponseWrapper
 import net.sf.ehcache.constructs.web.PageInfo
 import net.sf.ehcache.constructs.web.filter.PageFragmentCachingFilter
 import org.slf4j.LoggerFactory
-import org.codehaus.groovy.grails.web.sitemesh.GrailsPageFilter
-import org.codehaus.groovy.grails.web.sitemesh.GSPSitemeshPage
-import org.codehaus.groovy.grails.web.sitemesh.GrailsContentBufferingResponse
 
 class ContentCachingFilter extends PageFragmentCachingFilter {
 
@@ -33,8 +30,7 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 
 	protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
 		if (shouldCache(request)) {
-			PageInfo pageInfo = buildPageInfo(request, response, chain)
-			writeResponse(request, response, pageInfo)
+			super.doFilter(request, response, chain)
 		} else {
 			chain.doFilter(request, response)
 		}
@@ -44,7 +40,7 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 		// Look up the cached page
 		BlockingCache cache = getCache(request)
 		final key = calculateKey(request)
-		GrailsSitemeshPageInfo pageInfo = null
+		PageInfo pageInfo = null
 		try {
 			Element element = cache.get(key)
 			if (element == null || element.getObjectValue() == null) {
@@ -81,15 +77,16 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 		chain.doFilter(request, wrapper)
 		wrapper.flush()
 
-		boolean storeGzipped = false
 		long timeToLiveSeconds = getCache(request).cacheConfiguration.timeToLiveSeconds
 
-		def gspSitemeshPage = request.getAttribute(GrailsPageFilter.GSP_SITEMESH_PAGE)
-		if (gspSitemeshPage) log.debug "Got GSP_SITEMESH_PAGE: $gspSitemeshPage"
+		def contentType = wrapper.contentType ?: response.contentType
+		return new PageInfo(wrapper.status, contentType, wrapper.headers, wrapper.cookies,
+				outstr.toByteArray(), false, timeToLiveSeconds)
+	}
 
-		def pageInfo = new GrailsSitemeshPageInfo(wrapper.status, wrapper.contentType, wrapper.headers, wrapper.cookies, outstr.toByteArray(), storeGzipped, timeToLiveSeconds)
-		pageInfo.gspSitemeshPage = copyOf(gspSitemeshPage)
-		return pageInfo
+	protected void writeResponse(HttpServletResponse response, PageInfo pageInfo) {
+		response.contentType = pageInfo.contentType
+		super.writeResponse(response, pageInfo)
 	}
 
 	protected CacheManager getCacheManager() {
@@ -103,14 +100,6 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 			buffer << request.queryString
 		}
 		return buffer.toString()
-	}
-
-	protected void writeResponse(HttpServletRequest request, HttpServletResponse response, PageInfo pageInfo) {
-		if (pageInfo.gspSitemeshPage) {
-			request.setAttribute(GrailsPageFilter.GSP_SITEMESH_PAGE, pageInfo.gspSitemeshPage)
-		} else {
-			super.writeResponse(response, pageInfo)
-		}
 	}
 
 	private BlockingCache getCache(HttpServletRequest request) {
@@ -129,9 +118,9 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 			log.debug "Caching filter intercepting request..."
 				log.debug "    method = $request.method"
 				log.debug "    requestURI = $request.requestURI"
+				log.debug "    forwardURI = $request.forwardURI"
 				log.debug "    controller = $context.controllerName"
 				log.debug "    action = $context.actionName"
-				log.debug "    forwardURI = $request.forwardURI"
 			}
 			def cache = cacheProvider.getCache(cacheable.modelId()).wrappedCache
 			setCache(request, cache)
@@ -149,31 +138,6 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 			annotation = context.controllerArtefact?.clazz?.getAnnotation(type)
 		}
 		return annotation
-	}
-
-	private GSPSitemeshPage copyOf(GSPSitemeshPage original) {
-		def copy = new GSPSitemeshPage()
-		copy.@headBuffer = original.@headBuffer
-		copy.@bodyBuffer = original.@bodyBuffer
-		copy.@pageBuffer = original.@pageBuffer
-		copy.@used = original.@used
-		copy.@titleCaptured = original.@titleCaptured
-		copy.@contentBuffers = original.@contentBuffers?.clone()
-		copy.properties.putAll(original.properties)
-		copy.@pageData = original.@pageData
-		if (original.request) {
-			copy.request = original.request
-		}
-		return copy
-	}
-}
-
-class GrailsSitemeshPageInfo extends PageInfo {
-
-	GSPSitemeshPage gspSitemeshPage
-
-	GrailsSitemeshPageInfo(int statusCode, String contentType, Collection headers, Collection cookies, byte[] body, boolean storeGzipped, long timeToLiveSeconds) {
-		super(statusCode, contentType, headers, cookies, body, storeGzipped, timeToLiveSeconds)
 	}
 
 }
