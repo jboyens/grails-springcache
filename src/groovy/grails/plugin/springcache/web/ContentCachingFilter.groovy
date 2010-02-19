@@ -16,6 +16,8 @@ import net.sf.ehcache.constructs.web.GenericResponseWrapper
 import net.sf.ehcache.constructs.web.PageInfo
 import net.sf.ehcache.constructs.web.filter.PageFragmentCachingFilter
 import org.slf4j.LoggerFactory
+import org.codehaus.groovy.grails.web.util.WebUtils
+import org.codehaus.groovy.grails.web.servlet.WrappedResponseHolder
 
 class ContentCachingFilter extends PageFragmentCachingFilter {
 
@@ -74,7 +76,20 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 		// Invoke the next entity in the chain
 		def outstr = new ByteArrayOutputStream()
 		def wrapper = new GenericResponseWrapper(response, outstr)
-		chain.doFilter(request, wrapper)
+
+		def originalResponse = null
+		def isInclude = WebUtils.isIncludeRequest(request)
+		if (isInclude) {
+			originalResponse = WrappedResponseHolder.wrappedResponse
+			WrappedResponseHolder.wrappedResponse = wrapper
+		}
+		try {
+			chain.doFilter(request, wrapper)
+		} finally {
+			if (isInclude) {
+				WrappedResponseHolder.wrappedResponse = originalResponse 
+			}
+		}
 		wrapper.flush()
 
 		long timeToLiveSeconds = getCache(request).cacheConfiguration.timeToLiveSeconds
@@ -119,6 +134,9 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 				log.debug "    method = $request.method"
 				log.debug "    requestURI = $request.requestURI"
 				log.debug "    forwardURI = $request.forwardURI"
+				if (request.getAttribute(WebUtils.INCLUDE_REQUEST_URI_ATTRIBUTE)) {
+					log.debug "    includeURI = ${request.getAttribute(WebUtils.INCLUDE_REQUEST_URI_ATTRIBUTE)}"
+				}
 				log.debug "    controller = $context.controllerName"
 				log.debug "    action = $context.actionName"
 			}
