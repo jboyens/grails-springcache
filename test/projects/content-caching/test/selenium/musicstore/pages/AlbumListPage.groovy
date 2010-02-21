@@ -3,6 +3,7 @@ package musicstore.pages
 import grails.plugins.selenium.pageobjects.GrailsListPage
 
 class AlbumListPage extends GrailsListPage {
+
 	static AlbumListPage open() {
 		def page = new AlbumListPage()
 		page.selenium.open "/album/list"
@@ -15,4 +16,6 @@ class AlbumListPage extends GrailsListPage {
 	}
 
 	String getTitle() { selenium.title }
+
+	boolean isSitemeshDecorated() { selenium.isElementPresent "css=#grailsLogo" }
 }

@@ -39,6 +39,9 @@
       <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/bean-fields-0.5/grails-app/taglib" isTestSource="false" />
       <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/bubbling-2.1.1/grails-app/taglib" isTestSource="false" />
       <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/bubbling-2.1.1/src/groovy" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/build-test-data-0.2.3/grails-app/services" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/build-test-data-0.2.3/src/groovy" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/build-test-data-0.2.3/src/java" isTestSource="false" />
       <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/grails-ui-1.2-SNAPSHOT/grails-app/services" isTestSource="false" />
       <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/grails-ui-1.2-SNAPSHOT/grails-app/taglib" isTestSource="false" />
       <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/grails-ui-1.2-SNAPSHOT/src/groovy" isTestSource="false" />

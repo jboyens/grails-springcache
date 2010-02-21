@@ -5,6 +5,7 @@ import java.lang.reflect.Field
 import org.springframework.web.context.request.RequestContextHolder
 import org.codehaus.groovy.grails.commons.ApplicationHolder
 import org.apache.commons.lang.builder.ToStringBuilder
+import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
 class CachingFilterContext {
 
@@ -12,6 +13,7 @@ class CachingFilterContext {
 	private final String actionName
 	private final GrailsControllerClass controllerArtefact
 	private final Field actionClosure
+	private final Map params
 
 	CachingFilterContext() {
 		controllerName = RequestContextHolder.requestAttributes?.controllerName
@@ -22,12 +24,14 @@ class CachingFilterContext {
 		} catch (NoSuchFieldException e) {
 			// happens with dynamic scaffolded controllers
 		}
+		params = RequestContextHolder.requestAttributes?.parameterMap?.asImmutable()
 	}
 
 	GrailsControllerClass getControllerArtefact() { controllerArtefact }
 	Field getActionClosure() { actionClosure }
 	String getControllerName() { controllerName }
 	String getActionName() { actionName }
+	Map getParams() { params }
 
 	String toString() {
 		def buffer = new StringBuilder("[")

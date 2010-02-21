@@ -19,10 +19,12 @@ import net.sf.ehcache.constructs.web.filter.PageFragmentCachingFilter
 import org.codehaus.groovy.grails.web.servlet.WrappedResponseHolder
 import org.codehaus.groovy.grails.web.util.WebUtils
 import org.slf4j.LoggerFactory
+import grails.plugin.springcache.key.CacheKeyBuilder
 
 class ContentCachingFilter extends PageFragmentCachingFilter {
 
 	private static final REQUEST_CACHE_ATTR = "${ContentCachingFilter.name}.CACHE"
+	private static final REQUEST_CACHE_CONTEXT_ATTR = "${ContentCachingFilter.name}.CACHE_CONTEXT"
 
 	private final log = LoggerFactory.getLogger(getClass())
 	CacheProvider cacheProvider
@@ -141,13 +143,23 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 	 * /pirate/show/1 and /pirate/show/2 separately).
 	 */
 	protected String calculateKey(HttpServletRequest request) {
-		// TODO: use [controller, action, params] (can we isolate params for includes?)
-		def buffer = new StringBuilder()
-		buffer << request.requestURI
-		if (request.queryString) {
-			buffer << request.queryString
+		def context = getCachingFilterContext(request)
+		def builder = new CacheKeyBuilder()
+		builder.append(context.controllerName) // TODO: override leftShift
+		builder.append(context.actionName)
+		context.params.each { entry ->
+			builder.append(entry)
 		}
-		return buffer.toString()
+		return builder.toCacheKey().toString() // TODO: don't use toString
+	}
+
+	private CachingFilterContext getCachingFilterContext(HttpServletRequest request) {
+		def context = request.getAttribute(REQUEST_CACHE_CONTEXT_ATTR)
+		if (!context) {
+			context = new CachingFilterContext()
+			request.setAttribute(REQUEST_CACHE_CONTEXT_ATTR, context)
+		}
+		return context
 	}
 
 	private BlockingCache getCache(HttpServletRequest request) {
@@ -159,7 +171,7 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 	}
 
 	private boolean shouldCache(HttpServletRequest request) {
-		def context = new CachingFilterContext()
+		def context = getCachingFilterContext(request)
 		Cacheable cacheable = getAnnotation(context, Cacheable)
 		if (cacheable) {
 			def cache = cacheProvider.getCache(cacheable.modelId()).wrappedCache
@@ -178,7 +190,7 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 	}
 
 	boolean shouldFlush(HttpServletRequest request) {
-		def context = new CachingFilterContext()
+		def context = getCachingFilterContext(request)
 		CacheFlush cacheFlush = getAnnotation(context, CacheFlush)
 		if (cacheFlush) {
 			def caches = cacheProvider.getCaches(cacheFlush.modelId())*.wrappedCache

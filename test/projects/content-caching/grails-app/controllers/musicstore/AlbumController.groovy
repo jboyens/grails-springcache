@@ -41,6 +41,7 @@ class AlbumController {
         }
     }
 
+	@Cacheable(modelId = "AlbumController")
     def show = {
         def albumInstance = Album.get(params.id)
         if (!albumInstance) {
@@ -63,6 +64,7 @@ class AlbumController {
         }
     }
 
+	@CacheFlush(modelId = "AlbumController")
     def update = {
         def albumInstance = Album.get(params.id)
         if (albumInstance) {
@@ -90,6 +92,7 @@ class AlbumController {
         }
     }
 
+	@CacheFlush(modelId = "AlbumController")
     def delete = {
         def albumInstance = Album.get(params.id)
         if (albumInstance) {
