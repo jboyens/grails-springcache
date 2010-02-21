@@ -1,6 +1,7 @@
 package musicstore
 
 import grails.plugin.springcache.annotations.Cacheable
+import grails.plugin.springcache.annotations.CacheFlush
 
 class AlbumController {
 
@@ -22,6 +23,7 @@ class AlbumController {
         return [albumInstance: albumInstance]
     }
 
+	@CacheFlush(modelId = "AlbumController")
     def save = {
 		// TODO: custom data binder to acheive this
 		if (params."artist.name") {

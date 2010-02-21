@@ -54,10 +54,10 @@ class StaticScaffoldingCachingTests extends GroovyTestCase {
 		createPage.year = "2009"
 		createPage.save()
 
-		assertEquals 1, Album.count()
+		assertEquals "Album failed to save", 1, Album.count()
 
 		listPage = AlbumListPage.open()
-		assertEquals 1, listPage.rowCount
+		assertEquals "Album list page is still displayed cached content", 1, listPage.rowCount
 
 		assertEquals 0, albumControllerCache.statistics.cacheHits 
 		assertEquals 2, albumControllerCache.statistics.cacheMisses

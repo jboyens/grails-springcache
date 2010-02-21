@@ -18,6 +18,7 @@ import net.sf.ehcache.constructs.web.filter.PageFragmentCachingFilter
 import org.slf4j.LoggerFactory
 import org.codehaus.groovy.grails.web.util.WebUtils
 import org.codehaus.groovy.grails.web.servlet.WrappedResponseHolder
+import grails.plugin.springcache.annotations.CacheFlush
 
 class ContentCachingFilter extends PageFragmentCachingFilter {
 
@@ -31,7 +32,9 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 	}
 
 	protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
-		if (shouldCache(request)) {
+		if (shouldFlush(request)) {
+			chain.doFilter(request, response)
+		} else if (shouldCache(request)) {
 			super.doFilter(request, response, chain)
 		} else {
 			chain.doFilter(request, response)
@@ -77,6 +80,7 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 		def outstr = new ByteArrayOutputStream()
 		def wrapper = new GenericResponseWrapper(response, outstr)
 
+		// TODO: split the special include handling out into a separate method
 		def originalResponse = null
 		def isInclude = WebUtils.isIncludeRequest(request)
 		if (isInclude) {
@@ -87,7 +91,7 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 			chain.doFilter(request, wrapper)
 		} finally {
 			if (isInclude) {
-				WrappedResponseHolder.wrappedResponse = originalResponse 
+				WrappedResponseHolder.wrappedResponse = originalResponse
 			}
 		}
 		wrapper.flush()
@@ -100,6 +104,7 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 	}
 
 	protected void writeResponse(HttpServletResponse response, PageInfo pageInfo) {
+		// setting the content type is necessary in order to activate Sitemesh so the cached response will get decorated
 		response.contentType = pageInfo.contentType
 		super.writeResponse(response, pageInfo)
 	}
@@ -129,22 +134,35 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 		def context = new CachingFilterContext()
 		Cacheable cacheable = getAnnotation(context, Cacheable)
 		if (cacheable) {
-			if (log.isDebugEnabled()) {
-			log.debug "Caching filter intercepting request..."
-				log.debug "    method = $request.method"
-				log.debug "    requestURI = $request.requestURI"
-				log.debug "    forwardURI = $request.forwardURI"
-				if (WebUtils.isIncludeRequest(request)) {
-					log.debug "    includeURI = ${request.getAttribute(WebUtils.INCLUDE_REQUEST_URI_ATTRIBUTE)}"
-				}
-				log.debug "    controller = $context.controllerName"
-				log.debug "    action = $context.actionName"
-			}
 			def cache = cacheProvider.getCache(cacheable.modelId()).wrappedCache
+			// TODO: check cache is blocking otherwise we can't use it
 			setCache(request, cache)
+			if (log.isDebugEnabled()) {
+				log.debug "Caching request..."
+				logRequestDetails(request, context)
+				log.debug "    cache = $cache.name"
+			}
 			return true
 		} else {
 			log.debug "No cacheable annotation found for $request.method:$request.requestURI $context"
+			return false
+		}
+	}
+
+	boolean shouldFlush(HttpServletRequest request) {
+		def context = new CachingFilterContext()
+		CacheFlush cacheFlush = getAnnotation(context, CacheFlush)
+		if (cacheFlush) {
+			def caches = cacheProvider.getCaches(cacheFlush.modelId())*.wrappedCache
+			if (log.isDebugEnabled()) {
+				log.debug "Flushing request..."
+				logRequestDetails(request, context)
+				log.debug "    caches = $caches.name"
+			}
+			caches*.flush() // TODO: methods with side-effects suck - move this out
+			return true
+		} else {
+			log.debug "No cacheflush annotation found for $request.method:$request.requestURI $context"
 			return false
 		}
 	}
@@ -156,6 +174,17 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 			annotation = context.controllerArtefact?.clazz?.getAnnotation(type)
 		}
 		return annotation
+	}
+
+	private void logRequestDetails(HttpServletRequest request, CachingFilterContext context) {
+		log.debug "    method = $request.method"
+		log.debug "    requestURI = $request.requestURI"
+		log.debug "    forwardURI = $request.forwardURI"
+		if (WebUtils.isIncludeRequest(request)) {
+			log.debug "    includeURI = ${request.getAttribute(WebUtils.INCLUDE_REQUEST_URI_ATTRIBUTE)}"
+		}
+		log.debug "    controller = $context.controllerName"
+		log.debug "    action = $context.actionName"
 	}
 
 }
