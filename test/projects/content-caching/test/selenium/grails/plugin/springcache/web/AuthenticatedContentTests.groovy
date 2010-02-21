@@ -3,6 +3,7 @@ package grails.plugin.springcache.web
 import musicstore.auth.Role
 import musicstore.auth.User
 import musicstore.pages.HomePage
+import org.springframework.security.context.SecurityContextHolder
 
 class AuthenticatedContentTests extends GroovyTestCase {
 
@@ -10,19 +11,26 @@ class AuthenticatedContentTests extends GroovyTestCase {
 
 	void setUp() {
 		super.setUp()
-		def userRole = Role.findByAuthority("ROLE_USER")
-		def user = new User(username: "blackbeard", userRealName: "Edward Teach", email: "blackbeard@energizedwork.com")
-		user.passwd = authenticateService.encodePassword("password")
-		user.authorities = [userRole] as Set
-		user.save(failOnError: true)
+		User.withTransaction {tx ->
+			def userRole = Role.findByAuthority("ROLE_USER")
+			def user = new User(username: "blackbeard", userRealName: "Edward Teach", email: "blackbeard@energizedwork.com", enabled: true)
+			user.passwd = authenticateService.encodePassword("password")
+			user.save(failOnError: true)
+
+			userRole.addToPeople user
+			userRole.save(failOnError: true)
+		}
 	}
 
 	void tearDown() {
 		super.tearDown()
+		SecurityContextHolder.context.authentication = null
 		def userRole = Role.findByAuthority("ROLE_USER")
-		User.list().each {
-			userRole.removeFromPeople(it)
-			it.delete()
+		User.withTransaction {tx ->
+			User.list().each {
+				userRole.removeFromPeople(it)
+				it.delete()
+			}
 		}
 	}
 

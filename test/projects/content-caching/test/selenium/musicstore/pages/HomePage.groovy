@@ -21,7 +21,7 @@ class HomePage extends GrailsPage {
 
 	LoginPage goToLogin() {
 		if (isUserLoggedIn()) {
-			throw new IllegalStateException("Already logged in")
+			throw new PageStateException("Already logged in")
 		} else {
 			selenium.clickAndWait("css=#loginLink a")
 			return new LoginPage()

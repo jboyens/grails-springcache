@@ -6,4 +6,6 @@ security {
 
 	useRequestMapDomainClass = false
 	useControllerAnnotations = true
+
+	cacheUsers = false
 }
