@@ -4,8 +4,8 @@ BUGS
 NEXT RELEASE
 - put ehcache dependency back to default once pom is fixed
 - ensure caches for content are blocking
-- generate key using controller, action, params
 - only cache GET requests?
+- log timings at trace level
 
 BACKLOG
 - caching tag lib

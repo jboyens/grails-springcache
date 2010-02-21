@@ -93,12 +93,17 @@ log4j = {
 springcache {
 	cachingModels {
 		AlbumController.cacheName = "AlbumControllerCache"
+		ArtistController.cacheName = "ArtistControllerCache"
 	}
 	flushingModels {
 		AlbumController.cacheNames = "AlbumControllerCache"
 	}
 	caches {
 		AlbumControllerCache {
+			blocking = true
+			eternal = true
+		}
+		ArtistControllerCache {
 			blocking = true
 			eternal = true
 		}

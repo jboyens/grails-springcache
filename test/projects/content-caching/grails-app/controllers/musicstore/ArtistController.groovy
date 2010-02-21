@@ -1,7 +1,9 @@
 package musicstore
 
 import grails.converters.JSON
+import grails.plugin.springcache.annotations.Cacheable
 
+@Cacheable(modelId = "ArtistController")
 class ArtistController {
 
 	static scaffold = true
