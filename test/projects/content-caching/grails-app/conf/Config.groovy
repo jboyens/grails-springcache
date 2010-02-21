@@ -92,15 +92,10 @@ log4j = {
 
 springcache {
 	cachingModels {
-		PirateController.cacheName = "PirateControllerCache"
-		CurrentTimeController.cacheName = "CurrentTimeControllerCache"
+		AlbumController.cacheName = "AlbumControllerCache"
 	}
 	caches {
-		PirateControllerCache {
-			blocking = true
-			eternal = true
-		}
-		CurrentTimeControllerCache {
+		AlbumControllerCache {
 			blocking = true
 			eternal = true
 		}
