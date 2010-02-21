@@ -5,6 +5,9 @@ import net.sf.ehcache.CacheManager
 import net.sf.ehcache.Ehcache
 import grails.plugins.selenium.pageobjects.GrailsCreatePage
 import musicstore.Album
+import grails.plugins.selenium.pageobjects.GrailsShowPage
+import musicstore.pages.AlbumListPage
+import musicstore.pages.AlbumCreatePage
 
 class StaticScaffoldingCachingTests extends GroovyTestCase {
 
@@ -60,27 +63,4 @@ class StaticScaffoldingCachingTests extends GroovyTestCase {
 		assertEquals 2, albumControllerCache.statistics.cacheMisses
 	}
 
-}
-
-class AlbumCreatePage extends GrailsCreatePage {
-	static AlbumCreatePage open() {
-		def page = new AlbumCreatePage()
-		page.selenium.open "/album/create"
-		return page
-	}
-}
-
-class AlbumListPage extends GrailsListPage {
-	static AlbumListPage open() {
-		def page = new AlbumListPage()
-		page.selenium.open "/album/list"
-		return page
-	}
-
-	AlbumListPage refresh() {
-		selenium.refreshAndWait()
-		return new AlbumListPage()
-	}
-
-	String getTitle() { selenium.title }
 }

@@ -94,6 +94,9 @@ springcache {
 	cachingModels {
 		AlbumController.cacheName = "AlbumControllerCache"
 	}
+	flushingModels {
+		AlbumController.cacheNames = "AlbumControllerCache"
+	}
 	caches {
 		AlbumControllerCache {
 			blocking = true
