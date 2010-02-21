@@ -36,6 +36,11 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins">
+      <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/acegi-0.5.2/grails-app/controllers" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/acegi-0.5.2/grails-app/services" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/acegi-0.5.2/grails-app/taglib" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/acegi-0.5.2/src/groovy" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/acegi-0.5.2/src/java" isTestSource="false" />
       <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/bean-fields-0.5/grails-app/taglib" isTestSource="false" />
       <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/bubbling-2.1.1/grails-app/taglib" isTestSource="false" />
       <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/bubbling-2.1.1/src/groovy" isTestSource="false" />
@@ -73,9 +78,11 @@
           <root url="file://$MODULE_DIR$/lib" />
           <root url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/tomcat-1.2.1/lib" />
           <root url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/selenium-rc-1.0-SNAPSHOT/lib" />
+          <root url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/acegi-0.5.2/lib" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
+        <jarDirectory url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/acegi-0.5.2/lib" recursive="false" />
         <jarDirectory url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/selenium-rc-1.0-SNAPSHOT/lib" recursive="false" />
         <jarDirectory url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/tomcat-1.2.1/lib" recursive="false" />
         <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
