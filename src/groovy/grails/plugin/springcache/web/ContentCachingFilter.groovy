@@ -1,6 +1,7 @@
 package grails.plugin.springcache.web
 
 import grails.plugin.springcache.CacheProvider
+import grails.plugin.springcache.annotations.CacheFlush
 import grails.plugin.springcache.annotations.Cacheable
 import grails.plugin.springcache.web.CachingFilterContext
 import java.lang.annotation.Annotation
@@ -15,10 +16,9 @@ import net.sf.ehcache.constructs.blocking.LockTimeoutException
 import net.sf.ehcache.constructs.web.GenericResponseWrapper
 import net.sf.ehcache.constructs.web.PageInfo
 import net.sf.ehcache.constructs.web.filter.PageFragmentCachingFilter
-import org.slf4j.LoggerFactory
-import org.codehaus.groovy.grails.web.util.WebUtils
 import org.codehaus.groovy.grails.web.servlet.WrappedResponseHolder
-import grails.plugin.springcache.annotations.CacheFlush
+import org.codehaus.groovy.grails.web.util.WebUtils
+import org.slf4j.LoggerFactory
 
 class ContentCachingFilter extends PageFragmentCachingFilter {
 
@@ -27,11 +27,19 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 	private final log = LoggerFactory.getLogger(getClass())
 	CacheProvider cacheProvider
 
+	/**
+	 * Overrides doInit in CachingFilter to be a no-op. The superclass initializes a single cache that is used for all
+	 * intercepted requests but we will select a cache at runtime based on the target controller/action.
+	 */
 	@Override void doInit(FilterConfig filterConfig) {
 		// don't do anything - we need to get caches differently for each request
 	}
 
-	protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
+	/**
+	 * Overrides doFilter in PageFragmentCachingFilter to handle flushing and caching behaviour selectively depending
+	 * on annotations on target controller.
+	 */
+	@Override protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
 		if (shouldFlush(request)) {
 			chain.doFilter(request, response)
 		} else if (shouldCache(request)) {
@@ -41,7 +49,11 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 		}
 	}
 
-	protected PageInfo buildPageInfo(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
+	/**
+	 * Overrides buildPageInfo in PageFragmentCachingFilter to use different cache depending on target controller rather
+	 * than having the cache wired into the filter.
+	 */
+	@Override protected PageInfo buildPageInfo(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
 		// Look up the cached page
 		BlockingCache cache = getCache(request)
 		final key = calculateKey(request)
@@ -75,7 +87,11 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 		return pageInfo
 	}
 
-	protected PageInfo buildPage(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
+	/**
+	 * Overrides buildPage in PageFragmentCachingFilter to use different cache depending on target controller and to do
+	 * special handling for Grails include requests.
+	 */
+	@Override protected PageInfo buildPage(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
 		// Invoke the next entity in the chain
 		def outstr = new ByteArrayOutputStream()
 		def wrapper = new GenericResponseWrapper(response, outstr)
@@ -103,17 +119,29 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 				outstr.toByteArray(), false, timeToLiveSeconds)
 	}
 
-	protected void writeResponse(HttpServletResponse response, PageInfo pageInfo) {
-		// setting the content type is necessary in order to activate Sitemesh so the cached response will get decorated
+	/**
+	 * Overrides writeResponse in PageFragmentCachingFilter to set the contentType before writing the response. This is
+	 * necessary so that Sitemesh is activated (yeah, setContentType on GrailsContentBufferingResponse has a
+	 * side-effect) and will decorate our cached response.
+	 */
+	@Override protected void writeResponse(HttpServletResponse response, PageInfo pageInfo) {
 		response.contentType = pageInfo.contentType
 		super.writeResponse(response, pageInfo)
 	}
 
+	/**
+	 * This should never get called in this implementation.
+	 */
 	protected CacheManager getCacheManager() {
 		throw new UnsupportedOperationException("Filter should not be calling getCacheManager")
 	}
 
+	/**
+	 * Creates a cache key based on the target controller and action and any params (i.e. you want to cache
+	 * /pirate/show/1 and /pirate/show/2 separately).
+	 */
 	protected String calculateKey(HttpServletRequest request) {
+		// TODO: use [controller, action, params] (can we isolate params for includes?)
 		def buffer = new StringBuilder()
 		buffer << request.requestURI
 		if (request.queryString) {
@@ -157,7 +185,7 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 			if (log.isDebugEnabled()) {
 				log.debug "Flushing request..."
 				logRequestDetails(request, context)
-				log.debug "    caches = $caches.name"
+				log.debug "    caches = ${caches.name.join(', ')}"
 			}
 			caches*.flush() // TODO: methods with side-effects suck - move this out
 			return true
