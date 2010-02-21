@@ -1,5 +1,4 @@
 import musicstore.auth.Role
-import musicstore.auth.User
 
 class BootStrap {
 

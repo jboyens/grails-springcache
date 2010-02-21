@@ -4,6 +4,7 @@ import musicstore.auth.Role
 import musicstore.auth.User
 import musicstore.pages.HomePage
 import org.springframework.security.context.SecurityContextHolder
+import grails.plugins.selenium.SeleniumManager
 
 class AuthenticatedContentTests extends GroovyTestCase {
 
@@ -24,7 +25,7 @@ class AuthenticatedContentTests extends GroovyTestCase {
 
 	void tearDown() {
 		super.tearDown()
-		SecurityContextHolder.context.authentication = null
+		SeleniumManager.instance.selenium.open "/logout"
 		def userRole = Role.findByAuthority("ROLE_USER")
 		User.withTransaction {tx ->
 			User.list().each {
