@@ -5,14 +5,12 @@ import musicstore.auth.Role
 import musicstore.auth.User
 import musicstore.pages.HomePage
 import musicstore.pages.AlbumListPage
-import net.sf.ehcache.CacheManager
 import net.sf.ehcache.Ehcache
 import musicstore.pages.LoginPage
 
-class AuthenticatedContentTests extends GroovyTestCase {
+class AuthenticatedContentTests extends AbstractContentCachingTestCase {
 
 	def authenticateService
-	CacheManager springcacheCacheManager
 	Ehcache albumControllerCache
 
 	void setUp() {
@@ -42,12 +40,6 @@ class AuthenticatedContentTests extends GroovyTestCase {
 				userRole.removeFromPeople(it)
 				it.delete()
 			}
-		}
-
-		springcacheCacheManager.cacheNames.each { cacheName ->
-			def cache = springcacheCacheManager.getEhcache(cacheName)
-			cache.flush()
-			cache.clearStatistics()
 		}
 	}
 

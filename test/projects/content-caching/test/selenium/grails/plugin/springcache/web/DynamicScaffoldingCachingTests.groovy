@@ -1,28 +1,16 @@
 package grails.plugin.springcache.web
 
 import musicstore.pages.ArtistListPage
-import net.sf.ehcache.CacheManager
 import net.sf.ehcache.Ehcache
 
-class DynamicScaffoldingCachingTests extends GroovyTestCase {
+class DynamicScaffoldingCachingTests extends AbstractContentCachingTestCase {
 
-	CacheManager springcacheCacheManager
 	Ehcache artistControllerCache
 
 	void setUp() {
 		super.setUp()
 		artistControllerCache = springcacheCacheManager.getEhcache("ArtistControllerCache")
 		assert artistControllerCache, "Cache named ArtistControllerCache not found in $springcacheCacheManager.cacheNames"
-	}
-
-	void tearDown() {
-		super.tearDown()
-
-		springcacheCacheManager.cacheNames.each { cacheName ->
-			def cache = springcacheCacheManager.getEhcache(cacheName)
-			cache.flush()
-			cache.clearStatistics()
-		}
 	}
 
 	void testCacheableAnnotationAtClassLevelIsRecognised() {

@@ -1,35 +1,21 @@
 package grails.plugin.springcache.web
 
-import grails.plugins.selenium.pageobjects.GrailsListPage
-import net.sf.ehcache.CacheManager
-import net.sf.ehcache.Ehcache
-import grails.plugins.selenium.pageobjects.GrailsCreatePage
+import grails.plugin.springcache.web.AbstractContentCachingTestCase
 import musicstore.Album
-import grails.plugins.selenium.pageobjects.GrailsShowPage
-import musicstore.pages.AlbumListPage
-import musicstore.pages.AlbumCreatePage
 import musicstore.Artist
+import musicstore.pages.AlbumCreatePage
+import musicstore.pages.AlbumListPage
 import musicstore.pages.AlbumShowPage
+import net.sf.ehcache.Ehcache
 
-class StaticScaffoldingCachingTests extends GroovyTestCase {
+class StaticScaffoldingCachingTests extends AbstractContentCachingTestCase {
 
-	CacheManager springcacheCacheManager
 	Ehcache albumControllerCache
 
 	void setUp() {
 		super.setUp()
 		albumControllerCache = springcacheCacheManager.getEhcache("AlbumControllerCache")
 		assert albumControllerCache, "Cache named AlbumControllerCache not found in $springcacheCacheManager.cacheNames"
-	}
-
-	void tearDown() {
-		super.tearDown()
-
-		springcacheCacheManager.cacheNames.each { cacheName ->
-			def cache = springcacheCacheManager.getEhcache(cacheName)
-			cache.flush()
-			cache.clearStatistics()
-		}
 	}
 
 	void testOpeningListPageWithEmptyCache() {
