@@ -12,12 +12,6 @@ class StaticScaffoldingCachingTests extends AbstractContentCachingTestCase {
 
 	Ehcache albumControllerCache
 
-	void setUp() {
-		super.setUp()
-		albumControllerCache = springcacheCacheManager.getEhcache("AlbumControllerCache")
-		assert albumControllerCache, "Cache named AlbumControllerCache not found in $springcacheCacheManager.cacheNames"
-	}
-
 	void testOpeningListPageWithEmptyCache() {
 		def page = AlbumListPage.open()
 		assertEquals "Album List", page.title

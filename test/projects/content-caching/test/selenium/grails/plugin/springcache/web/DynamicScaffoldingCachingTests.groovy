@@ -7,12 +7,6 @@ class DynamicScaffoldingCachingTests extends AbstractContentCachingTestCase {
 
 	Ehcache artistControllerCache
 
-	void setUp() {
-		super.setUp()
-		artistControllerCache = springcacheCacheManager.getEhcache("ArtistControllerCache")
-		assert artistControllerCache, "Cache named ArtistControllerCache not found in $springcacheCacheManager.cacheNames"
-	}
-
 	void testCacheableAnnotationAtClassLevelIsRecognised() {
 		def page = ArtistListPage.open()
 		assertEquals "Artist List", page.title

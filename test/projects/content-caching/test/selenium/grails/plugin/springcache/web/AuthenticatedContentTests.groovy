@@ -16,9 +16,6 @@ class AuthenticatedContentTests extends AbstractContentCachingTestCase {
 	void setUp() {
 		super.setUp()
 
-		albumControllerCache = springcacheCacheManager.getEhcache("AlbumControllerCache")
-		assert albumControllerCache, "Cache named AlbumControllerCache not found in $springcacheCacheManager.cacheNames"
-
 		User.withTransaction {tx ->
 			def userRole = Role.findByAuthority("ROLE_USER")
 			def user = new User(username: "blackbeard", userRealName: "Edward Teach", email: "blackbeard@energizedwork.com", enabled: true)
