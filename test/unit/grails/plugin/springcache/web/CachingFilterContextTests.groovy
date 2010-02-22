@@ -15,6 +15,7 @@ class CachingFilterContextTests extends GroovyTestCase {
 		RequestContextHolder.requestAttributes = mock(GrailsWebRequest) {
 			getControllerName().returns(null)
 			getActionName().returns(null)
+			getParameterMap().returns(null)
 		}
 
 		play {
@@ -27,6 +28,7 @@ class CachingFilterContextTests extends GroovyTestCase {
 		RequestContextHolder.requestAttributes = mock(GrailsWebRequest) {
 			getControllerName().returns("test")
 			getActionName().returns(null)
+			getParameterMap().returns(null)
 		}
 		def mockArtefact = new DefaultGrailsControllerClass(TestController)
 		ApplicationHolder.application = mock(GrailsApplication) {
@@ -43,6 +45,7 @@ class CachingFilterContextTests extends GroovyTestCase {
 		RequestContextHolder.requestAttributes = mock(GrailsWebRequest) {
 			getControllerName().returns(null)
 			getActionName().returns(null)
+			getParameterMap().returns(null)
 		}
 
 		play {
@@ -55,6 +58,7 @@ class CachingFilterContextTests extends GroovyTestCase {
 		RequestContextHolder.requestAttributes = mock(GrailsWebRequest) {
 			getControllerName().returns("test")
 			getActionName().returns("list")
+			getParameterMap().returns(null)
 		}
 		def mockArtefact = new DefaultGrailsControllerClass(TestController)
 		ApplicationHolder.application = mock(GrailsApplication) {
@@ -71,6 +75,7 @@ class CachingFilterContextTests extends GroovyTestCase {
 		RequestContextHolder.requestAttributes = mock(GrailsWebRequest) {
 			getControllerName().returns("test")
 			getActionName().returns(null)
+			getParameterMap().returns(null)
 		}
 		def mockArtefact = new DefaultGrailsControllerClass(TestController)
 		ApplicationHolder.application = mock(GrailsApplication) {
@@ -87,6 +92,7 @@ class CachingFilterContextTests extends GroovyTestCase {
 		RequestContextHolder.requestAttributes = mock(GrailsWebRequest) {
 			getControllerName().returns("test")
 			getActionName().returns("scaffold")
+			getParameterMap().returns(null)
 		}
 		def mockArtefact = new DefaultGrailsControllerClass(TestController)
 		ApplicationHolder.application = mock(GrailsApplication) {

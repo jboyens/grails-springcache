@@ -2,7 +2,6 @@ BUGS
 - check caching of service methods with defaulted params
 
 NEXT RELEASE
-- put ehcache dependency back to default once pom is fixed
 - ensure caches for content are blocking
 - only cache GET requests?
 - log timings at trace level
