@@ -94,6 +94,7 @@ springcache {
 	cachingModels {
 		AlbumController.cacheName = "albumControllerCache"
 		ArtistController.cacheName = "artistControllerCache"
+		UserController.cacheName = "userControllerCache"
 	}
 	flushingModels {
 		AlbumController.cacheNames = "albumControllerCache"
@@ -104,6 +105,10 @@ springcache {
 			eternal = true
 		}
 		artistControllerCache {
+			blocking = true
+			eternal = true
+		}
+		userControllerCache {
 			blocking = true
 			eternal = true
 		}
