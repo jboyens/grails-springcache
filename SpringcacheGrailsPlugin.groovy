@@ -57,15 +57,15 @@ class SpringcacheGrailsPlugin {
 	}
 
 	def doWithSpring = {
-		if (ConfigurationHolder.config.springcache.disabled) {
+		if (application.config.springcache.disabled) {
 			log.warn "Springcache plugin is disabled"
 		} else {
 			springcacheAutoProxyCreator(AnnotationAwareAspectJAutoProxyCreator) {
 				proxyTargetClass = true
 			}
 
-			if (!ConfigurationHolder.config.springcache.provider.bean) {
-				log.info "No springcache provider configured; using default EhCacheProvider..."
+			if (!application.config.springcache.provider.bean) {
+			    log.info "No springcache provider configured; using default EhCacheProvider..."
 				springcacheCacheProvider(EhCacheProvider) {
 					cacheManager = ref("springcacheCacheManager")
 					createCachesOnDemand = true
@@ -75,8 +75,8 @@ class SpringcacheGrailsPlugin {
 					cacheManagerName = "Springcache Plugin Cache Manager"
 				}
 
-				ConfigurationHolder.config.springcache.caches.each {String name, ConfigObject cacheConfig ->
-					"$name"(EhCacheFactoryBean) {bean ->
+				application.config.springcache.caches.each { String name, ConfigObject cacheConfig ->
+					"$name"(EhCacheFactoryBean) { bean ->
 						cacheManager = ref("springcacheCacheManager")
 						cacheName = name
 						cacheConfig.each {
@@ -85,15 +85,15 @@ class SpringcacheGrailsPlugin {
 					}
 				}
 			} else {
-				log.info "Using ${ConfigurationHolder.config.springcache.provider.bean} as springcache provider..."
+			    log.info "Using ${application.config.springcache.provider.bean} as springcache provider..."
 			}
 
 			springcacheCachingAspect(CachingAspect) {
-				cacheProvider = ref(ConfigurationHolder.config.springcache.provider.bean ?: "springcacheCacheProvider")
+				cacheProvider = ref(application.config.springcache.provider.bean ?: "springcacheCacheProvider")
 			}
 
 			springcacheFlushingAspect(FlushingAspect) {
-				cacheProvider = ref(ConfigurationHolder.config.springcache.provider.bean ?: "springcacheCacheProvider")
+				cacheProvider = ref(application.config.springcache.provider.bean ?: "springcacheCacheProvider")
 			}
 
 			springcacheFilter(ContentCachingFilter) {
@@ -106,18 +106,18 @@ class SpringcacheGrailsPlugin {
 	}
 
 	def doWithApplicationContext = {applicationContext ->
-		if (!ConfigurationHolder.config.springcache.disabled) {
-			String providerBeanName = ConfigurationHolder.config.springcache.provider.bean ?: "springcacheCacheProvider"
-			CacheProvider provider = applicationContext.getBean(providerBeanName)
-			ConfigurationHolder.config.springcache.cachingModels.each {String modelId, ConfigObject modelConfig ->
-				if (log.isDebugEnabled()) log.debug "cachingModel id = $modelId, config = ${modelConfig.toProperties()}"
-				provider.addCachingModel modelId, modelConfig.toProperties()
-			}
-			ConfigurationHolder.config.springcache.flushingModels.each {String modelId, ConfigObject modelConfig ->
-				if (log.isDebugEnabled()) log.debug "flushingModel id = $modelId, config = ${modelConfig.toProperties()}"
-				provider.addFlushingModel modelId, modelConfig.toProperties()
-			}
-
+		if (!application.config.springcache.disabled) {
+		    String providerBeanName = application.config.springcache.provider.bean ?: "springcacheCacheProvider"
+		    CacheProvider provider = applicationContext.getBean(providerBeanName)
+		    application.config.springcache.cachingModels.each {String modelId, ConfigObject modelConfig ->
+			    if (log.isDebugEnabled()) log.debug "cachingModel id = $modelId, config = ${modelConfig.toProperties()}"
+			    provider.addCachingModel modelId, modelConfig.toProperties()
+		    }
+		    application.config.springcache.flushingModels.each {String modelId, ConfigObject modelConfig ->
+			    if (log.isDebugEnabled()) log.debug "flushingModel id = $modelId, config = ${modelConfig.toProperties()}"
+			    provider.addFlushingModel modelId, modelConfig.toProperties()
+		    }
+		
 			if (log.isDebugEnabled()) {
 				log.debug "Configured caches: ${applicationContext.getBeansOfType(EhCacheFactoryBean).values().cacheName}"
 			}
