@@ -99,6 +99,8 @@
 	              </g:each>
 	            </ul>
 	        </div>
+
+			<g:include controller="latest" action="albums"/>
 		</div>
     </body>
 </html>

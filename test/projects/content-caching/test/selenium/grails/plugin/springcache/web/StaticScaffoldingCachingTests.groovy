@@ -12,6 +12,13 @@ class StaticScaffoldingCachingTests extends AbstractContentCachingTestCase {
 
 	Ehcache albumControllerCache
 
+	void tearDown() {
+		super.tearDown()
+
+		Album.list()*.delete()
+		Artist.list()*.delete()
+	}
+
 	void testOpeningListPageWithEmptyCache() {
 		def page = AlbumListPage.open()
 		assertEquals "Album List", page.title
