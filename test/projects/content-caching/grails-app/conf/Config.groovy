@@ -98,7 +98,7 @@ springcache {
 		LatestController.cacheName = "latestControllerCache"
 	}
 	flushingModels {
-		AlbumController.cacheNames = "albumControllerCache"
+		AlbumController.cacheNames = "albumControllerCache,latestControllerCache"
 	}
 	caches {
 		albumControllerCache {
