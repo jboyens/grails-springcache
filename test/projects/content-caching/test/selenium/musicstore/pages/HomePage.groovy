@@ -4,7 +4,6 @@ import grails.plugins.selenium.pageobjects.GrailsPage
 
 class HomePage extends GrailsPage {
 
-
 	static HomePage open() {
 		def page = new HomePage()
 		page.selenium.open("/")

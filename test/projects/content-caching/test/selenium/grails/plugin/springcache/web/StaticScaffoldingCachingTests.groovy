@@ -24,8 +24,12 @@ class StaticScaffoldingCachingTests extends GroovyTestCase {
 
 	void tearDown() {
 		super.tearDown()
-		albumControllerCache?.statistics?.clearStatistics()
-		albumControllerCache?.removeAll()
+
+		springcacheCacheManager.cacheNames.each { cacheName ->
+			def cache = springcacheCacheManager.getEhcache(cacheName)
+			cache.flush()
+			cache.clearStatistics()
+		}
 	}
 
 	void testOpeningListPageWithEmptyCache() {

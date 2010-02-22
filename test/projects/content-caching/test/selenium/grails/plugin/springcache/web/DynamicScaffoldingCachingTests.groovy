@@ -17,8 +17,12 @@ class DynamicScaffoldingCachingTests extends GroovyTestCase {
 
 	void tearDown() {
 		super.tearDown()
-		artistControllerCache?.statistics?.clearStatistics()
-		artistControllerCache?.removeAll()
+
+		springcacheCacheManager.cacheNames.each { cacheName ->
+			def cache = springcacheCacheManager.getEhcache(cacheName)
+			cache.flush()
+			cache.clearStatistics()
+		}
 	}
 
 	void testCacheableAnnotationAtClassLevelIsRecognised() {
