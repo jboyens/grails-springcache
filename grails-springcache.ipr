@@ -1,88 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project relativePaths="false" version="4">
-  <component name="AntConfiguration">
-    <defaultAnt bundledAnt="true" />
-  </component>
-  <component name="BuildJarProjectSettings">
-    <option name="BUILD_JARS_ON_MAKE" value="false" />
-  </component>
-  <component name="CodeStyleProjectProfileManger">
-    <option name="PROJECT_PROFILE" />
-    <option name="USE_PROJECT_LEVEL_SETTINGS" value="false" />
-  </component>
-  <component name="CodeStyleSettingsManager">
-    <option name="PER_PROJECT_SETTINGS">
-      <value>
-        <ADDITIONAL_INDENT_OPTIONS fileType="groovy">
-          <option name="INDENT_SIZE" value="2" />
-          <option name="CONTINUATION_INDENT_SIZE" value="8" />
-          <option name="TAB_SIZE" value="4" />
-          <option name="USE_TAB_CHARACTER" value="false" />
-          <option name="SMART_TABS" value="false" />
-          <option name="LABEL_INDENT_SIZE" value="0" />
-          <option name="LABEL_INDENT_ABSOLUTE" value="false" />
-        </ADDITIONAL_INDENT_OPTIONS>
-        <ADDITIONAL_INDENT_OPTIONS fileType="gsp">
-          <option name="INDENT_SIZE" value="2" />
-          <option name="CONTINUATION_INDENT_SIZE" value="8" />
-          <option name="TAB_SIZE" value="4" />
-          <option name="USE_TAB_CHARACTER" value="false" />
-          <option name="SMART_TABS" value="false" />
-          <option name="LABEL_INDENT_SIZE" value="0" />
-          <option name="LABEL_INDENT_ABSOLUTE" value="false" />
-        </ADDITIONAL_INDENT_OPTIONS>
-        <ADDITIONAL_INDENT_OPTIONS fileType="java">
-          <option name="INDENT_SIZE" value="4" />
-          <option name="CONTINUATION_INDENT_SIZE" value="8" />
-          <option name="TAB_SIZE" value="4" />
-          <option name="USE_TAB_CHARACTER" value="false" />
-          <option name="SMART_TABS" value="false" />
-          <option name="LABEL_INDENT_SIZE" value="0" />
-          <option name="LABEL_INDENT_ABSOLUTE" value="false" />
-        </ADDITIONAL_INDENT_OPTIONS>
-        <ADDITIONAL_INDENT_OPTIONS fileType="js">
-          <option name="INDENT_SIZE" value="4" />
-          <option name="CONTINUATION_INDENT_SIZE" value="8" />
-          <option name="TAB_SIZE" value="4" />
-          <option name="USE_TAB_CHARACTER" value="false" />
-          <option name="SMART_TABS" value="false" />
-          <option name="LABEL_INDENT_SIZE" value="0" />
-          <option name="LABEL_INDENT_ABSOLUTE" value="false" />
-        </ADDITIONAL_INDENT_OPTIONS>
-        <ADDITIONAL_INDENT_OPTIONS fileType="jsp">
-          <option name="INDENT_SIZE" value="4" />
-          <option name="CONTINUATION_INDENT_SIZE" value="8" />
-          <option name="TAB_SIZE" value="4" />
-          <option name="USE_TAB_CHARACTER" value="false" />
-          <option name="SMART_TABS" value="false" />
-          <option name="LABEL_INDENT_SIZE" value="0" />
-          <option name="LABEL_INDENT_ABSOLUTE" value="false" />
-        </ADDITIONAL_INDENT_OPTIONS>
-        <ADDITIONAL_INDENT_OPTIONS fileType="sql">
-          <option name="INDENT_SIZE" value="2" />
-          <option name="CONTINUATION_INDENT_SIZE" value="8" />
-          <option name="TAB_SIZE" value="4" />
-          <option name="USE_TAB_CHARACTER" value="false" />
-          <option name="SMART_TABS" value="false" />
-          <option name="LABEL_INDENT_SIZE" value="0" />
-          <option name="LABEL_INDENT_ABSOLUTE" value="false" />
-        </ADDITIONAL_INDENT_OPTIONS>
-        <ADDITIONAL_INDENT_OPTIONS fileType="xml">
-          <option name="INDENT_SIZE" value="4" />
-          <option name="CONTINUATION_INDENT_SIZE" value="8" />
-          <option name="TAB_SIZE" value="4" />
-          <option name="USE_TAB_CHARACTER" value="false" />
-          <option name="SMART_TABS" value="false" />
-          <option name="LABEL_INDENT_SIZE" value="0" />
-          <option name="LABEL_INDENT_ABSOLUTE" value="false" />
-        </ADDITIONAL_INDENT_OPTIONS>
-      </value>
-    </option>
-    <option name="USE_PER_PROJECT_SETTINGS" value="false" />
-  </component>
+<project version="4">
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
-    <option name="DEPLOY_AFTER_MAKE" value="0" />
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />
       <entry name=".+\.(gif|png|jpeg|jpg)" />
@@ -97,80 +16,17 @@
       <entry name="?*.html" />
       <entry name="?*.dtd" />
       <entry name="?*.tld" />
+      <entry name="?*.ftl" />
     </wildcardResourcePatterns>
+    <annotationProcessing enabled="false" useClasspath="true" />
   </component>
   <component name="CopyrightManager" default="">
     <module2copyright />
   </component>
-  <component name="DependenciesAnalyzeManager">
-    <option name="myForwardDirection" value="false" />
-  </component>
   <component name="DependencyValidationManager">
     <option name="SKIP_IMPORT_STATEMENTS" value="false" />
   </component>
-  <component name="EclipseCompilerSettings">
-    <option name="DEBUGGING_INFO" value="true" />
-    <option name="GENERATE_NO_WARNINGS" value="true" />
-    <option name="DEPRECATION" value="false" />
-    <option name="ADDITIONAL_OPTIONS_STRING" value="" />
-    <option name="MAXIMUM_HEAP_SIZE" value="128" />
-  </component>
-  <component name="EclipseEmbeddedCompilerSettings">
-    <option name="DEBUGGING_INFO" value="true" />
-    <option name="GENERATE_NO_WARNINGS" value="true" />
-    <option name="DEPRECATION" value="false" />
-    <option name="ADDITIONAL_OPTIONS_STRING" value="" />
-    <option name="MAXIMUM_HEAP_SIZE" value="128" />
-  </component>
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" />
-  <component name="EntryPointsManager">
-    <entry_points version="2.0" />
-  </component>
-  <component name="FacetAutodetectingManager">
-    <autodetection-disabled>
-      <facet-type id="Spring">
-        <modules>
-          <module name="testEhCache">
-            <files>
-              <file url="file://$PROJECT_DIR$/test/projects/testEhCache/web-app/WEB-INF/applicationContext.xml" />
-            </files>
-          </module>
-        </modules>
-      </facet-type>
-    </autodetection-disabled>
-  </component>
-  <component name="HierarchyBrowserManager">
-    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
-    <option name="SORT_ALPHABETICALLY" value="false" />
-    <option name="HIDE_CLASSES_WHERE_METHOD_NOT_IMPLEMENTED" value="false" />
-  </component>
-  <component name="IdProvider" IDEtalkID="264707B82D6027A839C8572BA2CDA28B" />
-  <component name="InspectionProjectProfileManager">
-    <option name="PROJECT_PROFILE" value="Project Default" />
-    <option name="USE_PROJECT_LEVEL_SETTINGS" value="false" />
-    <scopes />
-    <profiles>
-      <profile version="1.0" is_locked="false">
-        <option name="myName" value="Project Default" />
-        <option name="myLocal" value="false" />
-        <inspection_tool class="CssUnitlessNumber" level="WARNING" enabled="false" />
-        <inspection_tool class="UnusedMessageFormatParameter" level="WARNING" enabled="false" />
-      </profile>
-    </profiles>
-    <list size="4">
-      <item index="0" class="java.lang.String" itemvalue="SERVER PROBLEM" />
-      <item index="1" class="java.lang.String" itemvalue="INFO" />
-      <item index="2" class="java.lang.String" itemvalue="WARNING" />
-      <item index="3" class="java.lang.String" itemvalue="ERROR" />
-    </list>
-  </component>
-  <component name="JavacSettings">
-    <option name="DEBUGGING_INFO" value="true" />
-    <option name="GENERATE_NO_WARNINGS" value="false" />
-    <option name="DEPRECATION" value="true" />
-    <option name="ADDITIONAL_OPTIONS_STRING" value="" />
-    <option name="MAXIMUM_HEAP_SIZE" value="128" />
-  </component>
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />
     <option name="OPTION_SCOPE" value="protected" />
@@ -188,177 +44,127 @@
     <option name="LOCALE" />
     <option name="OPEN_IN_BROWSER" value="true" />
   </component>
-  <component name="JikesSettings">
-    <option name="JIKES_PATH" value="" />
-    <option name="DEBUGGING_INFO" value="true" />
-    <option name="DEPRECATION" value="true" />
-    <option name="GENERATE_NO_WARNINGS" value="false" />
-    <option name="IS_EMACS_ERRORS_MODE" value="true" />
-    <option name="ADDITIONAL_OPTIONS_STRING" value="" />
-  </component>
-  <component name="Palette2">
-    <group name="Swing">
-      <item class="com.intellij.uiDesigner.HSpacer" tooltip-text="Horizontal Spacer" icon="/com/intellij/uiDesigner/icons/hspacer.png" removable="false" auto-create-binding="false" can-attach-label="false">
-        <default-constraints vsize-policy="1" hsize-policy="6" anchor="0" fill="1" />
-      </item>
-      <item class="com.intellij.uiDesigner.VSpacer" tooltip-text="Vertical Spacer" icon="/com/intellij/uiDesigner/icons/vspacer.png" removable="false" auto-create-binding="false" can-attach-label="false">
-        <default-constraints vsize-policy="6" hsize-policy="1" anchor="0" fill="2" />
-      </item>
-      <item class="javax.swing.JPanel" icon="/com/intellij/uiDesigner/icons/panel.png" removable="false" auto-create-binding="false" can-attach-label="false">
-        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3" />
-      </item>
-      <item class="javax.swing.JScrollPane" icon="/com/intellij/uiDesigner/icons/scrollPane.png" removable="false" auto-create-binding="false" can-attach-label="true">
-        <default-constraints vsize-policy="7" hsize-policy="7" anchor="0" fill="3" />
-      </item>
-      <item class="javax.swing.JButton" icon="/com/intellij/uiDesigner/icons/button.png" removable="false" auto-create-binding="true" can-attach-label="false">
-        <default-constraints vsize-policy="0" hsize-policy="3" anchor="0" fill="1" />
-        <initial-values>
-          <property name="text" value="Button" />
-        </initial-values>
-      </item>
-      <item class="javax.swing.JRadioButton" icon="/com/intellij/uiDesigner/icons/radioButton.png" removable="false" auto-create-binding="true" can-attach-label="false">
-        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
-        <initial-values>
-          <property name="text" value="RadioButton" />
-        </initial-values>
-      </item>
-      <item class="javax.swing.JCheckBox" icon="/com/intellij/uiDesigner/icons/checkBox.png" removable="false" auto-create-binding="true" can-attach-label="false">
-        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
-        <initial-values>
-          <property name="text" value="CheckBox" />
-        </initial-values>
-      </item>
-      <item class="javax.swing.JLabel" icon="/com/intellij/uiDesigner/icons/label.png" removable="false" auto-create-binding="false" can-attach-label="false">
-        <default-constraints vsize-policy="0" hsize-policy="0" anchor="8" fill="0" />
-        <initial-values>
-          <property name="text" value="Label" />
-        </initial-values>
-      </item>
-      <item class="javax.swing.JTextField" icon="/com/intellij/uiDesigner/icons/textField.png" removable="false" auto-create-binding="true" can-attach-label="true">
-        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-          <preferred-size width="150" height="-1" />
-        </default-constraints>
-      </item>
-      <item class="javax.swing.JPasswordField" icon="/com/intellij/uiDesigner/icons/passwordField.png" removable="false" auto-create-binding="true" can-attach-label="true">
-        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-          <preferred-size width="150" height="-1" />
-        </default-constraints>
-      </item>
-      <item class="javax.swing.JFormattedTextField" icon="/com/intellij/uiDesigner/icons/formattedTextField.png" removable="false" auto-create-binding="true" can-attach-label="true">
-        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-          <preferred-size width="150" height="-1" />
-        </default-constraints>
-      </item>
-      <item class="javax.swing.JTextArea" icon="/com/intellij/uiDesigner/icons/textArea.png" removable="false" auto-create-binding="true" can-attach-label="true">
-        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
-          <preferred-size width="150" height="50" />
-        </default-constraints>
-      </item>
-      <item class="javax.swing.JTextPane" icon="/com/intellij/uiDesigner/icons/textPane.png" removable="false" auto-create-binding="true" can-attach-label="true">
-        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
-          <preferred-size width="150" height="50" />
-        </default-constraints>
-      </item>
-      <item class="javax.swing.JEditorPane" icon="/com/intellij/uiDesigner/icons/editorPane.png" removable="false" auto-create-binding="true" can-attach-label="true">
-        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
-          <preferred-size width="150" height="50" />
-        </default-constraints>
-      </item>
-      <item class="javax.swing.JComboBox" icon="/com/intellij/uiDesigner/icons/comboBox.png" removable="false" auto-create-binding="true" can-attach-label="true">
-        <default-constraints vsize-policy="0" hsize-policy="2" anchor="8" fill="1" />
-      </item>
-      <item class="javax.swing.JTable" icon="/com/intellij/uiDesigner/icons/table.png" removable="false" auto-create-binding="true" can-attach-label="false">
-        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
-          <preferred-size width="150" height="50" />
-        </default-constraints>
-      </item>
-      <item class="javax.swing.JList" icon="/com/intellij/uiDesigner/icons/list.png" removable="false" auto-create-binding="true" can-attach-label="false">
-        <default-constraints vsize-policy="6" hsize-policy="2" anchor="0" fill="3">
-          <preferred-size width="150" height="50" />
-        </default-constraints>
-      </item>
-      <item class="javax.swing.JTree" icon="/com/intellij/uiDesigner/icons/tree.png" removable="false" auto-create-binding="true" can-attach-label="false">
-        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
-          <preferred-size width="150" height="50" />
-        </default-constraints>
-      </item>
-      <item class="javax.swing.JTabbedPane" icon="/com/intellij/uiDesigner/icons/tabbedPane.png" removable="false" auto-create-binding="true" can-attach-label="false">
-        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
-          <preferred-size width="200" height="200" />
-        </default-constraints>
-      </item>
-      <item class="javax.swing.JSplitPane" icon="/com/intellij/uiDesigner/icons/splitPane.png" removable="false" auto-create-binding="false" can-attach-label="false">
-        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
-          <preferred-size width="200" height="200" />
-        </default-constraints>
-      </item>
-      <item class="javax.swing.JSpinner" icon="/com/intellij/uiDesigner/icons/spinner.png" removable="false" auto-create-binding="true" can-attach-label="true">
-        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
-      </item>
-      <item class="javax.swing.JSlider" icon="/com/intellij/uiDesigner/icons/slider.png" removable="false" auto-create-binding="true" can-attach-label="false">
-        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
-      </item>
-      <item class="javax.swing.JSeparator" icon="/com/intellij/uiDesigner/icons/separator.png" removable="false" auto-create-binding="false" can-attach-label="false">
-        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3" />
-      </item>
-      <item class="javax.swing.JProgressBar" icon="/com/intellij/uiDesigner/icons/progressbar.png" removable="false" auto-create-binding="true" can-attach-label="false">
-        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1" />
-      </item>
-      <item class="javax.swing.JToolBar" icon="/com/intellij/uiDesigner/icons/toolbar.png" removable="false" auto-create-binding="false" can-attach-label="false">
-        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1">
-          <preferred-size width="-1" height="20" />
-        </default-constraints>
-      </item>
-      <item class="javax.swing.JToolBar$Separator" icon="/com/intellij/uiDesigner/icons/toolbarSeparator.png" removable="false" auto-create-binding="false" can-attach-label="false">
-        <default-constraints vsize-policy="0" hsize-policy="0" anchor="0" fill="1" />
-      </item>
-      <item class="javax.swing.JScrollBar" icon="/com/intellij/uiDesigner/icons/scrollbar.png" removable="false" auto-create-binding="true" can-attach-label="false">
-        <default-constraints vsize-policy="6" hsize-policy="0" anchor="0" fill="2" />
-      </item>
-    </group>
-  </component>
   <component name="ProjectDetails">
     <option name="projectName" value="grails-springcache" />
-  </component>
-  <component name="ProjectFileVersion" converted="true" />
-  <component name="ProjectKey">
-    <option name="state" value="project:///Users/rob/IdeaProjects/grails-springcache/grails-springcache.ipr" />
   </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/test/projects/alt-cache-impl/alt-cache-impl.iml" filepath="$PROJECT_DIR$/test/projects/alt-cache-impl/alt-cache-impl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/test/projects/alt-cache-impl/alt-cache-impl-grailsPlugins.iml" filepath="$PROJECT_DIR$/test/projects/alt-cache-impl/alt-cache-impl-grailsPlugins.iml" />
       <module fileurl="file://$PROJECT_DIR$/test/projects/content-caching/content-caching.iml" filepath="$PROJECT_DIR$/test/projects/content-caching/content-caching.iml" />
+      <module fileurl="file://$PROJECT_DIR$/test/projects/content-caching/content-caching-grailsPlugins.iml" filepath="$PROJECT_DIR$/test/projects/content-caching/content-caching-grailsPlugins.iml" />
       <module fileurl="file://$PROJECT_DIR$/grails-springcache.iml" filepath="$PROJECT_DIR$/grails-springcache.iml" />
+      <module fileurl="file://$PROJECT_DIR$/grails-springcache-grailsPlugins.iml" filepath="$PROJECT_DIR$/grails-springcache-grailsPlugins.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springcache.iml" filepath="$PROJECT_DIR$/springcache.iml" />
       <module fileurl="file://$PROJECT_DIR$/test/projects/springcache-test/springcache-test.iml" filepath="$PROJECT_DIR$/test/projects/springcache-test/springcache-test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/test/projects/springcache-test/springcache-test-grailsPlugins.iml" filepath="$PROJECT_DIR$/test/projects/springcache-test/springcache-test-grailsPlugins.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
-  <component name="ResourceManagerContainer">
-    <option name="myResourceBundles">
-      <value>
-        <list size="0" />
-      </value>
-    </option>
-  </component>
-  <component name="RmicSettings">
-    <option name="IS_EANABLED" value="false" />
-    <option name="DEBUGGING_INFO" value="true" />
-    <option name="GENERATE_NO_WARNINGS" value="false" />
-    <option name="GENERATE_IIOP_STUBS" value="false" />
-    <option name="ADDITIONAL_OPTIONS_STRING" value="" />
-  </component>
   <component name="SvnBranchConfigurationManager">
-    <option name="myVersion" value="124" />
     <option name="mySupportsUserInfoFilter" value="true" />
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
   </component>
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
-  <UsedPathMacros>
-    <macro name="USER_HOME" description="" />
-  </UsedPathMacros>
+  <component name="libraryTable">
+    <library name="Grails 1.2.1">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/java/grails/lib/ant-1.7.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/ant-junit-1.7.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/ant-launcher-1.7.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/ant-nodeps-1.7.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/ant-trax-1.7.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/antlr-2.7.6.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/aopalliance-1.0.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/aspectjrt-1.6.6.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/aspectjweaver-1.6.6.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/cglib-nodep-2.1_3.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/commons-beanutils-1.8.0.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/commons-cli-1.0.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/commons-codec-1.3.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/commons-collections-3.2.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/commons-dbcp-1.2.2.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/commons-el-1.0.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/commons-fileupload-1.2.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/commons-io-1.4.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/commons-lang-2.4.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/commons-pool-1.5.3.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/commons-validator-1.3.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/dom4j-1.6.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/ehcache-core-1.7.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/ejb3-persistence-1.0.2.GA.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/gant_groovy1.6-1.6.0.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/GParallelizer-0.8.3.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/groovy-all-1.6.7.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/hibernate-annotations-3.4.0.GA.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/hibernate-commons-annotations-3.1.0.GA.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/hibernate-core-3.3.1.GA.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/hibernate-ehcache-3.3.1.GA.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/hsqldb-1.8.0.10.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/ivy-2.1.0.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/javassist-3.11.0.GA.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/jcl-over-slf4j-1.5.8.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/jline-0.9.91.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/jsp-api-2.0.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/jsp-api-2.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/jsr107cache-1.0.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/jsr166y-070108.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/jstl-1.1.2.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/jta-1.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/jul-to-slf4j-1.5.8.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/junit-3.8.2.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/log4j-1.2.15.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/ognl-2.7.3.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/org.springframework.aop-3.0.0.RELEASE.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/org.springframework.asm-3.0.0.RELEASE.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/org.springframework.aspects-3.0.0.RELEASE.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/org.springframework.beans-3.0.0.RELEASE.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/org.springframework.binding-2.0.8.RELEASE.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/org.springframework.context-3.0.0.RELEASE.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/org.springframework.context.support-3.0.0.RELEASE.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/org.springframework.core-3.0.0.RELEASE.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/org.springframework.expression-3.0.0.RELEASE.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/org.springframework.instrument-3.0.0.RELEASE.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/org.springframework.jdbc-3.0.0.RELEASE.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/org.springframework.jms-3.0.0.RELEASE.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/org.springframework.js-2.0.8.RELEASE.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/org.springframework.orm-3.0.0.RELEASE.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/org.springframework.oxm-3.0.0.RELEASE.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/org.springframework.test-3.0.0.RELEASE.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/org.springframework.transaction-3.0.0.RELEASE.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/org.springframework.web-3.0.0.RELEASE.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/org.springframework.web.servlet-3.0.0.RELEASE.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/org.springframework.webflow-2.0.8.RELEASE.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/oro-2.0.8.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/radeox-1.0-b2.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/serializer-2.7.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/servlet-api-2.5.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/sitemesh-2.4.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/slf4j-api-1.5.8.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/slf4j-log4j12-1.5.8.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/standard-1.1.2.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/svnkit-1.3.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/lib/xpp3_min-1.1.3.4.O.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/dist/grails-bootstrap-1.2.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/dist/grails-core-1.2.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/dist/grails-crud-1.2.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/dist/grails-docs-1.2.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/dist/grails-gorm-1.2.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/dist/grails-osgi-1.2.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/dist/grails-resources-1.2.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/dist/grails-scripts-1.2.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/dist/grails-spring-1.2.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/dist/grails-test-1.2.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/dist/grails-web-1.2.1.jar!/" />
+        <root url="jar://$USER_HOME$/java/grails/dist/grails-webflow-1.2.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+  </component>
 </project>
 
