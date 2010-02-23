@@ -8,6 +8,7 @@ import musicstore.pages.AlbumCreatePage
 import org.grails.rateable.Rating
 import org.grails.rateable.RatingLink
 import musicstore.auth.User
+import musicstore.pages.AlbumShowPage
 
 class IncludedContentTests extends AbstractContentCachingTestCase {
 
@@ -27,6 +28,8 @@ class IncludedContentTests extends AbstractContentCachingTestCase {
 		super.tearDown()
 
 		Album.withTransaction {tx ->
+			RatingLink.list()*.delete()
+			Rating.list()*.delete()
 			Album.list()*.delete()
 			Artist.list()*.delete()
 		}
@@ -77,6 +80,27 @@ class IncludedContentTests extends AbstractContentCachingTestCase {
 		assertEquals 1, popularControllerCache.statistics.objectCount
 		assertEquals 1, popularControllerCache.statistics.cacheMisses
 		assertEquals 0, popularControllerCache.statistics.cacheHits
+	}
+
+	void testIncludedContentFlushedByRateable() {
+		setUpUser("ponytail", "Steven Segal")
+		def user = setUpUser("roundhouse", "Chuck Norris")
+		setUpAlbumRating(album1, user, 5.0)
+		setUpAlbumRating(album2, user, 3.0)
+		setUpAlbumRating(album3, user, 4.0)
+
+		def expectedPopularList = [album1, album3, album2].collect { it.toString() }
+
+		def homePage = loginAs("ponytail")
+		assertEquals expectedPopularList, homePage.popularAlbums
+
+		def showPage = AlbumShowPage.open(album1.id)
+		showPage.vote 1
+
+		homePage = HomePage.open()
+		assertEquals([album3, album2, album1], homePage.popularAlbums)
+
+		assertEquals 2, popularControllerCache.statistics.cacheMisses
 	}
 
 	private void setUpAlbumRating(Album album, User rater, double stars) {

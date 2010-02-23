@@ -48,12 +48,10 @@ abstract class AbstractContentCachingTestCase extends GroovyTestCase {
 	}
 
 	HomePage loginAs(String username, String password = "password") {
-		HomePage page
 		def loginPage = LoginPage.open()
 		loginPage.j_username = username
 		loginPage.j_password = password
-		page = loginPage.login()
-		return page
+		return loginPage.login()
 	}
 
 	HomePage logout() {
