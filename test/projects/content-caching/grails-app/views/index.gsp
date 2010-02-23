@@ -101,6 +101,7 @@
 	        </div>
 
 			<g:include controller="latest" action="albums"/>
+			<g:include controller="popular" action="albums"/>
 		</div>
     </body>
 </html>

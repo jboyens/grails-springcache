@@ -20,8 +20,7 @@ class StaticScaffoldingCachingTests extends AbstractContentCachingTestCase {
 	}
 
 	void testOpeningListPageWithEmptyCache() {
-		def page = AlbumListPage.open()
-		assertEquals "Album List", page.title
+		AlbumListPage.open()
 
 		assertEquals 0, albumControllerCache.statistics.cacheHits
 		assertEquals 1, albumControllerCache.statistics.cacheMisses
@@ -29,23 +28,11 @@ class StaticScaffoldingCachingTests extends AbstractContentCachingTestCase {
 
 	void testReloadingListPageHitsCache() {
 		def page = AlbumListPage.open()
-		assertEquals "Album List", page.title
 
-		page = page.refresh()
-		assertEquals "Album List", page.title
+		page.refresh()
 
 		assertEquals 1, albumControllerCache.statistics.cacheHits
 		assertEquals 1, albumControllerCache.statistics.objectCount
-	}
-
-	void testCachedResponseIsDecoratedBySitemesh() {
-		def page = AlbumListPage.open()
-		assertTrue page.sitemeshDecorated
-
-		page = page.refresh()
-		assertTrue page.sitemeshDecorated
-
-		assertEquals 1, albumControllerCache.statistics.cacheHits
 	}
 
 	void testSaveFlushesCache() {

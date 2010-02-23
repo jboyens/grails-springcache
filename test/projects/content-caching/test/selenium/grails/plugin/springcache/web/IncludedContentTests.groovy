@@ -28,7 +28,7 @@ class IncludedContentTests extends AbstractContentCachingTestCase {
 	}
 
 	void testIncludedContentIsCached() {
-		def expectedList = ["It's Blitz! by Yeah Yeah Yeahs", "Odd Blood by Yeasayer", "Up From Below by Edward Sharpe & the Magnetic Zeros"]
+		def expectedList = ["It's Blitz! by Yeah Yeah Yeahs (2009)", "Odd Blood by Yeasayer (2010)", "Up From Below by Edward Sharpe & the Magnetic Zeros (2009)"]
 		def page = HomePage.open()
 		assertEquals expectedList, page.latestAlbums
 
@@ -40,7 +40,7 @@ class IncludedContentTests extends AbstractContentCachingTestCase {
 	}
 
 	void testIncludedContentCanBeFlushedByAnotherController() {
-		def expectedList = ["It's Blitz! by Yeah Yeah Yeahs", "Odd Blood by Yeasayer", "Up From Below by Edward Sharpe & the Magnetic Zeros"]
+		def expectedList = ["It's Blitz! by Yeah Yeah Yeahs (2009)", "Odd Blood by Yeasayer (2010)", "Up From Below by Edward Sharpe & the Magnetic Zeros (2009)"]
 		assertEquals expectedList, HomePage.open().latestAlbums
 
 		def createPage = AlbumCreatePage.open()
@@ -49,7 +49,7 @@ class IncludedContentTests extends AbstractContentCachingTestCase {
 		createPage.year = "2009"
 		createPage.save()
 
-		expectedList.add(0, "Sigh No More by Mumford & Sons")
+		expectedList.add(0, "Sigh No More by Mumford & Sons (2009)")
 		assertEquals expectedList, HomePage.open().latestAlbums
 	}
 

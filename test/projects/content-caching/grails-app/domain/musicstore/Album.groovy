@@ -1,8 +1,9 @@
 package musicstore
 
+import org.grails.rateable.Rateable
 import org.springframework.context.MessageSourceResolvable
 
-class Album implements MessageSourceResolvable {
+class Album implements MessageSourceResolvable, Rateable {
 
 	Artist artist
 	String name
@@ -28,7 +29,7 @@ class Album implements MessageSourceResolvable {
 
 	String[] getCodes() { [Album.name] as String[] }
 
-	Object[] getArguments() { [name, artist.name] as Object[] }
+	Object[] getArguments() { [name, artist.name, year] as Object[] }
 
-	String getDefaultMessage() { "{0} by {1}" }
+	String getDefaultMessage() { "{0} by {1} ({2})" }
 }

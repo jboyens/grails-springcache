@@ -13,6 +13,7 @@
           <root url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/bubbling-2.1.1/web-app" relative="/" />
           <root url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/grails-ui-1.2-SNAPSHOT/web-app" relative="/" />
           <root url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/bean-fields-0.5/web-app" relative="/" />
+          <root url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/rateable-0.6.2/web-app" relative="/" />
         </webroots>
         <sourceRoots />
         <building>
@@ -50,6 +51,10 @@
       <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/grails-ui-1.2-SNAPSHOT/grails-app/services" isTestSource="false" />
       <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/grails-ui-1.2-SNAPSHOT/grails-app/taglib" isTestSource="false" />
       <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/grails-ui-1.2-SNAPSHOT/src/groovy" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/rateable-0.6.2/grails-app/controllers" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/rateable-0.6.2/grails-app/domain" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/rateable-0.6.2/grails-app/taglib" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/rateable-0.6.2/src/groovy" isTestSource="false" />
       <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/selenium-rc-1.0-SNAPSHOT/src/groovy" isTestSource="false" />
       <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/selenium-rc-1.0-SNAPSHOT/src/java" isTestSource="false" />
       <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/tomcat-1.2.1/src/groovy" isTestSource="false" />

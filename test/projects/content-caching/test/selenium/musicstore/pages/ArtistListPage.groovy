@@ -1,13 +1,14 @@
 package musicstore.pages
 
 import grails.plugins.selenium.pageobjects.GrailsListPage
+import grails.plugins.selenium.pageobjects.GrailsPage
+import grails.plugins.selenium.pageobjects.InvalidPageStateException
 
 class ArtistListPage extends GrailsListPage {
 
 	static ArtistListPage open() {
-		def page = new ArtistListPage()
-		page.selenium.open "/artist/list"
-		return page
+		GrailsPage.open "/artist/list"
+		return new ArtistListPage()
 	}
 
 	ArtistListPage refresh() {
@@ -18,4 +19,14 @@ class ArtistListPage extends GrailsListPage {
 	String getTitle() { selenium.title }
 
 	boolean isSitemeshDecorated() { selenium.isElementPresent "css=#grailsLogo" }
+
+	@Override protected void validate() {
+		def title = selenium.title
+		if (title != "Artist List") {
+			throw new InvalidPageStateException("Artist list page is not open, found page title $title")
+		}
+		if (!selenium.isElementPresent("css=#grailsLogo")) {
+			throw new InvalidPageStateException("Page is missing Sitemesh decoration")
+		}
+	}
 }

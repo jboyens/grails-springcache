@@ -6,6 +6,7 @@
         <meta name="layout" content="main" />
         <g:set var="entityName" value="${message(code: 'album.label', default: 'Album')}" />
         <title><g:message code="default.show.label" args="[entityName]" /></title>
+		<rateable:resources/>
     </head>
     <body>
         <div class="nav">
@@ -24,28 +25,26 @@
                     
 						<tr class="prop">
 							<td valign="top" class="name"><g:message code="album.artist.label" default="Artist" /></td>
-
 							<td valign="top" class="value"><g:link controller="artist" action="show" id="${albumInstance?.artist?.id}">${albumInstance?.artist?.encodeAsHTML()}</g:link></td>
-
 						</tr>
 
                         <tr class="prop">
                             <td valign="top" class="name"><g:message code="album.name.label" default="Name" /></td>
-                            
                             <td valign="top" class="value">${fieldValue(bean: albumInstance, field: "name")}</td>
-                            
                         </tr>
                     
                         <tr class="prop">
                             <td valign="top" class="name"><g:message code="album.year.label" default="Year" /></td>
-                            
                             <td valign="top" class="value">${fieldValue(bean: albumInstance, field: "year")}</td>
-                            
                         </tr>
                     
                         <tr class="prop">
+                            <td valign="top" class="name"><g:message code="album.rating.label" default="Rating" /></td>
+                            <td valign="top" class="value"><rateable:ratings bean="${albumInstance}" /></td>
+                        </tr>
+
+                        <tr class="prop">
                             <td valign="top" class="name"><g:message code="album.tracks.label" default="Tracks" /></td>
-                            
                             <td valign="top" style="text-align: left;" class="value">
                                 <ul>
                                 <g:each in="${albumInstance.tracks}" var="t">
@@ -53,7 +52,6 @@
                                 </g:each>
                                 </ul>
                             </td>
-                            
                         </tr>
                     
                     </tbody>

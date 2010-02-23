@@ -12,6 +12,10 @@ class Artist {
 		name unique: true, blank: false
     }
 
+	static mapping = {
+		albums sort: "year"
+	}
+
 	String toString() { name }
 
 }

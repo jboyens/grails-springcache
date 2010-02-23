@@ -7,7 +7,8 @@ NEXT RELEASE
 - log timings at trace level
 
 BACKLOG
-- caching tag lib
-- expose a cache service
+- configurable cacheable & cacheflush for controllers in plugins?
+- caching tag libs
+- expose a cache service?
 - expose caching statistics (JMX?)
 - support reloading via onChange and onConfigChange

@@ -1,3 +1,6 @@
+import org.springframework.security.context.SecurityContextHolder
+import org.springframework.security.userdetails.UserDetails
+
 // locations to search for config files that get merged into the main config
 // config files can either be Java properties files or ConfigSlurper scripts
 
@@ -67,8 +70,7 @@ log4j = {
 	//    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
 	//}
 
-
-	error	'org.codehaus.groovy.grails.web.servlet',  //  controllers
+	error 'org.codehaus.groovy.grails.web.servlet',  //  controllers
 			'org.codehaus.groovy.grails.web.pages', //  GSP
 			'org.codehaus.groovy.grails.web.sitemesh', //  layouts
 			'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
@@ -80,25 +82,30 @@ log4j = {
 			'org.hibernate',
 			'net.sf.ehcache.hibernate'
 
-	warn	'org.mortbay.log'
+	warn 'org.mortbay.log'
 
-	info	'net.sf.ehcache.constructs.web.filter'
+	info 'net.sf.ehcache.constructs.web.filter'
 
-	debug	'grails.plugin.springcache',
+	debug 'grails.plugin.springcache',
 			'grails.app.controller.test.PirateController',
 			'net.sf.ehcache.constructs.web.filter'
 
 }
+//log4j.logger.org.springframework.security='off,stdout'
+//log4j.logger.org.springframework.security='off,stdout'
 
 springcache {
+//	disabled = true
 	cachingModels {
 		AlbumController.cacheName = "albumControllerCache"
 		ArtistController.cacheName = "artistControllerCache"
 		UserController.cacheName = "userControllerCache"
 		LatestController.cacheName = "latestControllerCache"
+		PopularController.cacheName = "popularControllerCache"
 	}
 	flushingModels {
-		AlbumController.cacheNames = "albumControllerCache,latestControllerCache"
+		AlbumController.cacheNames = "albumControllerCache,latestControllerCache,popularControllerCache"
+		RateableController.cacheNames = "albumControllerCache,popularControllerCache"
 	}
 	caches {
 		albumControllerCache {
@@ -117,11 +124,18 @@ springcache {
 			blocking = true
 			eternal = true
 		}
+		popularControllerCache {
+			blocking = true
+			eternal = true
+		}
 	}
 }
 
-     
+grails.rateable.rater.evaluator = {
+	def principal = SecurityContextHolder.context?.authentication?.principal
+	if (principal instanceof UserDetails) {
+		return principal.domainClass
+	}
+	return null
+}
 
-//log4j.logger.org.springframework.security='off,stdout'
-
-//log4j.logger.org.springframework.security='off,stdout'

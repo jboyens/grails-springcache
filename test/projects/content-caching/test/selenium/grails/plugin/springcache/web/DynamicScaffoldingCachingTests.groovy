@@ -18,13 +18,4 @@ class DynamicScaffoldingCachingTests extends AbstractContentCachingTestCase {
 		assertEquals 1, artistControllerCache.statistics.cacheMisses
 	}
 
-	void testCachedResponseIsDecoratedBySitemesh() {
-		def page = ArtistListPage.open()
-		assertTrue page.sitemeshDecorated
-
-		page = page.refresh()
-		assertTrue page.sitemeshDecorated
-
-		assertEquals 1, artistControllerCache.statistics.cacheHits
-	}
 }
