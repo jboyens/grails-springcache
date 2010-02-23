@@ -23,6 +23,13 @@ abstract class AbstractContentCachingTestCase extends GroovyTestCase {
 		}
 	}
 
+	protected void setUpAlbumRating(Album album, User rater, double stars) {
+		def rating = new Rating(stars: stars, raterId: rater.id, raterClass: User.name)
+		rating.save(failOnError: true)
+		def link = new RatingLink(rating: rating, ratingRef: album.id, type: "album")
+		link.save(failOnError: true)
+	}
+
 	protected User setUpUser(username, userRealName) {
 		User.withTransaction {tx ->
 			def userRole = Role.findByAuthority("ROLE_USER")
