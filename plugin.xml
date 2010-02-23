@@ -15,18 +15,18 @@
       <resolver type='mavenLocal' />
       <resolver type='mavenRepo' root='http://m2repo.spockframework.org/snapshots' name='http://m2repo.spockframework.org/snapshots' m2compatbile='true' />
     </resolvers>
-    <dependency group='net.sf.ehcache' name='ehcache-web' version='2.0.0' conf='compile' transitive='true'>
-      <excludes group='*' name='ehcache-core' />
-    </dependency>
-    <dependency group='net.sf.ehcache' name='ehcache' version='1.7.2' conf='compile' transitive='true'>
+    <dependency group='net.sf.ehcache' name='ehcache' version='1.7.1' conf='compile' transitive='true'>
       <excludes group='*' name='jms' />
       <excludes group='*' name='commons-logging' />
       <excludes group='*' name='servlet-api' />
     </dependency>
-    <dependency group='org.hamcrest' name='hamcrest-all' version='1.1' conf='test' transitive='true' />
+    <dependency group='net.sf.ehcache' name='ehcache-web' version='2.0.0' conf='compile' transitive='true'>
+      <excludes group='*' name='ehcache-core' />
+    </dependency>
     <dependency group='org.gmock' name='gmock' version='0.8.0' conf='test' transitive='true'>
       <excludes group='*' name='junit' />
     </dependency>
+    <dependency group='org.hamcrest' name='hamcrest-all' version='1.1' conf='test' transitive='true' />
   </dependencies>
   <behavior />
 </plugin>
