@@ -31,7 +31,6 @@ class AlbumController {
 			if (artistInstance) params.artist = artistInstance
 		}
         def albumInstance = new Album(params)
-		println albumInstance
         if (albumInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'album.label', default: 'Album'), albumInstance.id])}"
             redirect(action: "show", id: albumInstance.id)
