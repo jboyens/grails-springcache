@@ -42,6 +42,16 @@ class HomePage extends GrailsPage {
 		return list
 	}
 
+	List<String> getPopularAlbums() {
+		def list = []
+		int i = 1
+		while (selenium.isElementPresent("//div[@id='popularAlbums']/ol/li[$i]")) {
+			list << selenium.getText("//div[@id='popularAlbums']/ol/li[$i]/span[@class='album']")
+			i++
+		}
+		return list
+	}
+
 	@Override protected void validate() {
 		def title = selenium.title
 		if (title != "Welcome to Grails") {

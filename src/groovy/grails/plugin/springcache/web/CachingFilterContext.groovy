@@ -1,11 +1,9 @@
 package grails.plugin.springcache.web
 
-import org.codehaus.groovy.grails.commons.GrailsControllerClass
 import java.lang.reflect.Field
-import org.springframework.web.context.request.RequestContextHolder
 import org.codehaus.groovy.grails.commons.ApplicationHolder
-import org.apache.commons.lang.builder.ToStringBuilder
-import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
+import org.codehaus.groovy.grails.commons.GrailsControllerClass
+import org.springframework.web.context.request.RequestContextHolder
 
 class CachingFilterContext {
 

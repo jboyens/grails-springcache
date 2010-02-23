@@ -86,9 +86,8 @@ log4j = {
 
 	info 'net.sf.ehcache.constructs.web.filter'
 
-	debug 'grails.plugin.springcache',
-			'grails.app.controller.test.PirateController',
-			'net.sf.ehcache.constructs.web.filter'
+//	debug 'grails.plugin.springcache',
+//			'net.sf.ehcache.constructs.web.filter'
 
 }
 //log4j.logger.org.springframework.security='off,stdout'

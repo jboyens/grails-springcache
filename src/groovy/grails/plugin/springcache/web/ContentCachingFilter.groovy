@@ -42,6 +42,7 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 	 * on annotations on target controller.
 	 */
 	@Override protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
+		request[REQUEST_CACHE_CONTEXT_ATTR] = new CachingFilterContext()
 		if (shouldFlush(request)) {
 			chain.doFilter(request, response)
 		} else if (shouldCache(request)) {
@@ -143,7 +144,7 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 	 * /pirate/show/1 and /pirate/show/2 separately).
 	 */
 	protected String calculateKey(HttpServletRequest request) {
-		def context = getCachingFilterContext(request)
+		def context = request[REQUEST_CACHE_CONTEXT_ATTR]
 		def builder = new CacheKeyBuilder()
 		builder.append(context.controllerName) // TODO: override leftShift
 		builder.append(context.actionName)
@@ -151,15 +152,6 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 			builder.append(entry)
 		}
 		return builder.toCacheKey().toString() // TODO: don't use toString
-	}
-
-	private CachingFilterContext getCachingFilterContext(HttpServletRequest request) {
-		def context = request.getAttribute(REQUEST_CACHE_CONTEXT_ATTR)
-		if (!context) {
-			context = new CachingFilterContext()
-			request.setAttribute(REQUEST_CACHE_CONTEXT_ATTR, context)
-		}
-		return context
 	}
 
 	private BlockingCache getCache(HttpServletRequest request) {
@@ -171,7 +163,7 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 	}
 
 	private boolean shouldCache(HttpServletRequest request) {
-		def context = getCachingFilterContext(request)
+		def context = request[REQUEST_CACHE_CONTEXT_ATTR]
 		Cacheable cacheable = getAnnotation(context, Cacheable)
 		if (cacheable) {
 			def cache = cacheProvider.getCache(cacheable.modelId()).wrappedCache
@@ -190,7 +182,7 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 	}
 
 	boolean shouldFlush(HttpServletRequest request) {
-		def context = getCachingFilterContext(request)
+		def context = request[REQUEST_CACHE_CONTEXT_ATTR]
 		CacheFlush cacheFlush = getAnnotation(context, CacheFlush)
 		if (cacheFlush) {
 			def caches = cacheProvider.getCaches(cacheFlush.modelId())*.wrappedCache

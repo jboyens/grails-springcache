@@ -3,7 +3,7 @@
 	<ol>
 		<g:each var="albumInstance" in="${albumInstanceList}">
 			<li>
-				<g:link controller="album" action="show" id="${albumInstance.id}"><g:message message="${albumInstance}"/></g:link>
+				<span class="album"><g:link controller="album" action="show" id="${albumInstance.id}"><g:message message="${albumInstance}"/></g:link></span>
 				<rateable:ratings bean="${albumInstance}" />
 			</li>
 		</g:each>

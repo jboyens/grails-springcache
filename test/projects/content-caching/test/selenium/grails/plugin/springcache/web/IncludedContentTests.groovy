@@ -5,17 +5,22 @@ import musicstore.Album
 import musicstore.Artist
 import net.sf.ehcache.Ehcache
 import musicstore.pages.AlbumCreatePage
+import org.grails.rateable.Rating
+import org.grails.rateable.RatingLink
+import musicstore.auth.User
 
 class IncludedContentTests extends AbstractContentCachingTestCase {
 
 	Ehcache latestControllerCache
+	Ehcache popularControllerCache
+	Album album1, album2, album3
 
 	void setUp() {
 		super.setUp()
 
-		Album.build(artist: Artist.build(name: "Edward Sharpe & the Magnetic Zeros"), name: "Up From Below", year: "2009")
-		Album.build(artist: Artist.build(name: "Yeasayer"), name: "Odd Blood", year: "2010")
-		Album.build(artist: Artist.build(name: "Yeah Yeah Yeahs"), name: "It's Blitz!", year: "2009")
+		album1 = Album.build(artist: Artist.build(name: "Edward Sharpe & the Magnetic Zeros"), name: "Up From Below", year: "2009")
+		album2 = Album.build(artist: Artist.build(name: "Yeasayer"), name: "Odd Blood", year: "2010")
+		album3 = Album.build(artist: Artist.build(name: "Yeah Yeah Yeahs"), name: "It's Blitz!", year: "2009")
 	}
 
 	void tearDown() {
@@ -28,7 +33,7 @@ class IncludedContentTests extends AbstractContentCachingTestCase {
 	}
 
 	void testIncludedContentIsCached() {
-		def expectedList = ["It's Blitz! by Yeah Yeah Yeahs (2009)", "Odd Blood by Yeasayer (2010)", "Up From Below by Edward Sharpe & the Magnetic Zeros (2009)"]
+		def expectedList = [album3, album2, album1].collect { it.toString() }
 		def page = HomePage.open()
 		assertEquals expectedList, page.latestAlbums
 
@@ -40,7 +45,7 @@ class IncludedContentTests extends AbstractContentCachingTestCase {
 	}
 
 	void testIncludedContentCanBeFlushedByAnotherController() {
-		def expectedList = ["It's Blitz! by Yeah Yeah Yeahs (2009)", "Odd Blood by Yeasayer (2010)", "Up From Below by Edward Sharpe & the Magnetic Zeros (2009)"]
+		def expectedList = [album3, album2, album1].collect { it.toString() }
 		assertEquals expectedList, HomePage.open().latestAlbums
 
 		def createPage = AlbumCreatePage.open()
@@ -51,6 +56,34 @@ class IncludedContentTests extends AbstractContentCachingTestCase {
 
 		expectedList.add(0, "Sigh No More by Mumford & Sons (2009)")
 		assertEquals expectedList, HomePage.open().latestAlbums
+	}
+
+	void testMultipleIncludesAreCachedSeparately() {
+		def user = setUpUser("blackbeard", "Edward Teach")
+		setUpAlbumRating(album1, user, 5.0)
+		setUpAlbumRating(album2, user, 3.0)
+		setUpAlbumRating(album3, user, 4.0)
+
+		def expectedLatestList = [album3, album2, album1].collect { it.toString() }
+		def expectedPopularList = [album1, album3, album2].collect { it.toString() }
+
+		def page = HomePage.open()
+		assertEquals expectedLatestList, page.latestAlbums
+		assertEquals expectedPopularList, page.popularAlbums
+
+		assertEquals 1, latestControllerCache.statistics.objectCount
+		assertEquals 1, latestControllerCache.statistics.cacheMisses
+		assertEquals 0, latestControllerCache.statistics.cacheHits
+		assertEquals 1, popularControllerCache.statistics.objectCount
+		assertEquals 1, popularControllerCache.statistics.cacheMisses
+		assertEquals 0, popularControllerCache.statistics.cacheHits
+	}
+
+	private void setUpAlbumRating(Album album, User rater, double stars) {
+		def rating = new Rating(stars: stars, raterId: rater.id, raterClass: User.name)
+		rating.save(failOnError: true)
+		def link = new RatingLink(rating: rating, ratingRef: album.id, type: "album")
+		link.save(failOnError: true)
 	}
 
 }

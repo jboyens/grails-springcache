@@ -49,6 +49,7 @@
 				margin-right:20px;
 			}
 		</style>
+		<rateable:resources/>
     </head>
     <body>
 		<div id="nav">

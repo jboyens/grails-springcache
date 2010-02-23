@@ -10,36 +10,18 @@ import musicstore.pages.UserListPage
 
 class AuthenticatedContentTests extends AbstractContentCachingTestCase {
 
-	def authenticateService
 	Ehcache albumControllerCache
 	Ehcache userControllerCache
 
 	void setUp() {
 		super.setUp()
-
-		User.withTransaction {tx ->
-			def userRole = Role.findByAuthority("ROLE_USER")
-			def user = new User(username: "blackbeard", userRealName: "Edward Teach", email: "blackbeard@energizedwork.com", enabled: true)
-			user.passwd = authenticateService.encodePassword("password")
-			user.save(failOnError: true)
-
-			userRole.addToPeople user
-			userRole.save(failOnError: true)
-		}
+		setUpUser("blackbeard", "Edward Teach")
 	}
 
 	void tearDown() {
 		super.tearDown()
-		
 		logout()
-		
-		def userRole = Role.findByAuthority("ROLE_USER")
-		User.withTransaction {tx ->
-			User.list().each {
-				userRole.removeFromPeople(it)
-				it.delete()
-			}
-		}
+		tearDownUsers()
 	}
 
 	void testLoginOnUncachedPage() {
