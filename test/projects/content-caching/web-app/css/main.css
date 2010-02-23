@@ -268,3 +268,13 @@ th.desc a {
     background: transparent url(../images/skin/database_save.png) 5px 50% no-repeat;
     padding-left: 28px;
 }
+
+/* RATINGS ON HOME PAGE */
+table.ratingDisplay {
+	border: 0;
+	width: auto;
+	display: inline-block;
+	vertical-align: text-bottom;
+	position: relative;
+	right: 0px;
+}
