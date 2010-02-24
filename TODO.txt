@@ -2,12 +2,11 @@ BUGS
 - check caching of service methods with defaulted params
 
 NEXT RELEASE
+- handle varying content for content negotiated requests
 - ensure caches for content are blocking
 - only cache GET requests?
-- log timings at trace level
 - test ajax
 - test multiple sitemesh layouts
-- test sitemesh page properties
 - don't configure filter if not using ehcache
 - test caching XML/JSON output
 
