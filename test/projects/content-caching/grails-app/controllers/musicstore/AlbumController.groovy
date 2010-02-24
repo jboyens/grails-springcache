@@ -25,11 +25,6 @@ class AlbumController {
 
 	@CacheFlush(modelId = "AlbumController")
     def save = {
-		// TODO: custom data binder to acheive this
-		if (params."artist.name") {
-			def artistInstance = Artist.findByName(params."artist.name")
-			if (artistInstance) params.artist = artistInstance
-		}
         def albumInstance = new Album(params)
         if (albumInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'album.label', default: 'Album'), albumInstance.id])}"

@@ -1,4 +1,5 @@
-// Place your Spring DSL code here
+import musicstore.binding.CustomPropertyEditorRegistrar
+
 beans = {
-    
+	musicStoreEditorRegistrar(CustomPropertyEditorRegistrar)
 }
