@@ -3,7 +3,6 @@ package grails.plugin.springcache.web
 import grails.plugin.springcache.CacheProvider
 import grails.plugin.springcache.annotations.CacheFlush
 import grails.plugin.springcache.annotations.Cacheable
-import grails.plugin.springcache.web.CachingFilterContext
 import java.lang.annotation.Annotation
 import javax.servlet.FilterChain
 import javax.servlet.FilterConfig
@@ -20,13 +19,11 @@ import org.codehaus.groovy.grails.web.servlet.WrappedResponseHolder
 import org.codehaus.groovy.grails.web.util.WebUtils
 import org.slf4j.LoggerFactory
 import grails.plugin.springcache.key.CacheKeyBuilder
-import org.apache.commons.lang.time.StopWatch
 
 class ContentCachingFilter extends PageFragmentCachingFilter {
 
 	private static final REQUEST_CACHE_ATTR = "${ContentCachingFilter.name}.CACHE"
 	private static final REQUEST_CACHE_CONTEXT_ATTR = "${ContentCachingFilter.name}.CACHE_CONTEXT"
-	private static final REQUEST_STOPWATCH_ATTR = "${ContentCachingFilter.name}.STOPWATCH"
 
 	private final log = LoggerFactory.getLogger(getClass())
 	private final timingLog = LoggerFactory.getLogger("${getClass().name}.TIMINGS")
@@ -60,10 +57,8 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 	 * than having the cache wired into the filter.
 	 */
 	@Override protected PageInfo buildPageInfo(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
-		if (timingLog.isInfoEnabled()) {
-			request[REQUEST_STOPWATCH_ATTR] = new StopWatch()
-			request[REQUEST_STOPWATCH_ATTR].start()
-		}
+		def timer = new Timer()
+		timer.start()
 		// Look up the cached page
 		BlockingCache cache = getCache(request)
 		final key = calculateKey(request)
@@ -86,17 +81,11 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 					cache.put(new Element(key, null))
 					throw new Exception(throwable)
 				}
-				if (timingLog.isInfoEnabled()) {
-					request[REQUEST_STOPWATCH_ATTR].stop()
-					timingLog.info "Uncached request for ${getCachedUri(request)} took ${request[REQUEST_STOPWATCH_ATTR]}"
-				}
+				timer.stop("Uncached request for ${getCachedUri(request)}")
 			} else {
 				log.debug "Serving cached content for $key"
 				pageInfo = element.getObjectValue()
-				if (timingLog.isInfoEnabled()) {
-					request[REQUEST_STOPWATCH_ATTR].stop()
-					timingLog.info "Cached request for ${getCachedUri(request)} took ${request[REQUEST_STOPWATCH_ATTR]}"
-				}
+				timer.stop("Cached request for ${getCachedUri(request)}")
 			}
 		} catch (LockTimeoutException e) {
 			//do not release the lock, because you never acquired it
