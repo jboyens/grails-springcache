@@ -7,7 +7,7 @@ import net.sf.ehcache.Ehcache
 import musicstore.pages.AlbumCreatePage
 import org.grails.rateable.Rating
 import org.grails.rateable.RatingLink
-import musicstore.auth.User
+
 import musicstore.pages.AlbumShowPage
 
 class IncludedContentTests extends AbstractContentCachingTestCase {
@@ -86,20 +86,21 @@ class IncludedContentTests extends AbstractContentCachingTestCase {
 		setUpUser("ponytail", "Steven Segal")
 		def user = setUpUser("roundhouse", "Chuck Norris")
 		setUpAlbumRating(album1, user, 5.0)
-		setUpAlbumRating(album2, user, 3.0)
-		setUpAlbumRating(album3, user, 4.0)
+		setUpAlbumRating(album2, user, 2.0)
+		setUpAlbumRating(album3, user, 1.0)
 
-		def expectedPopularList = [album1, album3, album2].collect { it.toString() }
+		def expectedPopularList = [album1, album2, album3].collect { it.toString() }
 
 		def homePage = loginAs("ponytail")
 		assertEquals expectedPopularList, homePage.popularAlbums
 
-		def showPage = AlbumShowPage.open(album1.id)
-		showPage.vote 1
+		def showPage = AlbumShowPage.open(album3.id)
+		showPage.vote 5
+
+		expectedPopularList = [album3, album1, album2].collect { it.toString() }
 
 		homePage = HomePage.open()
-		// TODO: not working because of goofy query in Rateable plugin - orders by num votes then avg rating!
-//		assertEquals([album3, album2, album1], homePage.popularAlbums)
+		assertEquals(expectedPopularList, homePage.popularAlbums)
 
 		assertEquals 2, popularControllerCache.statistics.cacheMisses
 	}

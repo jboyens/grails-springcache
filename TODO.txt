@@ -5,6 +5,7 @@ NEXT RELEASE
 - ensure caches for content are blocking
 - only cache GET requests?
 - log timings at trace level
+- test 
 
 BACKLOG
 - configurable cacheable & cacheflush for controllers in plugins?

@@ -1,12 +1,15 @@
 package grails.plugin.springcache.web
 
 import grails.plugins.selenium.SeleniumManager
+import musicstore.Album
+import musicstore.auth.Role
+import musicstore.auth.User
 import musicstore.pages.HomePage
 import musicstore.pages.LoginPage
 import net.sf.ehcache.CacheManager
-import musicstore.auth.User
-import musicstore.auth.Role
 import org.grails.plugins.springsecurity.service.AuthenticateService
+import org.grails.rateable.Rating
+import org.grails.rateable.RatingLink
 
 abstract class AbstractContentCachingTestCase extends GroovyTestCase {
 
