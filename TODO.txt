@@ -5,9 +5,13 @@ NEXT RELEASE
 - ensure caches for content are blocking
 - only cache GET requests?
 - log timings at trace level
-- test 
+- test ajax
+- test multiple sitemesh layouts
+- test sitemesh page properties
+- don't configure filter if not using ehcache
 
 BACKLOG
+- allow cache names directly on annotations
 - configurable cacheable & cacheflush for controllers in plugins?
 - caching tag libs
 - expose a cache service?
