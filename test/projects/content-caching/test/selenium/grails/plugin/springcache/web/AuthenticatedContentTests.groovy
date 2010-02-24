@@ -1,8 +1,5 @@
 package grails.plugin.springcache.web
 
-import grails.plugin.springcache.web.AbstractContentCachingTestCase
-import musicstore.auth.Role
-import musicstore.auth.User
 import musicstore.pages.AlbumListPage
 import musicstore.pages.HomePage
 import net.sf.ehcache.Ehcache
@@ -19,9 +16,9 @@ class AuthenticatedContentTests extends AbstractContentCachingTestCase {
 	}
 
 	void tearDown() {
-		super.tearDown()
 		logout()
 		tearDownUsers()
+		super.tearDown()
 	}
 
 	void testLoginOnUncachedPage() {
@@ -47,11 +44,13 @@ class AuthenticatedContentTests extends AbstractContentCachingTestCase {
 	}
 
 	void testCachingOfAuthenticatedAction() {
-		UserListPage.openNotAuthenticated()
+		def loginPage = UserListPage.openNotAuthenticated()
 		assertEquals "Page should not be cached if status is 403", 0, userControllerCache.statistics.objectCount
 
-		loginAs "blackbeard"
-		UserListPage.open()
+		loginPage.j_username = "blackbeard"
+		loginPage.j_password = "password"
+		loginPage.login(UserListPage)
+		
 		assertEquals 1, userControllerCache.statistics.objectCount
 
 		logout()

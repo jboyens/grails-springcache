@@ -9,6 +9,7 @@ NEXT RELEASE
 - test multiple sitemesh layouts
 - test sitemesh page properties
 - don't configure filter if not using ehcache
+- test caching XML/JSON output
 
 BACKLOG
 - allow cache names directly on annotations

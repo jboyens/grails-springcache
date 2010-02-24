@@ -25,14 +25,15 @@ class IncludedContentTests extends AbstractContentCachingTestCase {
 	}
 
 	void tearDown() {
-		super.tearDown()
-
+		logout()
+		tearDownUsers()
 		Album.withTransaction {tx ->
 			RatingLink.list()*.delete()
 			Rating.list()*.delete()
 			Album.list()*.delete()
 			Artist.list()*.delete()
 		}
+		super.tearDown()
 	}
 
 	void testIncludedContentIsCached() {

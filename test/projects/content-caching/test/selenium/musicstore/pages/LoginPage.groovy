@@ -11,13 +11,13 @@ class LoginPage extends GrailsFormPage {
 		return new LoginPage()
 	}
 
-	HomePage login() {
+	GrailsPage login(Class<? extends GrailsPage> expectedPageType = HomePage) {
 		selenium.clickAndWait("css=#loginForm input[type=submit]")
 		if (selenium.isElementPresent("css=.login_message")) {
 			def loginMessage = selenium.getText("css=.login_message")
 			throw new InvalidPageStateException("Login failed with message: '$loginMessage'")
 		}
-		return new HomePage()
+		return expectedPageType.newInstance()
 	}
 
 	@Override protected void validate() {

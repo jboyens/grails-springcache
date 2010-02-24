@@ -18,4 +18,8 @@ class Role {
 		authority(blank: false, unique: true)
 		description()
 	}
+
+	static mapping = {
+		people cascade: "all,delete-orphan"
+	}
 }

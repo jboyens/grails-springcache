@@ -52,7 +52,6 @@ abstract class AbstractContentCachingTestCase extends GroovyTestCase {
 		User.withTransaction {tx ->
 			User.list().each {
 				userRole.removeFromPeople(it)
-				it.delete()
 			}
 		}
 	}
@@ -64,10 +63,9 @@ abstract class AbstractContentCachingTestCase extends GroovyTestCase {
 		return loginPage.login()
 	}
 
-	HomePage logout() {
+	void logout() {
 		 // TODO: better way to log out?
 		SeleniumManager.instance.selenium.open "/logout"
-		return new HomePage()
 	}
 
 }

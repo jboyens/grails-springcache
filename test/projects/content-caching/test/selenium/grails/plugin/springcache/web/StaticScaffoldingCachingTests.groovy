@@ -1,6 +1,5 @@
 package grails.plugin.springcache.web
 
-import grails.plugin.springcache.web.AbstractContentCachingTestCase
 import musicstore.Album
 import musicstore.Artist
 import musicstore.pages.AlbumCreatePage
@@ -13,10 +12,9 @@ class StaticScaffoldingCachingTests extends AbstractContentCachingTestCase {
 	Ehcache albumControllerCache
 
 	void tearDown() {
-		super.tearDown()
-
 		Album.list()*.delete()
 		Artist.list()*.delete()
+		super.tearDown()
 	}
 
 	void testOpeningListPageWithEmptyCache() {
