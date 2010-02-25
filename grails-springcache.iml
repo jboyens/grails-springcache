@@ -32,17 +32,21 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="grails-1.2.1" level="application" />
     <orderEntry type="module-library" exported="">
       <library name="Grails User Library">
         <CLASSES>
           <root url="file://$MODULE_DIR$/lib" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/net.sf.ehcache/ehcache-terracotta/jars/ehcache-terracotta-1.7.2.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/net.sf.ehcache/ehcache-web/jars/ehcache-web-2.0.0.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.gmock/gmock/jars/gmock-0.8.0.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.hamcrest/hamcrest-all/jars/hamcrest-all-1.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
         <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="grails-springcache-grailsPlugins" />
     <orderEntry type="library" name="Grails 1.2.1" level="project" />
   </component>
 </module>
