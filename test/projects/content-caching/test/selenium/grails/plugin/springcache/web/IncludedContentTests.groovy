@@ -53,7 +53,7 @@ class IncludedContentTests extends AbstractContentCachingTestCase {
 		assertEquals expectedList, HomePage.open().latestAlbums
 
 		def createPage = AlbumCreatePage.open()
-		createPage."artist.name" = "Mumford & Sons"
+		createPage.artist = "Mumford & Sons"
 		createPage.name = "Sigh No More"
 		createPage.year = "2009"
 		createPage.save()

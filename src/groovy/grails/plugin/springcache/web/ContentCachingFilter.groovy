@@ -18,7 +18,6 @@ import net.sf.ehcache.constructs.web.filter.PageFragmentCachingFilter
 import org.codehaus.groovy.grails.web.servlet.WrappedResponseHolder
 import org.codehaus.groovy.grails.web.util.WebUtils
 import org.slf4j.LoggerFactory
-import grails.plugin.springcache.key.CacheKeyBuilder
 
 class ContentCachingFilter extends PageFragmentCachingFilter {
 
@@ -28,6 +27,7 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 	private final log = LoggerFactory.getLogger(getClass())
 	private final timingLog = LoggerFactory.getLogger("${getClass().name}.TIMINGS")
 	CacheProvider cacheProvider
+	KeyGenerator keyGenerator
 
 	/**
 	 * Overrides doInit in CachingFilter to be a no-op. The superclass initializes a single cache that is used for all
@@ -149,13 +149,7 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 	 */
 	protected String calculateKey(HttpServletRequest request) {
 		def context = request[REQUEST_CACHE_CONTEXT_ATTR]
-		def builder = new CacheKeyBuilder()
-		builder.append(context.controllerName) // TODO: override leftShift
-		builder.append(context.actionName)
-		context.params.each { entry ->
-			builder.append(entry)
-		}
-		return builder.toCacheKey().toString() // TODO: don't use toString
+		return keyGenerator.generateKey(context, request).toString()
 	}
 
 	private BlockingCache getCache(HttpServletRequest request) {
