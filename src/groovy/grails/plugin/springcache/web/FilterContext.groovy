@@ -5,7 +5,7 @@ import org.codehaus.groovy.grails.commons.ApplicationHolder
 import org.codehaus.groovy.grails.commons.GrailsControllerClass
 import org.springframework.web.context.request.RequestContextHolder
 
-class CachingFilterContext {
+class FilterContext {
 
 	String controllerName
 	String actionName
@@ -13,7 +13,7 @@ class CachingFilterContext {
 	private final GrailsControllerClass controllerArtefact
 	private final Field actionClosure
 
-	CachingFilterContext() {
+	FilterContext() {
 		controllerName = RequestContextHolder.requestAttributes?.controllerName
 		controllerArtefact = controllerName ? ApplicationHolder.application.getArtefactByLogicalPropertyName("Controller", controllerName) : null
 		actionName = RequestContextHolder.requestAttributes?.actionName ?: controllerArtefact?.defaultAction

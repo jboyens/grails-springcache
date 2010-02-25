@@ -1,6 +1,6 @@
 import org.springframework.security.context.SecurityContextHolder
 import org.springframework.security.userdetails.UserDetails
-import grails.plugin.springcache.web.MimeTypeAwareKeyGenerator
+import grails.plugin.springcache.web.key.MimeTypeAwareKeyGenerator
 
 // locations to search for config files that get merged into the main config
 // config files can either be Java properties files or ConfigSlurper scripts

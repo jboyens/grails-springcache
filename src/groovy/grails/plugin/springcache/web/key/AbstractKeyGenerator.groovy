@@ -1,16 +1,18 @@
-package grails.plugin.springcache.web
+package grails.plugin.springcache.web.key
 
 import javax.servlet.http.HttpServletRequest
 import grails.plugin.springcache.key.CacheKeyBuilder
 
+import grails.plugin.springcache.web.FilterContext
+
 abstract class AbstractKeyGenerator implements KeyGenerator {
 
-	def generateKey(CachingFilterContext context, HttpServletRequest request) {
+	def generateKey(FilterContext context, HttpServletRequest request) {
 		def builder = new CacheKeyBuilder()
 		generateKeyInternal(builder, context, request)
 		return builder.toCacheKey()
 	}
 
-	protected abstract void generateKeyInternal(CacheKeyBuilder builder, CachingFilterContext context, HttpServletRequest request)
+	protected abstract void generateKeyInternal(CacheKeyBuilder builder, FilterContext context, HttpServletRequest request)
 
 }

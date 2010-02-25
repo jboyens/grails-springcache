@@ -1,6 +1,5 @@
 package grails.plugin.springcache.web
 
-import grails.plugin.springcache.web.CachingFilterContext
 import org.codehaus.groovy.grails.commons.ApplicationHolder
 import org.codehaus.groovy.grails.commons.DefaultGrailsControllerClass
 import org.codehaus.groovy.grails.commons.GrailsApplication
@@ -9,7 +8,7 @@ import org.gmock.WithGMock
 import org.springframework.web.context.request.RequestContextHolder
 
 @WithGMock
-class CachingFilterContextTests extends GroovyTestCase {
+class FilterContextTests extends GroovyTestCase {
 
 	void testControllerArtefactIsNullWhenNoControllerNamePresent() {
 		RequestContextHolder.requestAttributes = mock(GrailsWebRequest) {
@@ -19,7 +18,7 @@ class CachingFilterContextTests extends GroovyTestCase {
 		}
 
 		play {
-			def context = new CachingFilterContext()
+			def context = new FilterContext()
 			assertNull context.controllerArtefact
 		}
 	}
@@ -36,7 +35,7 @@ class CachingFilterContextTests extends GroovyTestCase {
 		}
 
 		play {
-			def context = new CachingFilterContext()
+			def context = new FilterContext()
 			assertEquals mockArtefact, context.controllerArtefact
 		}
 	}
@@ -49,7 +48,7 @@ class CachingFilterContextTests extends GroovyTestCase {
 		}
 
 		play {
-			def context = new CachingFilterContext()
+			def context = new FilterContext()
 			assertNull context.actionClosure
 		}
 	}
@@ -66,7 +65,7 @@ class CachingFilterContextTests extends GroovyTestCase {
 		}
 
 		play {
-			def context = new CachingFilterContext()
+			def context = new FilterContext()
 			assertNotNull context.actionClosure
 		}
 	}
@@ -83,7 +82,7 @@ class CachingFilterContextTests extends GroovyTestCase {
 		}
 
 		play {
-			def context = new CachingFilterContext()
+			def context = new FilterContext()
 			assertNotNull context.actionClosure
 		}
 	}
@@ -100,7 +99,7 @@ class CachingFilterContextTests extends GroovyTestCase {
 		}
 
 		play {
-			def context = new CachingFilterContext()
+			def context = new FilterContext()
 			assertNull context.actionClosure
 		}
 	}

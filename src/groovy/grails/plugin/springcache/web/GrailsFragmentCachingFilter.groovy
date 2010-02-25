@@ -18,11 +18,12 @@ import net.sf.ehcache.constructs.web.filter.PageFragmentCachingFilter
 import org.codehaus.groovy.grails.web.servlet.WrappedResponseHolder
 import org.codehaus.groovy.grails.web.util.WebUtils
 import org.slf4j.LoggerFactory
+import grails.plugin.springcache.web.key.KeyGenerator
 
-class ContentCachingFilter extends PageFragmentCachingFilter {
+class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 
-	private static final REQUEST_CACHE_ATTR = "${ContentCachingFilter.name}.CACHE"
-	private static final REQUEST_CACHE_CONTEXT_ATTR = "${ContentCachingFilter.name}.CACHE_CONTEXT"
+	private static final REQUEST_CACHE_ATTR = "${GrailsFragmentCachingFilter.name}.CACHE"
+	private static final REQUEST_CACHE_CONTEXT_ATTR = "${GrailsFragmentCachingFilter.name}.CACHE_CONTEXT"
 
 	private final log = LoggerFactory.getLogger(getClass())
 	private final timingLog = LoggerFactory.getLogger("${getClass().name}.TIMINGS")
@@ -42,7 +43,7 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 	 * on annotations on target controller.
 	 */
 	@Override protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
-		request[REQUEST_CACHE_CONTEXT_ATTR] = new CachingFilterContext()
+		request[REQUEST_CACHE_CONTEXT_ATTR] = new FilterContext()
 		if (shouldFlush(request)) {
 			chain.doFilter(request, response)
 		} else if (shouldCache(request)) {
@@ -197,7 +198,7 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 		}
 	}
 
-	private Annotation getAnnotation(CachingFilterContext context, Class type) {
+	private Annotation getAnnotation(FilterContext context, Class type) {
 		// TODO: cache this by controller/action
 		def annotation = context.actionClosure?.getAnnotation(type)
 		if (!annotation) {
@@ -206,7 +207,7 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 		return annotation
 	}
 
-	private void logRequestDetails(HttpServletRequest request, CachingFilterContext context) {
+	private void logRequestDetails(HttpServletRequest request, FilterContext context) {
 		log.debug "    method = $request.method"
 		log.debug "    requestURI = $request.requestURI"
 		log.debug "    forwardURI = $request.forwardURI"
