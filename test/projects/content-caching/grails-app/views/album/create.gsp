@@ -32,7 +32,7 @@
 									<label for="artist"><g:message code="album.artist.label" default="Artist" /></label>
 								</td>
 								<td valign="top" class="value ${hasErrors(bean: albumInstance, field: 'artist', 'errors')}">
-									<g:textField name="artist.name" value="${albumInstance?.artist?.name}" />
+									<g:textField name="artist" value="${albumInstance?.artist?.name}" />
 								</td>
 							</tr>
 

@@ -38,7 +38,7 @@ class StaticScaffoldingCachingTests extends AbstractContentCachingTestCase {
 		assertEquals 0, listPage.rowCount
 
 		def createPage = AlbumCreatePage.open()
-		createPage."artist.name" = "Edward Sharpe & the Magnetic Zeros"
+		createPage.artist = "Edward Sharpe & the Magnetic Zeros"
 		createPage.name = "Up From Below"
 		createPage.year = "2009"
 		createPage.save()
