@@ -101,8 +101,8 @@ class SpringcacheGrailsPlugin {
 			}
 
 			springcacheFilter(ContentCachingFilter) {
-				cacheProvider = ref(ConfigurationHolder.config.springcache.provider.bean ?: "springcacheCacheProvider")
-				keyGenerator = new MimeTypeAwareKeyGenerator()
+				cacheProvider = ref(application.config.springcache.provider.bean ?: "springcacheCacheProvider")
+				keyGenerator = new DefaultKeyGenerator()
 			}
 		}
 	}
