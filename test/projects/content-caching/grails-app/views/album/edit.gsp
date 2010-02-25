@@ -32,10 +32,10 @@
                         
 							<tr class="prop">
 								<td valign="top" class="name">
-								  <label for="artist"><g:message code="album.artist.label" default="Artist" /></label>
+								  <label><g:message code="album.artist.label" default="Artist" /></label>
 								</td>
-								<td valign="top" class="value ${hasErrors(bean: albumInstance, field: 'artist', 'errors')}">
-									<g:textField name="artist" value="${albumInstance?.artist?.name}" />
+								<td valign="top" class="value">
+									<g:link controller="artist" action="show" id="${albumInstance?.artist?.id}">${albumInstance?.artist?.encodeAsHTML()}</g:link>
 								</td>
 							</tr>
 
