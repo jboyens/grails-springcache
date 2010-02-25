@@ -3,7 +3,6 @@ BUGS
 
 NEXT RELEASE
 - mime type key generator needs to only work if action uses withFormat (somehow)
-- handle varying content for content negotiated requests
 - ensure caches for content are blocking
 - only cache GET requests?
 - test ajax
