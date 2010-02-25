@@ -7,6 +7,7 @@
           <root url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/bean-fields-0.5/web-app" relative="/" />
           <root url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/rateable-0.6.2/web-app" relative="/" />
           <root url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/yui-2.7.0.1/web-app" relative="/" />
+          <root url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/functional-test-1.2.7/web-app" relative="/" />
         </webroots>
         <sourceRoots />
       </configuration>
@@ -28,6 +29,9 @@
       <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/build-test-data-0.2.3/src/java" isTestSource="false" />
       <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/build-test-data-0.2.3/src/groovy" isTestSource="false" />
       <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/build-test-data-0.2.3/grails-app/services" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/functional-test-1.2.7">
+      <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/functional-test-1.2.7/src/groovy" isTestSource="false" />
     </content>
     <content url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/rateable-0.6.2">
       <sourceFolder url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/rateable-0.6.2/src/groovy" isTestSource="false" />
@@ -54,15 +58,18 @@
           <root url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/tomcat-1.2.1/lib" />
           <root url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/acegi-0.5.2/lib" />
           <root url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/selenium-rc-1.0-SNAPSHOT/lib" />
+          <root url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/functional-test-1.2.7/lib" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
         <jarDirectory url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/acegi-0.5.2/lib" recursive="false" />
+        <jarDirectory url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/functional-test-1.2.7/lib" recursive="false" />
         <jarDirectory url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/selenium-rc-1.0-SNAPSHOT/lib" recursive="false" />
         <jarDirectory url="file://$USER_HOME$/.grails/1.2.1/projects/content-caching/plugins/tomcat-1.2.1/lib" recursive="false" />
       </library>
     </orderEntry>
     <orderEntry type="library" name="Grails 1.2.1" level="project" />
+    <orderEntry type="library" name="grails-1.2.1" level="application" />
   </component>
 </module>
 
