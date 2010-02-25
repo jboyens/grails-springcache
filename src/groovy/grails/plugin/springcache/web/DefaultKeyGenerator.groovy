@@ -7,10 +7,10 @@ class DefaultKeyGenerator implements KeyGenerator {
 
 	def generateKey(CachingFilterContext context, HttpServletRequest request) {
 		def builder = new CacheKeyBuilder()
-		builder.append(context.controllerName) // TODO: override leftShift
-		builder.append(context.actionName)
-		context.params.each { entry ->
-			builder.append(entry)
+		builder << context.controllerName
+		builder << context.actionName
+		context.params?.sort { it.key }?.each { entry ->
+			builder << entry
 		}
 		return builder.toCacheKey()
 	}

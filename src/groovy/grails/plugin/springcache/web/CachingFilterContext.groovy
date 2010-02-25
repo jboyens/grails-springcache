@@ -7,11 +7,11 @@ import org.springframework.web.context.request.RequestContextHolder
 
 class CachingFilterContext {
 
-	private final String controllerName
-	private final String actionName
+	String controllerName
+	String actionName
+	Map params
 	private final GrailsControllerClass controllerArtefact
 	private final Field actionClosure
-	private final Map params
 
 	CachingFilterContext() {
 		controllerName = RequestContextHolder.requestAttributes?.controllerName
@@ -27,9 +27,6 @@ class CachingFilterContext {
 
 	GrailsControllerClass getControllerArtefact() { controllerArtefact }
 	Field getActionClosure() { actionClosure }
-	String getControllerName() { controllerName }
-	String getActionName() { actionName }
-	Map getParams() { params }
 
 	String toString() {
 		def buffer = new StringBuilder("[")
