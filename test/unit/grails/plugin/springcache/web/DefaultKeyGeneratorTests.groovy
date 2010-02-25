@@ -55,4 +55,11 @@ class DefaultKeyGeneratorTests extends GroovyTestCase {
 		assertFalse key1 == key2
 	}
 
+	void testControllerAndActionParamsAreIgnored() {
+		def key1 = generator.generateKey(new CachingFilterContext(controllerName: "foo", actionName: "bar", params: [:]), null)
+		def key2 = generator.generateKey(new CachingFilterContext(controllerName: "foo", actionName: "bar", params: [controller: "foo", action: "bar"]), null)
+
+		assertEquals key1, key2
+	}
+
 }

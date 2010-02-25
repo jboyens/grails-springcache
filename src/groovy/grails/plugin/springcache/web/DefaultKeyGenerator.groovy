@@ -10,7 +10,9 @@ class DefaultKeyGenerator implements KeyGenerator {
 		builder << context.controllerName
 		builder << context.actionName
 		context.params?.sort { it.key }?.each { entry ->
-			builder << entry
+			if (!(entry.key in ["controller", "action"])) {
+				builder << entry
+			}
 		}
 		return builder.toCacheKey()
 	}
