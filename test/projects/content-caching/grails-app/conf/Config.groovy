@@ -13,7 +13,7 @@ import org.springframework.security.userdetails.UserDetails
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
-grails.mime.use.accept.header = false
+grails.mime.use.accept.header = true
 grails.mime.types = [html: ['text/html', 'application/xhtml+xml'],
 		xml: ['text/xml', 'application/xml'],
 		text: 'text/plain',
