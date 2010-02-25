@@ -1,4 +1,3 @@
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator
 import org.slf4j.LoggerFactory
 import grails.plugin.springcache.provider.ehcache.EhCacheProvider
@@ -6,9 +5,9 @@ import org.springframework.cache.ehcache.*
 import grails.plugin.springcache.CacheProvider
 import grails.plugin.springcache.aop.CachingAspect
 import grails.plugin.springcache.aop.FlushingAspect
-import grails.plugin.springcache.web.ContentCachingFilter
+import grails.plugin.springcache.web.GrailsFragmentCachingFilter
 import org.springframework.web.filter.DelegatingFilterProxy
-import grails.plugin.springcache.web.DefaultKeyGenerator
+import grails.plugin.springcache.web.key.DefaultKeyGenerator
 
 class SpringcacheGrailsPlugin {
 	def version = "1.2-SNAPSHOT"
@@ -99,8 +98,8 @@ class SpringcacheGrailsPlugin {
 				cacheProvider = ref(application.config.springcache.provider.bean ?: "springcacheCacheProvider")
 			}
 
-			springcacheFilter(ContentCachingFilter) {
-				cacheProvider = ref(ConfigurationHolder.config.springcache.provider.bean ?: "springcacheCacheProvider")
+			springcacheFilter(GrailsFragmentCachingFilter) {
+				cacheProvider = ref(application.config.springcache.provider.bean ?: "springcacheCacheProvider")
 				keyGenerator = new DefaultKeyGenerator()
 			}
 		}

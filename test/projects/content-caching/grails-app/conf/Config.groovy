@@ -1,5 +1,6 @@
 import org.springframework.security.context.SecurityContextHolder
 import org.springframework.security.userdetails.UserDetails
+import grails.plugin.springcache.web.key.MimeTypeAwareKeyGenerator
 
 // locations to search for config files that get merged into the main config
 // config files can either be Java properties files or ConfigSlurper scripts
@@ -13,7 +14,7 @@ import org.springframework.security.userdetails.UserDetails
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
-grails.mime.use.accept.header = false
+grails.mime.use.accept.header = true
 grails.mime.types = [html: ['text/html', 'application/xhtml+xml'],
 		xml: ['text/xml', 'application/xml'],
 		text: 'text/plain',
@@ -84,8 +85,8 @@ log4j = {
 
 	warn 'org.mortbay.log'
 
-	info 'net.sf.ehcache.constructs.web.filter',
-			'grails.plugin.springcache.web.Timer'
+	info 'net.sf.ehcache.constructs.web.filter'/*,
+			'grails.plugin.springcache.web.Timer'*/
 
 //	debug 'grails.plugin.springcache',
 //			'net.sf.ehcache.constructs.web.filter'
@@ -139,3 +140,6 @@ grails.rateable.rater.evaluator = {
 	return null
 }
 
+beans {
+	springcacheFilter.keyGenerator = new MimeTypeAwareKeyGenerator()
+}

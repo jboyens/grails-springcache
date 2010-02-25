@@ -50,6 +50,14 @@ public class CacheKeyBuilder {
 		return this;
 	}
 
+	public void leftShift(Object o) {
+		append(o);
+	}
+
+	public void leftShift(Object[] oarr) {
+		append(oarr);
+	}
+
 	public CacheKey toCacheKey() {
 		return new CacheKey(hash, checksum);
 	}

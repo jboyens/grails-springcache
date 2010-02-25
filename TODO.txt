@@ -2,7 +2,7 @@ BUGS
 - check caching of service methods with defaulted params
 
 NEXT RELEASE
-- handle varying content for content negotiated requests
+- mime type key generator needs to only work if action uses withFormat (somehow)
 - ensure caches for content are blocking
 - only cache GET requests?
 - test ajax

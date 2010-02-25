@@ -5,31 +5,30 @@ import org.codehaus.groovy.grails.commons.ApplicationHolder
 import org.codehaus.groovy.grails.commons.GrailsControllerClass
 import org.springframework.web.context.request.RequestContextHolder
 
-class CachingFilterContext {
+class FilterContext {
 
-	private final String controllerName
-	private final String actionName
-	private final GrailsControllerClass controllerArtefact
-	private final Field actionClosure
-	private final Map params
+	String controllerName
+	String actionName
+	Map params
 
-	CachingFilterContext() {
+	FilterContext() {
 		controllerName = RequestContextHolder.requestAttributes?.controllerName
-		controllerArtefact = controllerName ? ApplicationHolder.application.getArtefactByLogicalPropertyName("Controller", controllerName) : null
 		actionName = RequestContextHolder.requestAttributes?.actionName ?: controllerArtefact?.defaultAction
-		try {
-			actionClosure = actionName ? controllerArtefact?.clazz?.getDeclaredField(actionName) : null
-		} catch (NoSuchFieldException e) {
-			// happens with dynamic scaffolded controllers
-		}
 		params = RequestContextHolder.requestAttributes?.parameterMap?.asImmutable()
 	}
 
-	GrailsControllerClass getControllerArtefact() { controllerArtefact }
-	Field getActionClosure() { actionClosure }
-	String getControllerName() { controllerName }
-	String getActionName() { actionName }
-	Map getParams() { params }
+	@Lazy GrailsControllerClass controllerArtefact = {
+		controllerName ? ApplicationHolder.application.getArtefactByLogicalPropertyName("Controller", controllerName) : null
+	}()
+
+	@Lazy Field actionClosure = {
+		try {
+			return actionName ? controllerArtefact?.clazz?.getDeclaredField(actionName) : null
+		} catch (NoSuchFieldException e) {
+			// happens with dynamic scaffolded controllers
+			return null
+		}
+	}()
 
 	String toString() {
 		def buffer = new StringBuilder("[")
