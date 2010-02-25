@@ -10,23 +10,25 @@ class FilterContext {
 	String controllerName
 	String actionName
 	Map params
-	private final GrailsControllerClass controllerArtefact
-	private final Field actionClosure
 
 	FilterContext() {
 		controllerName = RequestContextHolder.requestAttributes?.controllerName
-		controllerArtefact = controllerName ? ApplicationHolder.application.getArtefactByLogicalPropertyName("Controller", controllerName) : null
 		actionName = RequestContextHolder.requestAttributes?.actionName ?: controllerArtefact?.defaultAction
-		try {
-			actionClosure = actionName ? controllerArtefact?.clazz?.getDeclaredField(actionName) : null
-		} catch (NoSuchFieldException e) {
-			// happens with dynamic scaffolded controllers
-		}
 		params = RequestContextHolder.requestAttributes?.parameterMap?.asImmutable()
 	}
 
-	GrailsControllerClass getControllerArtefact() { controllerArtefact }
-	Field getActionClosure() { actionClosure }
+	@Lazy GrailsControllerClass controllerArtefact = {
+		controllerName ? ApplicationHolder.application.getArtefactByLogicalPropertyName("Controller", controllerName) : null
+	}()
+
+	@Lazy Field actionClosure = {
+		try {
+			return actionName ? controllerArtefact?.clazz?.getDeclaredField(actionName) : null
+		} catch (NoSuchFieldException e) {
+			// happens with dynamic scaffolded controllers
+			return null
+		}
+	}()
 
 	String toString() {
 		def buffer = new StringBuilder("[")

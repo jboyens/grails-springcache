@@ -10,12 +10,23 @@ import org.springframework.web.context.request.RequestContextHolder
 @WithGMock
 class FilterContextTests extends GroovyTestCase {
 
+	void setUp() {
+		super.setUp()
+		
+		def mockArtefact = new DefaultGrailsControllerClass(TestController)
+		def mockApplication = mock(GrailsApplication) {
+			getArtefactByLogicalPropertyName("Controller", "test").returns(mockArtefact).stub()
+		}
+		mock(ApplicationHolder).static.application.returns(mockApplication).stub()
+	}
+
 	void testControllerArtefactIsNullWhenNoControllerNamePresent() {
-		RequestContextHolder.requestAttributes = mock(GrailsWebRequest) {
+		def mockRequest = mock(GrailsWebRequest) {
 			getControllerName().returns(null)
 			getActionName().returns(null)
 			getParameterMap().returns(null)
 		}
+		mock(RequestContextHolder).static.requestAttributes.returns(mockRequest).stub()
 
 		play {
 			def context = new FilterContext()
@@ -24,28 +35,26 @@ class FilterContextTests extends GroovyTestCase {
 	}
 
 	void testControllerArtefactIsLookedUp() {
-		RequestContextHolder.requestAttributes = mock(GrailsWebRequest) {
+		def mockRequest = mock(GrailsWebRequest) {
 			getControllerName().returns("test")
 			getActionName().returns(null)
 			getParameterMap().returns(null)
 		}
-		def mockArtefact = new DefaultGrailsControllerClass(TestController)
-		ApplicationHolder.application = mock(GrailsApplication) {
-			getArtefactByLogicalPropertyName("Controller", "test").returns(mockArtefact)
-		}
+		mock(RequestContextHolder).static.requestAttributes.returns(mockRequest).stub()
 
 		play {
 			def context = new FilterContext()
-			assertEquals mockArtefact, context.controllerArtefact
+			assertEquals TestController, context.controllerArtefact.clazz
 		}
 	}
 
 	void testActionClosureIsNullWhenNoControllerNamePresent() {
-		RequestContextHolder.requestAttributes = mock(GrailsWebRequest) {
+		def mockRequest = mock(GrailsWebRequest) {
 			getControllerName().returns(null)
 			getActionName().returns(null)
 			getParameterMap().returns(null)
 		}
+		mock(RequestContextHolder).static.requestAttributes.returns(mockRequest).stub()
 
 		play {
 			def context = new FilterContext()
@@ -54,15 +63,12 @@ class FilterContextTests extends GroovyTestCase {
 	}
 
 	void testActionClosureFoundOnControllerClass() {
-		RequestContextHolder.requestAttributes = mock(GrailsWebRequest) {
+		def mockRequest = mock(GrailsWebRequest) {
 			getControllerName().returns("test")
 			getActionName().returns("list")
 			getParameterMap().returns(null)
 		}
-		def mockArtefact = new DefaultGrailsControllerClass(TestController)
-		ApplicationHolder.application = mock(GrailsApplication) {
-			getArtefactByLogicalPropertyName("Controller", "test").returns(mockArtefact)
-		}
+		mock(RequestContextHolder).static.requestAttributes.returns(mockRequest).stub()
 
 		play {
 			def context = new FilterContext()
@@ -71,15 +77,12 @@ class FilterContextTests extends GroovyTestCase {
 	}
 
 	void testActionClosureTakenFromDefaultActionIfNoActionNamePresent() {
-		RequestContextHolder.requestAttributes = mock(GrailsWebRequest) {
+		def mockRequest = mock(GrailsWebRequest) {
 			getControllerName().returns("test")
 			getActionName().returns(null)
 			getParameterMap().returns(null)
 		}
-		def mockArtefact = new DefaultGrailsControllerClass(TestController)
-		ApplicationHolder.application = mock(GrailsApplication) {
-			getArtefactByLogicalPropertyName("Controller", "test").returns(mockArtefact)
-		}
+		mock(RequestContextHolder).static.requestAttributes.returns(mockRequest).stub()
 
 		play {
 			def context = new FilterContext()
@@ -88,15 +91,12 @@ class FilterContextTests extends GroovyTestCase {
 	}
 
 	void testActionClosureIsNullIfActionNotFoundOnControllerClass() {
-		RequestContextHolder.requestAttributes = mock(GrailsWebRequest) {
+		def mockRequest = mock(GrailsWebRequest) {
 			getControllerName().returns("test")
 			getActionName().returns("scaffold")
 			getParameterMap().returns(null)
 		}
-		def mockArtefact = new DefaultGrailsControllerClass(TestController)
-		ApplicationHolder.application = mock(GrailsApplication) {
-			getArtefactByLogicalPropertyName("Controller", "test").returns(mockArtefact)
-		}
+		mock(RequestContextHolder).static.requestAttributes.returns(mockRequest).stub()
 
 		play {
 			def context = new FilterContext()
