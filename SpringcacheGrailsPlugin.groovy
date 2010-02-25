@@ -9,6 +9,7 @@ import grails.plugin.springcache.aop.FlushingAspect
 import grails.plugin.springcache.web.ContentCachingFilter
 import org.springframework.web.filter.DelegatingFilterProxy
 import grails.plugin.springcache.web.DefaultKeyGenerator
+import grails.plugin.springcache.web.MimeTypeAwareKeyGenerator
 
 class SpringcacheGrailsPlugin {
 	def version = "1.2-SNAPSHOT"
@@ -101,7 +102,7 @@ class SpringcacheGrailsPlugin {
 
 			springcacheFilter(ContentCachingFilter) {
 				cacheProvider = ref(ConfigurationHolder.config.springcache.provider.bean ?: "springcacheCacheProvider")
-				keyGenerator = new DefaultKeyGenerator()
+				keyGenerator = new MimeTypeAwareKeyGenerator()
 			}
 		}
 	}

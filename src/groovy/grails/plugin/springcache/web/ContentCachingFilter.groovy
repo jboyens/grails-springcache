@@ -215,6 +215,7 @@ class ContentCachingFilter extends PageFragmentCachingFilter {
 		}
 		log.debug "    controller = $context.controllerName"
 		log.debug "    action = $context.actionName"
+		log.debug "    params = $context.params"
 	}
 
 	private String getCachedUri(HttpServletRequest request) {

@@ -84,8 +84,8 @@ log4j = {
 
 	warn 'org.mortbay.log'
 
-	info 'net.sf.ehcache.constructs.web.filter',
-			'grails.plugin.springcache.web.Timer'
+	info 'net.sf.ehcache.constructs.web.filter'/*,
+			'grails.plugin.springcache.web.Timer'*/
 
 //	debug 'grails.plugin.springcache',
 //			'net.sf.ehcache.constructs.web.filter'
