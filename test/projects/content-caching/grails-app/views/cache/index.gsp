@@ -19,7 +19,10 @@
 					<thead>
 						<tr>
 							<th>Name</th>
-							<th>Object Count</th>
+							<th>Status</th>
+							<th>Size</th>
+							<th>Memory</th>
+							<th>Disk</th>
 							<th>Hits</th>
 							<th>Misses</th>
 							<th colspan="2">&nbsp;</th>
@@ -29,7 +32,10 @@
 						<g:each var="cacheInstance" in="${cacheInstanceList}" status="i">
 							<tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
 								<td>${cacheInstance.name}</td>
+								<td>${cacheInstance.status}</td>
 								<td>${cacheInstance.statistics.objectCount}</td>
+								<td>${cacheInstance.statistics.memoryStoreObjectCount}</td>
+								<td>${cacheInstance.statistics.diskStoreObjectCount}</td>
 								<td>${cacheInstance.statistics.cacheHits}</td>
 								<td>${cacheInstance.statistics.cacheMisses}</td>
 								<td>
