@@ -16,8 +16,8 @@
 package grails.plugin.springcache.aop;
 
 import grails.plugin.springcache.annotations.CacheFlush;
-import grails.plugin.springcache.CacheFacade;
-import grails.plugin.springcache.CacheProvider;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Ehcache;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
@@ -28,11 +28,12 @@ public class FlushingAspect {
 
 	private final Logger log = LoggerFactory.getLogger(FlushingAspect.class);
 
-	private CacheProvider cacheProvider;
+	private CacheManager cacheManager;
 
 	@After("@annotation(cacheFlush)")
 	public void flushCaches(CacheFlush cacheFlush) throws Throwable {
-		for (CacheFacade cache : cacheProvider.getCaches(cacheFlush.modelId())) {
+		for (String name : cacheFlush.value()) {
+			Ehcache cache = cacheManager.getEhcache(name);
 			try {
 				if (log.isDebugEnabled()) log.debug(String.format("Flushing cache %s", cache.getName()));
 				cache.flush();
@@ -42,7 +43,7 @@ public class FlushingAspect {
 		}
 	}
 
-	public void setCacheProvider(CacheProvider cacheProvider) {
-		this.cacheProvider = cacheProvider;
+	public void setCacheManager(CacheManager cacheManager) {
+		this.cacheManager = cacheManager;
 	}
 }

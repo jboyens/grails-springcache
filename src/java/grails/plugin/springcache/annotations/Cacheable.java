@@ -29,5 +29,5 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 public @interface Cacheable {
-	String modelId();
+	String value();
 }

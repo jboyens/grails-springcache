@@ -29,5 +29,5 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 public @interface CacheFlush {
-	String modelId();
+	String[] value();
 }

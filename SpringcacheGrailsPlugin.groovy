@@ -66,40 +66,30 @@ class SpringcacheGrailsPlugin {
 				proxyTargetClass = true
 			}
 
-			if (!application.config.springcache.provider.bean) {
-				log.info "No springcache provider configured; using default EhCacheProvider..."
-				springcacheCacheProvider(EhCacheProvider) {
+			springcacheCacheManager(EhCacheManagerFactoryBean) {
+				cacheManagerName = "Springcache Plugin Cache Manager"
+			}
+
+			application.config.springcache.caches.each {String name, ConfigObject cacheConfig ->
+				"$name"(EhCacheFactoryBean) {bean ->
 					cacheManager = ref("springcacheCacheManager")
-					createCachesOnDemand = true
-				}
-
-				springcacheCacheManager(EhCacheManagerFactoryBean) {
-					cacheManagerName = "Springcache Plugin Cache Manager"
-				}
-
-				application.config.springcache.caches.each {String name, ConfigObject cacheConfig ->
-					"$name"(EhCacheFactoryBean) {bean ->
-						cacheManager = ref("springcacheCacheManager")
-						cacheName = name
-						cacheConfig.each {
-							bean.setPropertyValue it.key, it.value
-						}
+					cacheName = name
+					cacheConfig.each {
+						bean.setPropertyValue it.key, it.value
 					}
 				}
-			} else {
-				log.info "Using ${application.config.springcache.provider.bean} as springcache provider..."
 			}
 
 			springcacheCachingAspect(CachingAspect) {
-				cacheProvider = ref(application.config.springcache.provider.bean ?: "springcacheCacheProvider")
+				cacheManager = ref("springcacheCacheManager")
 			}
 
 			springcacheFlushingAspect(FlushingAspect) {
-				cacheProvider = ref(application.config.springcache.provider.bean ?: "springcacheCacheProvider")
+				cacheManager = ref("springcacheCacheManager")
 			}
 
 			springcacheFilter(GrailsFragmentCachingFilter) {
-				cacheProvider = ref(application.config.springcache.provider.bean ?: "springcacheCacheProvider")
+				cacheManager = ref("springcacheCacheManager")
 				keyGenerator = new DefaultKeyGenerator()
 			}
 		}
@@ -109,22 +99,6 @@ class SpringcacheGrailsPlugin {
 	}
 
 	def doWithApplicationContext = {applicationContext ->
-		if (!application.config.springcache.disabled) {
-			String providerBeanName = application.config.springcache.provider.bean ?: "springcacheCacheProvider"
-			CacheProvider provider = applicationContext.getBean(providerBeanName)
-			application.config.springcache.cachingModels.each {String modelId, ConfigObject modelConfig ->
-				if (log.isDebugEnabled()) log.debug "cachingModel id = $modelId, config = ${modelConfig.toProperties()}"
-				provider.addCachingModel modelId, modelConfig.toProperties()
-			}
-			application.config.springcache.flushingModels.each {String modelId, ConfigObject modelConfig ->
-				if (log.isDebugEnabled()) log.debug "flushingModel id = $modelId, config = ${modelConfig.toProperties()}"
-				provider.addFlushingModel modelId, modelConfig.toProperties()
-			}
-
-			if (log.isDebugEnabled()) {
-				log.debug "Configured caches: ${applicationContext.getBeansOfType(EhCacheFactoryBean).values().cacheName}"
-			}
-		}
 	}
 
 	def onChange = {event ->

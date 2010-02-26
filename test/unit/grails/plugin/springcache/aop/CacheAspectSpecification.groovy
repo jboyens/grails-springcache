@@ -15,8 +15,9 @@
  */
 package grails.plugin.springcache.aop
 
-import grails.plugin.springcache.CacheFacade
 import grails.plugin.springcache.CacheKey
+import net.sf.ehcache.Ehcache
+import net.sf.ehcache.Element
 import org.aspectj.lang.ProceedingJoinPoint
 import spock.lang.Specification
 
@@ -29,7 +30,7 @@ class CacheAspectSpecification extends Specification {
 	void "The intercepted method is invoked if the cache does not contain the result of a previous call"() {
 		given: "the cache is empty"
 		def joinPoint = Mock(ProceedingJoinPoint)
-		def cache = Mock(CacheFacade)
+		def cache = Mock(Ehcache)
 		cache.containsKey(KEY) >> false
 
 		when: "a method call is intercepted"
@@ -42,15 +43,15 @@ class CacheAspectSpecification extends Specification {
 		result == UNCACHED_VALUE
 
 		and: "the method's result is cached"
-		1 * cache.put(KEY, UNCACHED_VALUE)
+		1 * cache.put(new Element(KEY, UNCACHED_VALUE))
 	}
 
 	void "The cached value is returned if the cache contains the result of a previous call"() {
 		given: "the result of a previous call is in the cache"
 		def joinPoint = Mock(ProceedingJoinPoint)
-		def cache = Mock(CacheFacade)
+		def cache = Mock(Ehcache)
 		cache.containsKey(KEY) >> true
-		cache.get(KEY) >> CACHED_VALUE
+		cache.get(KEY) >> new Element(KEY, CACHED_VALUE)
 
 		when: "a method call is intercepted"
 		def result = new CachingAspect().getFromCacheOrInvoke(joinPoint, cache, KEY)
