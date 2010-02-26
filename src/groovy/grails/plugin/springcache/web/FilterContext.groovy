@@ -1,6 +1,7 @@
 package grails.plugin.springcache.web
 
 import java.lang.reflect.Field
+import javax.servlet.http.HttpServletRequest
 import org.codehaus.groovy.grails.commons.ApplicationHolder
 import org.codehaus.groovy.grails.commons.GrailsControllerClass
 import org.springframework.web.context.request.RequestContextHolder
@@ -10,8 +11,10 @@ class FilterContext {
 	String controllerName
 	String actionName
 	Map params
+	HttpServletRequest request
 
 	FilterContext() {
+		request = request = RequestContextHolder.requestAttributes?.request
 		controllerName = RequestContextHolder.requestAttributes?.controllerName
 		actionName = RequestContextHolder.requestAttributes?.actionName ?: controllerArtefact?.defaultAction
 		params = RequestContextHolder.requestAttributes?.parameterMap?.asImmutable()

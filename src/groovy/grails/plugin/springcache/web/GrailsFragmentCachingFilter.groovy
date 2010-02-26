@@ -63,7 +63,7 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 		// Look up the cached page
 		BlockingCache cache = getCache(request)
 		final key = calculateKey(request)
-		PageInfo pageInfo = null
+		PageInfo pageInfo
 		try {
 			Element element = cache.get(key)
 			if (element == null || element.getObjectValue() == null) {
@@ -150,7 +150,7 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 	 */
 	protected String calculateKey(HttpServletRequest request) {
 		def context = request[REQUEST_CACHE_CONTEXT_ATTR]
-		return keyGenerator.generateKey(context, request).toString()
+		return keyGenerator.generateKey(context).toString()
 	}
 
 	private BlockingCache getCache(HttpServletRequest request) {

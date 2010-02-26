@@ -15,29 +15,29 @@ class DefaultKeyGeneratorTests extends GroovyTestCase {
 	}
 
 	void testKeyVariesOnControllerName() {
-		def key1 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar"), null)
-		def key2 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar"), null)
-		def key3 = generator.generateKey(new FilterContext(controllerName: "baz", actionName: "bar"), null)
+		def key1 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar"))
+		def key2 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar"))
+		def key3 = generator.generateKey(new FilterContext(controllerName: "baz", actionName: "bar"))
 
 		assertEquals key1, key2
 		assertFalse key1 == key3
 	}
 
 	void testKeyVariesOnActionName() {
-		def key1 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar"), null)
-		def key2 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar"), null)
-		def key3 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "baz"), null)
+		def key1 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar"))
+		def key2 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar"))
+		def key3 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "baz"))
 
 		assertEquals key1, key2
 		assertFalse key1 == key3
 	}
 
 	void testKeyVariesWithParams() {
-		def key1 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar", params: [:]), null)
-		def key2 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar", params: [:]), null)
-		def key3 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar", params: [id: "1"]), null)
-		def key4 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "baz", params: [id: "2"]), null)
-		def key5 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "baz", params: [id: "2"]), null)
+		def key1 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar", params: [:]))
+		def key2 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar", params: [:]))
+		def key3 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar", params: [id: "1"]))
+		def key4 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "baz", params: [id: "2"]))
+		def key5 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "baz", params: [id: "2"]))
 
 		assertEquals key1, key2
 		assertFalse key1 == key3
@@ -46,22 +46,22 @@ class DefaultKeyGeneratorTests extends GroovyTestCase {
 	}
 
 	void testParameterOrderNotImportant() {
-		def key1 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar", params: [id: "1", foo: "bar"]), null)
-		def key2 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar", params: [foo: "bar", id: "1"]), null)
+		def key1 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar", params: [id: "1", foo: "bar"]))
+		def key2 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar", params: [foo: "bar", id: "1"]))
 
 		assertEquals key1, key2
 	}
 
 	void testMatchingSubsetOfParamsCreatesDifferentKey() {
-		def key1 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar", params: [id: "1"]), null)
-		def key2 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar", params: [id: "1", foo: "bar"]), null)
+		def key1 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar", params: [id: "1"]))
+		def key2 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar", params: [id: "1", foo: "bar"]))
 
 		assertFalse key1 == key2
 	}
 
 	void testControllerAndActionParamsAreIgnored() {
-		def key1 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar", params: [:]), null)
-		def key2 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar", params: [controller: "foo", action: "bar"]), null)
+		def key1 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar", params: [:]))
+		def key2 = generator.generateKey(new FilterContext(controllerName: "foo", actionName: "bar", params: [controller: "foo", action: "bar"]))
 
 		assertEquals key1, key2
 	}
