@@ -59,7 +59,7 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 	 */
 	@Override protected PageInfo buildPageInfo(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
 		def timer = new Timer()
-		timer.start()
+		timer.start(getCachedUri(request))
 		// Look up the cached page
 		BlockingCache cache = getCache(request)
 		final key = calculateKey(request)
@@ -82,11 +82,11 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 					cache.put(new Element(key, null))
 					throw new Exception(throwable)
 				}
-				timer.stop("Uncached request for ${getCachedUri(request)}")
+				timer.stop(false)
 			} else {
 				log.debug "Serving cached content for $key"
 				pageInfo = element.getObjectValue()
-				timer.stop("Cached request for ${getCachedUri(request)}")
+				timer.stop(true)
 			}
 		} catch (LockTimeoutException e) {
 			//do not release the lock, because you never acquired it
