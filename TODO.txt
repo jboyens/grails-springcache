@@ -11,9 +11,13 @@ NEXT RELEASE
 - test caching XML/JSON output
 
 BACKLOG
+- use annotations on taglibs
+- cacheable version of g:render?
 - allow cache names directly on annotations
 - configurable cacheable & cacheflush for controllers in plugins?
-- caching tag libs
 - expose a cache service?
 - expose caching statistics (JMX?)
 - support reloading via onChange and onConfigChange
+
+DOCS
+- can you configure cache defaults in spring as well as ehcache.xml?
