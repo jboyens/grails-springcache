@@ -3,9 +3,7 @@ grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir	= "target/test-reports"
 
 grails.project.dependency.resolution = {
-	inherits("global") {
-		excludes "ehcache"
-	}
+	inherits("global")
 	log "warn"
 	repositories {
         grailsHome()
@@ -14,11 +12,8 @@ grails.project.dependency.resolution = {
 		mavenCentral()
 	}
 	dependencies {
-		compile ("net.sf.ehcache:ehcache:1.7.2") {
-			excludes "jms", "commons-logging", "servlet-api"
-		}
 		compile("net.sf.ehcache:ehcache-web:2.0.0") {
-			excludes "ehcache-core"
+			excludes "ehcache-core" // ehcache-core is provided by Grails
 		}
 		test("org.gmock:gmock:0.8.0") {
 			excludes "junit"
