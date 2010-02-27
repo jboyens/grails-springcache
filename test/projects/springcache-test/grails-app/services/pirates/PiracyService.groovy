@@ -2,14 +2,12 @@ package pirates
 
 import grails.plugin.springcache.annotations.CacheFlush
 import grails.plugin.springcache.annotations.Cacheable
-import pirates.Pirate
-import pirates.Ship
 
 class PiracyService {
 
 	static transactional = false
 
-	@Cacheable(modelId = "Pirates")
+	@Cacheable("PirateCache")
 	List listPirateNames() {
 		Pirate.withCriteria {
 			projections {
@@ -19,7 +17,7 @@ class PiracyService {
 		}
 	}
 
-	@Cacheable(modelId = "Pirates")
+	@Cacheable("PirateCache")
 	List findPirateNames(String name) {
 		Pirate.withCriteria {
 			projections {
@@ -30,7 +28,7 @@ class PiracyService {
 		}
 	}
 
-	@Cacheable(modelId = "Ships")
+	@Cacheable("ShipCache")
 	List listShipNames() {
 		Ship.withCriteria {
 			projections {
@@ -40,12 +38,12 @@ class PiracyService {
 		}
 	}
 
-	@CacheFlush(modelId = "Pirates")
+	@CacheFlush("PirateCache")
 	void newPirate(String name) {
 		new Pirate(name: name).save(failOnError: true)
 	}
 
-	@CacheFlush(modelId = "All")
+	@CacheFlush(["PirateCache", "ShipCache"])
 	void newShip(String name, List crewNames) {
 		new Ship(name: name, crew: crewNames.collect {
 			Pirate.findByName(it) ?: new Pirate(name: it)

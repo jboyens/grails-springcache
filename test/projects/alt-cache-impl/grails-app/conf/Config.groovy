@@ -81,11 +81,5 @@ log4j = {
 
 springcache {
 	provider.bean = "simpleCacheProvider"
-	cachingModels {
-		TestCachingModel.cacheName = "testCache"
-	}
-	flushingModels {
-		TestFlushingModel.cacheNames = "testCache"
-	}
 }
      

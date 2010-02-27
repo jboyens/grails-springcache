@@ -1,6 +1,5 @@
 package grails.plugin.springcache.web
 
-import grails.plugin.springcache.CacheProvider
 import grails.plugin.springcache.annotations.CacheFlush
 import grails.plugin.springcache.annotations.Cacheable
 import java.lang.annotation.Annotation
@@ -27,14 +26,15 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 
 	private final log = LoggerFactory.getLogger(getClass())
 	private final timingLog = LoggerFactory.getLogger("${getClass().name}.TIMINGS")
-	CacheProvider cacheProvider
+	CacheManager cacheManager
 	KeyGenerator keyGenerator
 
 	/**
 	 * Overrides doInit in CachingFilter to be a no-op. The superclass initializes a single cache that is used for all
 	 * intercepted requests but we will select a cache at runtime based on the target controller/action.
 	 */
-	@Override void doInit(FilterConfig filterConfig) {
+	@Override
+	void doInit(FilterConfig filterConfig) {
 		// don't do anything - we need to get caches differently for each request
 	}
 
@@ -137,36 +137,38 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 		super.writeResponse(response, pageInfo)
 	}
 
-	/**
-	 * This should never get called in this implementation.
-	 */
-	protected CacheManager getCacheManager() {
-		throw new UnsupportedOperationException("Filter should not be calling getCacheManager")
+	@Override protected CacheManager getCacheManager() {
+		return cacheManager
 	}
 
 	/**
 	 * Creates a cache key based on the target controller and action and any params (i.e. you want to cache
 	 * /pirate/show/1 and /pirate/show/2 separately).
 	 */
-	protected String calculateKey(HttpServletRequest request) {
+	@Override protected String calculateKey(HttpServletRequest request) {
 		def context = request[REQUEST_CACHE_CONTEXT_ATTR]
 		return keyGenerator.generateKey(context).toString()
 	}
 
 	private BlockingCache getCache(HttpServletRequest request) {
-		request.getAttribute(REQUEST_CACHE_ATTR)
+		request[REQUEST_CACHE_ATTR]
 	}
 
 	private void setCache(HttpServletRequest request, BlockingCache cache) {
-		request.setAttribute(REQUEST_CACHE_ATTR, cache)
+		if (!(cache instanceof BlockingCache)) {
+			def blockingCache = new BlockingCache(cache)
+			cacheManager.replaceCacheWithDecoratedCache(cache, blockingCache)
+			request[REQUEST_CACHE_ATTR] = blockingCache
+		} else {
+			request[REQUEST_CACHE_ATTR] = cache
+		}
 	}
 
 	private boolean shouldCache(HttpServletRequest request) {
 		def context = request[REQUEST_CACHE_CONTEXT_ATTR]
 		Cacheable cacheable = getAnnotation(context, Cacheable)
 		if (cacheable) {
-			def cache = cacheProvider.getCache(cacheable.modelId()).wrappedCache
-			// TODO: check cache is blocking otherwise we can't use it
+			def cache = cacheManager.getEhcache(cacheable.value())
 			setCache(request, cache)
 			if (log.isDebugEnabled()) {
 				log.debug "Caching request..."
@@ -184,7 +186,7 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 		def context = request[REQUEST_CACHE_CONTEXT_ATTR]
 		CacheFlush cacheFlush = getAnnotation(context, CacheFlush)
 		if (cacheFlush) {
-			def caches = cacheProvider.getCaches(cacheFlush.modelId())*.wrappedCache
+			def caches = cacheFlush.value().collect { cacheManager.getEhcache(it) }
 			if (log.isDebugEnabled()) {
 				log.debug "Flushing request..."
 				logRequestDetails(request, context)
@@ -212,7 +214,7 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 		log.debug "    requestURI = $request.requestURI"
 		log.debug "    forwardURI = $request.forwardURI"
 		if (WebUtils.isIncludeRequest(request)) {
-			log.debug "    includeURI = ${request.getAttribute(WebUtils.INCLUDE_REQUEST_URI_ATTRIBUTE)}"
+			log.debug "    includeURI = ${request[WebUtils.INCLUDE_REQUEST_URI_ATTRIBUTE]}"
 		}
 		log.debug "    controller = $context.controllerName"
 		log.debug "    action = $context.actionName"
@@ -221,7 +223,7 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 
 	private String getCachedUri(HttpServletRequest request) {
 		if (WebUtils.isIncludeRequest(request)) {
-			return request.getAttribute(WebUtils.INCLUDE_REQUEST_URI_ATTRIBUTE)
+			return request[WebUtils.INCLUDE_REQUEST_URI_ATTRIBUTE]
 		}
 		return request.requestURI
 	}

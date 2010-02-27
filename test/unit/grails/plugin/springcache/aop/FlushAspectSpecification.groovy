@@ -16,24 +16,25 @@
 package grails.plugin.springcache.aop
 
 import grails.plugin.springcache.annotations.CacheFlush
-import grails.plugin.springcache.CacheFacade
-import grails.plugin.springcache.CacheProvider
+import net.sf.ehcache.Ehcache
+import net.sf.ehcache.CacheManager
 import spock.lang.Specification
 
 class FlushAspectSpecification extends Specification {
 
-	void "All specfied caches are flushed"() {
+	void "All specified caches are flushed"() {
 		given: "some caches exist"
-		def cache1 = Mock(CacheFacade)
-		def cache2 = Mock(CacheFacade)
-		def cache3 = Mock(CacheFacade)
-		def cacheManager = Mock(CacheProvider)
-		cacheManager.getCaches("modelId") >> [cache1, cache2]
+		def cache1 = Mock(Ehcache)
+		def cache2 = Mock(Ehcache)
+		def cache3 = Mock(Ehcache)
+		def cacheManager = Mock(CacheManager)
+		cacheManager.getEhcache("cache1") >> cache1
+		cacheManager.getEhcache("cache2") >> cache2
 
 		when: "the flush aspect is triggered"
-		def annotation = [modelId: {-> "modelId" }] as CacheFlush
+		def annotation = [value: {-> ["cache1", "cache2"] as String[] }] as CacheFlush
 		def aspect = new FlushingAspect()
-		aspect.cacheProvider = cacheManager
+		aspect.cacheManager = cacheManager
 		aspect.flushCaches(annotation)
 
 		then: "the specified caches are flushed"
