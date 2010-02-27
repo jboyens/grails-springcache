@@ -22,6 +22,7 @@ class FilterContextTests extends GroovyTestCase {
 
 	void testControllerArtefactIsNullWhenNoControllerNamePresent() {
 		def mockRequest = mock(GrailsWebRequest) {
+			request.returns(null)
 			getControllerName().returns(null)
 			getActionName().returns(null)
 			getParameterMap().returns(null)
@@ -36,6 +37,7 @@ class FilterContextTests extends GroovyTestCase {
 
 	void testControllerArtefactIsLookedUp() {
 		def mockRequest = mock(GrailsWebRequest) {
+			request.returns(null)
 			getControllerName().returns("test")
 			getActionName().returns(null)
 			getParameterMap().returns(null)
@@ -50,6 +52,7 @@ class FilterContextTests extends GroovyTestCase {
 
 	void testActionClosureIsNullWhenNoControllerNamePresent() {
 		def mockRequest = mock(GrailsWebRequest) {
+			request.returns(null)
 			getControllerName().returns(null)
 			getActionName().returns(null)
 			getParameterMap().returns(null)
@@ -64,6 +67,7 @@ class FilterContextTests extends GroovyTestCase {
 
 	void testActionClosureFoundOnControllerClass() {
 		def mockRequest = mock(GrailsWebRequest) {
+			request.returns(null)
 			getControllerName().returns("test")
 			getActionName().returns("list")
 			getParameterMap().returns(null)
@@ -78,6 +82,7 @@ class FilterContextTests extends GroovyTestCase {
 
 	void testActionClosureTakenFromDefaultActionIfNoActionNamePresent() {
 		def mockRequest = mock(GrailsWebRequest) {
+			request.returns(null)
 			getControllerName().returns("test")
 			getActionName().returns(null)
 			getParameterMap().returns(null)
@@ -92,6 +97,7 @@ class FilterContextTests extends GroovyTestCase {
 
 	void testActionClosureIsNullIfActionNotFoundOnControllerClass() {
 		def mockRequest = mock(GrailsWebRequest) {
+			request.returns(null)
 			getControllerName().returns("test")
 			getActionName().returns("scaffold")
 			getParameterMap().returns(null)
