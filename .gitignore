@@ -6,6 +6,5 @@ test/reports
 lib/build
 docs/api
 docs/gapi
-*.zip
 build/
 .gradle/
