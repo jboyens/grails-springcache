@@ -182,7 +182,7 @@ You can configure caches in @grails-app/conf/spring/resources.groovy@ using Spri
 
 h4. grails-app/conf/spring/resources.groovy
 {code}
-pirateCache(EhCacheFactoryBean) {bean ->
+pirateCache(EhCacheFactoryBean) { bean ->
 	cacheManager = ref("springcacheCacheManager")
 	cacheName = "pirateCache"
 	eternal = true
@@ -207,7 +207,7 @@ springcache {
 	}
 }
 {code}
-Under the hood this is simply setting up @EhCacheFactoryBean@ instances in the Spring context, so it is up to you whether you prefer to use @resources.groovy@ or @Config.groovy@ there is very little difference.
+Under the hood this is simply setting up @EhCacheFactoryBean@ instances in the Spring context, so it is up to you whether you prefer to use @resources.groovy@ or @Config.groovy@ there is not much difference.
 
 h2. Tips
 
@@ -222,7 +222,7 @@ void tearDown() {
 	springcacheCacheManager.cacheNames.each {
 		def cache = springcacheCacheManager.getEhcache(it)
 		cache.flush()
-		cache.clearStatistics()
+		cache.clearStatistics() // optional - you only really need to do this if your tests are making assertions about hit/miss counts and so on
 	}
 }
 {code}
@@ -252,7 +252,13 @@ h3. My cache config doesn't seem to be working.
 Ensure all your config for the Springcache plugin is nested inside a single 'springcache' block in Config.groovy otherwise only the last block will take effect.
 
 h3. Can I programatically disable caching in specific circumstances such as when a user is logged in?
-Not right now, although I'm planning to add this to a future release of the plugin.
+Not right now, although I hope to add this to a future release of the plugin. I'd encourage you to think about structuring your pages using SiteMesh layouts and the g:include tag such that it is possible to separate the dynamic and cacheable sections.
+
+h3. Why isn't there a taglib so I can just wrap parts of my page that need caching?
+It's something I may add but from a purist point of view I'm not very keen on the idea. Caching is a separate concern from view rendering and the two really shouldn't be mixed up. So far the plugin has deliberately taken a declarative approach to caching which encourages you to maintain a good separation of concerns.
+
+h3. Can I use @Cacheable on taglib Closures?
+Not yet. This is definitely on the roadmap for a future version of the plugin.
 
 h2. Release Notes
 h4. 1.2

@@ -2,7 +2,7 @@ BUGS
 - check caching of service methods with defaulted params
 
 NEXT RELEASE
-- migrate caching and flushing logic to a service so it can be shared by filter and pointcuts
+- facade cachemanager to allow for auto-creation of caches
 - @CacheFlush takes regexes
 - provide util method for tearing down caches in tests
 - mime type key generator needs to only work if action uses withFormat (somehow)
