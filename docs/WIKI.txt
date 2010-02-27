@@ -135,6 +135,8 @@ h3. Example: a modular page using multiple cached sections
 
 h3. Page fragment caching and content negotiation
 
+h3. Customising key generation for page fragment caching
+
 h3. Full page caching
 
 The plugin only provides page fragment caching rather than full page caching. Full page caching is very simple to apply using the EHCache-Web library that the Springcache plugin uses. See my blog post [here|http://adhockery.blogspot.com/2010/02/full-page-caching-in-grails-with.html] for details.

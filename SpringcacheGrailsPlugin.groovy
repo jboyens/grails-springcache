@@ -1,8 +1,6 @@
 import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator
 import org.slf4j.LoggerFactory
-import grails.plugin.springcache.provider.ehcache.EhCacheProvider
 import org.springframework.cache.ehcache.*
-import grails.plugin.springcache.CacheProvider
 import grails.plugin.springcache.aop.CachingAspect
 import grails.plugin.springcache.aop.FlushingAspect
 import grails.plugin.springcache.web.GrailsFragmentCachingFilter

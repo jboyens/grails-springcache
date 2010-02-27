@@ -40,7 +40,6 @@
           <root url="file://$MODULE_DIR$/lib" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.gmock/gmock/jars/gmock-0.8.0.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.hamcrest/hamcrest-all/jars/hamcrest-all-1.1.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/net.sf.ehcache/ehcache-terracotta/jars/ehcache-terracotta-1.7.2.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/net.sf.ehcache/ehcache-web/jars/ehcache-web-2.0.0.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/net.sourceforge.htmlunit/htmlunit/jars/htmlunit-2.6.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/commons-httpclient/commons-httpclient/jars/commons-httpclient-3.1.jar!/" />
