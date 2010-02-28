@@ -20,7 +20,7 @@ class SpringcacheService {
 				try {
 					springcacheCacheManager.getEhcache(name)?.flush()
 				} catch (IllegalStateException e) {
-					log.warn "Attempted to flush cache $name when it is not alive"
+					log.warn "Attempted to flush cache '$name' when it is not alive"
 				}
 			}
 		}
@@ -54,6 +54,7 @@ class SpringcacheService {
 		def cache = springcacheCacheManager.getEhcache(cacheName)
 		if (!cache) {
 			if (autoCreateCaches) {
+				log.warn "Cache '$cacheName' does not exist. Creating it now..."
 				springcacheCacheManager.addCache(cacheName)
 				cache = springcacheCacheManager.getEhcache(cacheName)
 			} else {
