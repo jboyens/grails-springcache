@@ -1,7 +1,9 @@
 package grails.plugin.springcache.web
 
+import grails.plugin.springcache.SpringcacheService
 import grails.plugin.springcache.annotations.CacheFlush
 import grails.plugin.springcache.annotations.Cacheable
+import grails.plugin.springcache.web.key.KeyGenerator
 import java.lang.annotation.Annotation
 import javax.servlet.FilterChain
 import javax.servlet.FilterConfig
@@ -17,7 +19,6 @@ import net.sf.ehcache.constructs.web.filter.PageFragmentCachingFilter
 import org.codehaus.groovy.grails.web.servlet.WrappedResponseHolder
 import org.codehaus.groovy.grails.web.util.WebUtils
 import org.slf4j.LoggerFactory
-import grails.plugin.springcache.web.key.KeyGenerator
 
 class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 
@@ -26,6 +27,7 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 
 	private final log = LoggerFactory.getLogger(getClass())
 	private final timingLog = LoggerFactory.getLogger("${getClass().name}.TIMINGS")
+	SpringcacheService springcacheService
 	CacheManager cacheManager
 	KeyGenerator keyGenerator
 
@@ -44,7 +46,7 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 	 */
 	@Override protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
 		request[REQUEST_CACHE_CONTEXT_ATTR] = new FilterContext()
-		if (shouldFlush(request)) {
+		if (handleFlush(request)) {
 			chain.doFilter(request, response)
 		} else if (shouldCache(request)) {
 			super.doFilter(request, response, chain)
@@ -182,17 +184,16 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 		}
 	}
 
-	boolean shouldFlush(HttpServletRequest request) {
+	boolean handleFlush(HttpServletRequest request) {
 		def context = request[REQUEST_CACHE_CONTEXT_ATTR]
 		CacheFlush cacheFlush = getAnnotation(context, CacheFlush)
 		if (cacheFlush) {
-			def caches = cacheFlush.value().collect { cacheManager.getEhcache(it) }
 			if (log.isDebugEnabled()) {
 				log.debug "Flushing request..."
 				logRequestDetails(request, context)
-				log.debug "    caches = ${caches.name.join(', ')}"
+				log.debug "    caches = ${cacheFlush.value().join(', ')}"
 			}
-			caches*.flush() // TODO: methods with side-effects suck - move this out
+			springcacheService.flush(cacheFlush.value())
 			return true
 		} else {
 			log.debug "No cacheflush annotation found for $request.method:$request.requestURI $context"

@@ -83,10 +83,11 @@ class SpringcacheGrailsPlugin {
 			}
 
 			springcacheFlushingAspect(FlushingAspect) {
-				cacheManager = ref("springcacheCacheManager")
+				springcacheService = ref("springcacheService")
 			}
 
 			springcacheFilter(GrailsFragmentCachingFilter) {
+				springcacheService = ref("springcacheService")
 				cacheManager = ref("springcacheCacheManager")
 				keyGenerator = new DefaultKeyGenerator()
 			}
