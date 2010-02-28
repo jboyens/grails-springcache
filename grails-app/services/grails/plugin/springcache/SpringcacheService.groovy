@@ -11,17 +11,16 @@ class SpringcacheService {
 	CacheManager springcacheCacheManager
 	boolean autoCreateCaches = true // TODO: config?
 
-	void flush(cacheNames) {
-		if (cacheNames instanceof String) cacheNames = [cacheNames]
-		def cachesToFlush = springcacheCacheManager.cacheNames.findAll { name ->
-			cacheNames.any { name ==~ it }
-		}
-		if (log.isDebugEnabled()) log.debug "Flushing caches ${cachesToFlush.join(', ')}"
-		cachesToFlush.each { name ->
-			try {
-				springcacheCacheManager.getEhcache(name)?.flush()
-			} catch (IllegalStateException e) {
-				log.warn "Attempted to flush cache $name when it is not alive"
+	void flush(cacheNamePatterns) {
+		if (cacheNamePatterns instanceof String) cacheNamePatterns = [cacheNamePatterns]
+		springcacheCacheManager.cacheNames.each { name ->
+			if (cacheNamePatterns.any { name ==~ it }) {
+				if (log.isDebugEnabled()) log.debug "Flushing cache '$name'"
+				try {
+					springcacheCacheManager.getEhcache(name)?.flush()
+				} catch (IllegalStateException e) {
+					log.warn "Attempted to flush cache $name when it is not alive"
+				}
 			}
 		}
 	}
