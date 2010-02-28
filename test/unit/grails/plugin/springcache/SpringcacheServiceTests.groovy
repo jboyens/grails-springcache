@@ -6,6 +6,8 @@ import net.sf.ehcache.Ehcache
 import org.gmock.WithGMock
 import static org.hamcrest.Matchers.*
 import net.sf.ehcache.Element
+import net.sf.ehcache.constructs.blocking.BlockingCache
+import net.sf.ehcache.Cache
 
 @WithGMock
 class SpringcacheServiceTests extends GrailsUnitTestCase {
@@ -173,4 +175,44 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 			assertNull service.get("cache1", "key")
 		}
 	}
+
+	void testEnsureCacheIsBlockingDoesNothingIfCacheIsBlockingAlready() {
+		def mockCache = mock(BlockingCache)
+		service.springcacheCacheManager.getEhcache("cache1").returns(mockCache)
+		play {
+			service.ensureCacheIsBlocking("cache1")
+		}
+	}
+
+	void testEnsureCacheIsBlockingWrapsCacheIfNotBlocking() {
+		def mockCache = mock(Ehcache)
+		service.springcacheCacheManager.getEhcache("cache1").returns(mockCache)
+		def blockingCache = mock(BlockingCache, constructor(sameInstance(mockCache)))
+		service.springcacheCacheManager.replaceCacheWithDecoratedCache(sameInstance(mockCache), sameInstance(blockingCache))
+		play {
+			service.ensureCacheIsBlocking("cache1")
+		}
+	}
+
+	void testEnsureCacheIsBlockingThrowsExceptionIfInvalidCacheNameUsedAndAutoCreateIsFalse() {
+		service.springcacheCacheManager.getEhcache("cache1").returns(null)
+		play {
+			service.autoCreateCaches = false
+			shouldFail(NoSuchCacheException) {
+				service.ensureCacheIsBlocking("cache1")
+			}
+		}
+	}
+
+	void testEnsureCacheIsBlockingCreatesNewCacheAddedIfCacheNotFoundAndAutoCreateIsTrue() {
+		def mockCache = mock(BlockingCache)
+		service.springcacheCacheManager.getEhcache("cache1").returns(null)
+		service.springcacheCacheManager.addCache("cache1")
+		service.springcacheCacheManager.getEhcache("cache1").returns(mockCache)
+		play {
+			service.autoCreateCaches = true
+			service.ensureCacheIsBlocking("cache1")
+		}
+	}
+
 }

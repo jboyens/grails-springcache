@@ -3,6 +3,7 @@ package grails.plugin.springcache
 import net.sf.ehcache.CacheManager
 import net.sf.ehcache.Element
 import net.sf.ehcache.Ehcache
+import net.sf.ehcache.constructs.blocking.BlockingCache
 
 class SpringcacheService {
 
@@ -37,6 +38,15 @@ class SpringcacheService {
 			return null
 		} else {
 			return element.objectValue
+		}
+	}
+
+	void ensureCacheIsBlocking(String cacheName) {
+		def cache = getOrCreateCache(cacheName)
+		if (!(cache instanceof BlockingCache)) {
+			log.warn "Cache '$cacheName' is not blocking. Decorating it now..."
+			def blockingCache = new BlockingCache(cache)
+			springcacheCacheManager.replaceCacheWithDecoratedCache(cache, blockingCache)
 		}
 	}
 
