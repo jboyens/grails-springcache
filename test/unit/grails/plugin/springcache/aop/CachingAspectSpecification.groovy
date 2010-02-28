@@ -16,12 +16,11 @@
 package grails.plugin.springcache.aop
 
 import grails.plugin.springcache.CacheKey
-import net.sf.ehcache.Ehcache
-import net.sf.ehcache.Element
+import grails.plugin.springcache.SpringcacheService
 import org.aspectj.lang.ProceedingJoinPoint
 import spock.lang.Specification
 
-class CacheAspectSpecification extends Specification {
+class CachingAspectSpecification extends Specification {
 
 	private static final UNCACHED_VALUE = "UNCACHED"
 	private static final CACHED_VALUE = "CACHED"
@@ -30,11 +29,13 @@ class CacheAspectSpecification extends Specification {
 	void "The intercepted method is invoked if the cache does not contain the result of a previous call"() {
 		given: "the cache is empty"
 		def joinPoint = Mock(ProceedingJoinPoint)
-		def cache = Mock(Ehcache)
-		cache.containsKey(KEY) >> false
+		def service = Mock(SpringcacheService)
+		service.get("cacheName", KEY) >> null
 
 		when: "a method call is intercepted"
-		def result = new CachingAspect().getFromCacheOrInvoke(joinPoint, cache, KEY)
+		def aspect = new CachingAspect()
+		aspect.springcacheService = service
+		def result = aspect.getFromCacheOrInvoke(joinPoint, "cacheName", KEY)
 
 		then: "the method is invoked"
 		1 * joinPoint.proceed() >> UNCACHED_VALUE
@@ -43,18 +44,19 @@ class CacheAspectSpecification extends Specification {
 		result == UNCACHED_VALUE
 
 		and: "the method's result is cached"
-		1 * cache.put(new Element(KEY, UNCACHED_VALUE))
+		1 * service.put("cacheName", KEY, UNCACHED_VALUE)
 	}
 
 	void "The cached value is returned if the cache contains the result of a previous call"() {
 		given: "the result of a previous call is in the cache"
 		def joinPoint = Mock(ProceedingJoinPoint)
-		def cache = Mock(Ehcache)
-		cache.containsKey(KEY) >> true
-		cache.get(KEY) >> new Element(KEY, CACHED_VALUE)
+		def service = Mock(SpringcacheService)
+		service.get("cacheName", KEY) >> CACHED_VALUE
 
 		when: "a method call is intercepted"
-		def result = new CachingAspect().getFromCacheOrInvoke(joinPoint, cache, KEY)
+		def aspect = new CachingAspect()
+		aspect.springcacheService = service
+		def result = aspect.getFromCacheOrInvoke(joinPoint, "cacheName", KEY)
 
 		then: "the cached value is returned"
 		result == CACHED_VALUE

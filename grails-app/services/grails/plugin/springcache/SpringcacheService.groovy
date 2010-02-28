@@ -2,13 +2,14 @@ package grails.plugin.springcache
 
 import net.sf.ehcache.CacheManager
 import net.sf.ehcache.Element
+import net.sf.ehcache.Ehcache
 
 class SpringcacheService {
 
 	static transactional = false
 
 	CacheManager springcacheCacheManager
-	boolean autoCreateCaches
+	boolean autoCreateCaches = true // TODO: config?
 
 	void flush(cacheNames) {
 		if (cacheNames instanceof String) cacheNames = [cacheNames]
@@ -26,6 +27,21 @@ class SpringcacheService {
 	}
 
 	void put(String cacheName, Serializable key, Object value) {
+		def cache = getOrCreateCache(cacheName)
+		cache.put(new Element(key, value))
+	}
+
+	def get(String cacheName, Serializable key) {
+		def cache = getOrCreateCache(cacheName)
+		def element = cache.get(key)
+		if (!element || element.isExpired()) {
+			return null
+		} else {
+			return element.objectValue
+		}
+	}
+
+	private Ehcache getOrCreateCache(String cacheName) {
 		def cache = springcacheCacheManager.getEhcache(cacheName)
 		if (!cache) {
 			if (autoCreateCaches) {
@@ -35,18 +51,7 @@ class SpringcacheService {
 				throw new NoSuchCacheException(cacheName)
 			}
 		}
-		cache.put(new Element(key, value))
-	}
-
-	def get(String cacheName, Serializable key) {
-		def cache = springcacheCacheManager.getEhcache(cacheName)
-		if (!cache) throw new NoSuchCacheException(cacheName)
-		def element = cache.get(key)
-		if (!element || element.isExpired()) {
-			return null
-		} else {
-			return element.objectValue
-		}
+		return cache
 	}
 }
 

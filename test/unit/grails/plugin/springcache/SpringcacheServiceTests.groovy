@@ -26,7 +26,7 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 		super.tearDown()
 	}
 
-	void testCachesCanBeFlushedIndividually() {
+	void testFlushAcceptsIndividualCacheNames() {
 		def mockCache = mock(Ehcache) {
 			flush()
 		}
@@ -36,7 +36,7 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 		}
 	}
 
-	void testMultipleCachesCanBeFlushedAtOnce() {
+	void testFlushAcceptsMultipleCacheNames() {
 		def mockCache1 = mock(Ehcache) {
 			flush()
 		}
@@ -50,7 +50,7 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 		}
 	}
 
-	void testCachesCanBeFlushedByPattern() {
+	void testFlushAcceptsCacheNamePatterns() {
 		def mockCache1 = mock(Ehcache) {
 			flush()
 		}
@@ -64,7 +64,7 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 		}
 	}
 
-	void testInvalidCacheNamesAreHandled() {
+	void testFlushIgnoresInvalidCacheNames() {
 		play {
 			service.flush("cacheZ")
 		}
@@ -84,7 +84,7 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 		}
 	}
 
-	void testElementsStoredInTheNamedCache() {
+	void testPutStoresElementsInTheNamedCache() {
 		def mockCache = mock(Ehcache) {
 			put(allOf(hasProperty("key", equalTo("key")), hasProperty("objectValue", equalTo("value"))))
 		}
@@ -94,7 +94,7 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 		}
 	}
 
-	void testExceptionThrownIfCacheNotFoundAndAutoCreateIsFalse() {
+	void testPutThrowsExceptionIfCacheNotFoundAndAutoCreateIsFalse() {
 		service.springcacheCacheManager.getEhcache("cache1").returns(null)
 		play {
 			service.autoCreateCaches = false
@@ -104,7 +104,20 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 		}
 	}
 
-	void testObjectsRetrievedFromCache() {
+	void testPutCreatesNewCacheAddedIfCacheNotFoundAndAutoCreateIsTrue() {
+		def mockCache = mock(Ehcache) {
+			put(allOf(hasProperty("key", equalTo("key")), hasProperty("objectValue", equalTo("value"))))
+		}
+		service.springcacheCacheManager.getEhcache("cache1").returns(null)
+		service.springcacheCacheManager.addCache("cache1")
+		service.springcacheCacheManager.getEhcache("cache1").returns(mockCache)
+		play {
+			service.autoCreateCaches = true
+			service.put("cache1", "key", "value")
+		}
+	}
+
+	void testGetRetrievesValueFromNamedCache() {
 		def mockCache = mock(Ehcache) {
 			get("key").returns(new Element("key", "value"))
 		}
@@ -138,7 +151,7 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 		}
 	}
 
-	void testGetThrowsExceptionIfInvalidCacheNameUsed() {
+	void testGetThrowsExceptionIfInvalidCacheNameUsedAndAutoCreateIsFalse() {
 		service.springcacheCacheManager.getEhcache("cache1").returns(null)
 		play {
 			service.autoCreateCaches = false
@@ -148,16 +161,16 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 		}
 	}
 
-	void testNewCacheAddedIfCacheNotFoundAndAutoCreateIsTrue() {
+	void testGetCreatesNewCacheAddedIfCacheNotFoundAndAutoCreateIsTrue() {
 		def mockCache = mock(Ehcache) {
-			put(allOf(hasProperty("key", equalTo("key")), hasProperty("objectValue", equalTo("value"))))
+			get("key").returns(null)
 		}
 		service.springcacheCacheManager.getEhcache("cache1").returns(null)
 		service.springcacheCacheManager.addCache("cache1")
 		service.springcacheCacheManager.getEhcache("cache1").returns(mockCache)
 		play {
 			service.autoCreateCaches = true
-			service.put("cache1", "key", "value")
+			assertNull service.get("cache1", "key")
 		}
 	}
 }

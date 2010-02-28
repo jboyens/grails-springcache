@@ -133,7 +133,7 @@ class CachingSpecification extends IntegrationSpecification {
 	}
 
 	void "Caches are created on demand if they do not exist"() {
-		when: "A cachable method is called twice when no cache exists"
+		when: "A cachable method is called when no cache exists"
 		piracyService.listPirateNames()
 
 		then: "The cache is created when first used"

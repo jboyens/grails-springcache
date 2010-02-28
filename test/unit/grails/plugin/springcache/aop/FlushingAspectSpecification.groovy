@@ -15,51 +15,22 @@
  */
 package grails.plugin.springcache.aop
 
+import grails.plugin.springcache.SpringcacheService
 import grails.plugin.springcache.annotations.CacheFlush
-import net.sf.ehcache.CacheManager
-import net.sf.ehcache.Ehcache
 import spock.lang.Specification
 
 class FlushingAspectSpecification extends Specification {
 
 	void "All specified caches are flushed"() {
-		given: "some caches exist"
-		def cache1 = Mock(Ehcache)
-		def cache2 = Mock(Ehcache)
-		def cacheManager = Mock(CacheManager)
-		cacheManager.getCacheNames() >> {["cache1", "cache2", "cache3"] as String[]}
-		cacheManager.getEhcache("cache1") >> cache1
-		cacheManager.getEhcache("cache2") >> cache2
+		given: "a flushing aspect"
+		def aspect = new FlushingAspect()
+		aspect.springcacheService = Mock(SpringcacheService)
 
-		when: "the flush aspect is triggered"
+		when: "the aspect is triggered"
 		def annotation = [value: {-> ["cache1", "cache2"] as String[] }] as CacheFlush
-		def aspect = new FlushingAspect()
-		aspect.cacheManager = cacheManager
 		aspect.flushCaches(annotation)
 
 		then: "the specified caches are flushed"
-		1 * cache1.flush()
-		1 * cache2.flush()
+		1 * aspect.springcacheService.flush(["cache1", "cache2"])
 	}
-
-	void "Cache names can be specified as regular expressions"() {
-		given: "some caches exist"
-		def cache1 = Mock(Ehcache)
-		def cache2 = Mock(Ehcache)
-		def cacheManager = Mock(CacheManager)
-		cacheManager.getCacheNames() >> {["cache1", "cache2", "cache3"] as String[]}
-		cacheManager.getEhcache("cache1") >> cache1
-		cacheManager.getEhcache("cache2") >> cache2
-
-		when: "the flush aspect is triggered"
-		def annotation = [value: {-> [/cache[1-2]/] as String[] }] as CacheFlush
-		def aspect = new FlushingAspect()
-		aspect.cacheManager = cacheManager
-		aspect.flushCaches(annotation)
-
-		then: "the specified caches are flushed"
-		1 * cache1.flush()
-		1 * cache2.flush()
-	}
-
 }
