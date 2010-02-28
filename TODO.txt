@@ -2,16 +2,13 @@ BUGS
 - check caching of service methods with defaulted params
 
 NEXT RELEASE
-- facade cachemanager to allow for auto-creation of caches
-- @CacheFlush takes regexes
 - provide util method for tearing down caches in tests
 - mime type key generator needs to only work if action uses withFormat (somehow)
-- ensure caches for content are blocking
 - only cache GET requests?
 - test ajax
 - test multiple sitemesh layouts
-- don't configure filter if not using ehcache
 - test caching XML/JSON output
+- option to disable content caching filter
 
 BACKLOG
 - use annotations on taglibs
