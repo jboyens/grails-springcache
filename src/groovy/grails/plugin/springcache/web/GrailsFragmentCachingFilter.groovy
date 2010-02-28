@@ -172,11 +172,7 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 		if (cacheable) {
 			def cache = cacheManager.getEhcache(cacheable.value())
 			setCache(request, cache)
-			if (log.isDebugEnabled()) {
-				log.debug "Caching request..."
-				logRequestDetails(request, context)
-				log.debug "    cache = $cache.name"
-			}
+			logRequestDetails(request, context, "Caching request")
 			return true
 		} else {
 			log.debug "No cacheable annotation found for $request.method:$request.requestURI $context"
@@ -188,11 +184,7 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 		def context = request[REQUEST_CACHE_CONTEXT_ATTR]
 		CacheFlush cacheFlush = getAnnotation(context, CacheFlush)
 		if (cacheFlush) {
-			if (log.isDebugEnabled()) {
-				log.debug "Flushing request..."
-				logRequestDetails(request, context)
-				log.debug "    caches = ${cacheFlush.value().join(', ')}"
-			}
+			logRequestDetails(request, context, "Flushing request")
 			springcacheService.flush(cacheFlush.value())
 			return true
 		} else {
@@ -210,16 +202,19 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 		return annotation
 	}
 
-	private void logRequestDetails(HttpServletRequest request, FilterContext context) {
-		log.debug "    method = $request.method"
-		log.debug "    requestURI = $request.requestURI"
-		log.debug "    forwardURI = $request.forwardURI"
-		if (WebUtils.isIncludeRequest(request)) {
-			log.debug "    includeURI = ${request[WebUtils.INCLUDE_REQUEST_URI_ATTRIBUTE]}"
+	private void logRequestDetails(HttpServletRequest request, FilterContext context, String message) {
+		if (log.isDebugEnabled()) {
+			log.debug "$message..."
+			log.debug "    method = $request.method"
+			log.debug "    requestURI = $request.requestURI"
+			log.debug "    forwardURI = $request.forwardURI"
+			if (WebUtils.isIncludeRequest(request)) {
+				log.debug "    includeURI = ${request[WebUtils.INCLUDE_REQUEST_URI_ATTRIBUTE]}"
+			}
+			log.debug "    controller = $context.controllerName"
+			log.debug "    action = $context.actionName"
+			log.debug "    params = $context.params"
 		}
-		log.debug "    controller = $context.controllerName"
-		log.debug "    action = $context.actionName"
-		log.debug "    params = $context.params"
 	}
 
 	private String getCachedUri(HttpServletRequest request) {
