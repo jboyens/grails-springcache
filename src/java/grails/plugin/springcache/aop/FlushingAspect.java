@@ -15,9 +15,14 @@
  */
 package grails.plugin.springcache.aop;
 
+import java.util.Arrays;
+import java.util.Collection;
 import grails.plugin.springcache.annotations.CacheFlush;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang.ArrayUtils;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
@@ -31,8 +36,18 @@ public class FlushingAspect {
 	private CacheManager cacheManager;
 
 	@After("@annotation(cacheFlush)")
-	public void flushCaches(CacheFlush cacheFlush) throws Throwable {
-		for (String name : cacheFlush.value()) {
+	public void flushCaches(final CacheFlush cacheFlush) throws Throwable {
+		@SuppressWarnings("unchecked")
+		Collection<String> cachesToFlush = CollectionUtils.select(Arrays.asList(cacheManager.getCacheNames()), new Predicate() {
+			public boolean evaluate(final Object cacheName) {
+				return CollectionUtils.exists(Arrays.asList(cacheFlush.value()), new Predicate() {
+					public boolean evaluate(Object pattern) {
+						return cacheName.toString().matches(pattern.toString());
+					}
+				});
+			}
+		});
+		for (String name : cachesToFlush) {
 			Ehcache cache = cacheManager.getEhcache(name);
 			try {
 				if (log.isDebugEnabled()) log.debug(String.format("Flushing cache %s", cache.getName()));
