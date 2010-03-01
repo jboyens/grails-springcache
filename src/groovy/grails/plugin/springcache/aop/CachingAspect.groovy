@@ -36,7 +36,7 @@ class CachingAspect {
 		if (log.isDebugEnabled()) log.debug "Intercepted ${pjp.toLongString()}"
 		String cacheName = cacheable.value()
 		CacheKey key = CacheKey.generate(pjp)
-		return springcacheService.withCache(cacheName, key) {
+		return springcacheService.doWithCache(cacheName, key) {
 			pjp.proceed()
 		}
 	}

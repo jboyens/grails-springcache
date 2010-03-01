@@ -5,6 +5,7 @@ import net.sf.ehcache.Element
 import net.sf.ehcache.Ehcache
 import net.sf.ehcache.constructs.blocking.BlockingCache
 import org.apache.commons.lang.ObjectUtils
+import net.sf.ehcache.constructs.blocking.LockTimeoutException
 
 class SpringcacheService {
 
@@ -13,6 +14,10 @@ class SpringcacheService {
 	CacheManager springcacheCacheManager
 	boolean autoCreateCaches = true // TODO: config?
 
+	/**
+	 * Flushes the specified cache or set of caches.
+	 * @param cacheNamePatterns can be a single cache name or a regex pattern or a Collection/array of them.
+	 */
 	void flush(cacheNamePatterns) {
 		if (cacheNamePatterns instanceof String) cacheNamePatterns = [cacheNamePatterns]
 		springcacheCacheManager.cacheNames.each { name ->
@@ -27,33 +32,53 @@ class SpringcacheService {
 		}
 	}
 
-	def withCache(String cacheName, Serializable key, Closure closure) {
+	/**
+	 * Calls a closure conditionally depending on whether a cache entry from a previous invocation exists. If the
+	 * closure is called its return value is written to the cache..
+	 * @param cacheName The name of the cache to use.
+	 * @param key The key used to get and put cache entries.
+	 * @param closure The closure to invoke if no cache entry exists already.
+	 * @return The cached value if a cache entry exists or the return value of the closure otherwise.
+	 */
+	def doWithCache(String cacheName, Serializable key, Closure closure) {
 		def cache = getOrCreateCache(cacheName)
+		return doWithCacheInternal(cache, key, closure)
+	}
+
+	/**
+	 * A variant on doWithCache that guarantees the cache used will be a BlockingCache instance. The method handles
+	 * clearing the lock if there is any exception raised.
+	 * @param cacheName The name of the cache to use. If the named cache is not a BlockingCache instance it will be
+	 *  decorated with one and replaced in the cache manager.
+	 * @param key The key used to get and put cache entries.
+	 * @param closure The closure to invoke if no cache entry exists already.
+	 * @return The cached value if a cache entry exists or the return value of the closure otherwise.
+	 */
+	def doWithBlockingCache(String cacheName, Serializable key, Closure closure) {
+		def cache = getOrCreateBlockingCache(cacheName)
+		try {
+			return doWithCacheInternal(cache, key, closure)
+		} catch (LockTimeoutException e) {
+			// do not release the lock as you never acquired it
+			throw e
+		} catch (Throwable t) {
+			if (log.isDebugEnabled()) log.debug "Clearing lock on cache '$cache.name'"
+			cache.put(new Element(key, null))
+			throw t
+		}
+	}
+
+	private doWithCacheInternal(Ehcache cache, Serializable key, Closure closure) {
 		def element = cache.get(key)
 		if (!element || element.isExpired()) {
-			if (log.isDebugEnabled()) log.debug "Cache '$cacheName' missed with key '$key'"
+			if (log.isDebugEnabled()) log.debug "Cache '$cache.name' missed with key '$key'"
 			def value = closure()
 			element = new Element(key, value == null ? ObjectUtils.NULL : value) // TODO: is this null handling really necessary?
 			cache.put(element)
 		} else {
-			if (log.isDebugEnabled()) log.debug "Cache '$cacheName' hit with key '$key'"
+			if (log.isDebugEnabled()) log.debug "Cache '$cache.name' hit with key '$key'"
 		}
 		return element.objectValue == ObjectUtils.NULL ? null : element.objectValue
-	}
-
-	def withBlockingCache(String cacheName, Serializable key, Closure closure) {
-		ensureCacheIsBlocking cacheName
-		return withCache(cacheName, key, closure)
-		// TODO: handle errors and unlocking cache
-	}
-
-	private void ensureCacheIsBlocking(String cacheName) {
-		def cache = getOrCreateCache(cacheName)
-		if (!(cache instanceof BlockingCache)) {
-			log.warn "Cache '$cacheName' is not blocking. Decorating it now..."
-			def blockingCache = new BlockingCache(cache)
-			springcacheCacheManager.replaceCacheWithDecoratedCache(cache, blockingCache)
-		}
 	}
 
 	private Ehcache getOrCreateCache(String cacheName) {
@@ -70,6 +95,19 @@ class SpringcacheService {
 		}
 		return cache
 	}
+
+	private BlockingCache getOrCreateBlockingCache(String cacheName) {
+		def cache = getOrCreateCache(cacheName)
+		if (cache instanceof BlockingCache) {
+			return cache
+		} else {
+			log.warn "Cache '$cacheName' is non-blocking. Decorating it now..."
+			def blockingCache = new BlockingCache(cache)
+			springcacheCacheManager.replaceCacheWithDecoratedCache(cache, blockingCache)
+			return blockingCache
+		}
+	}
+
 }
 
 class NoSuchCacheException extends RuntimeException {

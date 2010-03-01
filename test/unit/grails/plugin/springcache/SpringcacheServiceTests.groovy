@@ -9,6 +9,7 @@ import org.gmock.WithGMock
 import org.hamcrest.Matcher
 import static org.hamcrest.Matchers.*
 import org.apache.commons.lang.ObjectUtils
+import net.sf.ehcache.constructs.blocking.LockTimeoutException
 
 @WithGMock
 class SpringcacheServiceTests extends GrailsUnitTestCase {
@@ -101,10 +102,11 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 	void testWithCacheRetrievesValueFromCacheIfFound() {
 		def mockCache = mock(Ehcache) {
 			get("key").returns(new Element("key", "value"))
+			name.returns("cache1").stub()
 		}
 		service.springcacheCacheManager.getEhcache("cache1").returns(mockCache)
 		play {
-			assertEquals "value", service.withCache("cache1", "key") {
+			assertEquals "value", service.doWithCache("cache1", "key") {
 				fail "Closure should not have been invoked"
 			}
 		}
@@ -113,10 +115,11 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 	void testWithCacheReturnsNullIfNullPlaceholderFoundInCache() {
 		def mockCache = mock(Ehcache) {
 			get("key").returns(new Element("key", ObjectUtils.NULL))
+			name.returns("cache1").stub()
 		}
 		service.springcacheCacheManager.getEhcache("cache1").returns(mockCache)
 		play {
-			assertNull service.withCache("cache1", "key") {
+			assertNull service.doWithCache("cache1", "key") {
 				fail "Closure should not have been invoked"
 			}
 		}
@@ -126,10 +129,11 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 		def mockCache = mock(Ehcache) {
 			get("key").returns(null)
 			put(element("key", "value"))
+			name.returns("cache1").stub()
 		}
 		service.springcacheCacheManager.getEhcache("cache1").returns(mockCache)
 		play {
-			assertEquals "value", service.withCache("cache1", "key") {
+			assertEquals "value", service.doWithCache("cache1", "key") {
 				return "value"
 			}
 		}
@@ -142,10 +146,11 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 		def mockCache = mock(Ehcache) {
 			get("key").returns(mockElement)
 			put(element("key", "value"))
+			name.returns("cache1").stub()
 		}
 		service.springcacheCacheManager.getEhcache("cache1").returns(mockCache)
 		play {
-			assertEquals "value", service.withCache("cache1", "key") {
+			assertEquals "value", service.doWithCache("cache1", "key") {
 				return "value"
 			}
 		}
@@ -158,10 +163,11 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 		def mockCache = mock(Ehcache) {
 			get("key").returns(mockElement)
 			put(element("key", ObjectUtils.NULL))
+			name.returns("cache1").stub()
 		}
 		service.springcacheCacheManager.getEhcache("cache1").returns(mockCache)
 		play {
-			assertNull service.withCache("cache1", "key") {
+			assertNull service.doWithCache("cache1", "key") {
 				return null
 			}
 		}
@@ -172,7 +178,7 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 		play {
 			service.autoCreateCaches = false
 			shouldFail(NoSuchCacheException) {
-				assertEquals "value", service.withCache("cache1", "key") {
+				assertEquals "value", service.doWithCache("cache1", "key") {
 					fail "Closure should not have been invoked"
 				}
 			}
@@ -183,13 +189,14 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 		def mockCache = mock(Ehcache) {
 			get("key").returns(null)
 			put(element("key", "value"))
+			name.returns("cache1").stub()
 		}
 		service.springcacheCacheManager.getEhcache("cache1").returns(null)
 		service.springcacheCacheManager.addCache("cache1")
 		service.springcacheCacheManager.getEhcache("cache1").returns(mockCache)
 		play {
 			service.autoCreateCaches = true
-			assertEquals "value", service.withCache("cache1", "key") {
+			assertEquals "value", service.doWithCache("cache1", "key") {
 				return "value"
 			}
 		}
@@ -198,10 +205,11 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 	void testWithBlockingCacheDoesNotDecorateCacheIfItIsABlockingCacheAlready() {
 		def mockCache = mock(BlockingCache) {
 			get("key").returns(new Element("key", "value"))
+			name.returns("cache1").stub()
 		}
-		service.springcacheCacheManager.getEhcache("cache1").returns(mockCache).times(2)
+		service.springcacheCacheManager.getEhcache("cache1").returns(mockCache)
 		play {
-			assertEquals "value", service.withBlockingCache("cache1", "key") {
+			assertEquals "value", service.doWithBlockingCache("cache1", "key") {
 				fail "Closure should not have been invoked"
 			}
 		}
@@ -211,13 +219,44 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 		def mockCache = mock(Ehcache)
 		def blockingCache = mock(BlockingCache, constructor(sameInstance(mockCache))) {
 			get("key").returns(new Element("key", "value"))
+			name.returns("cache1").stub()
 		}
 		service.springcacheCacheManager.getEhcache("cache1").returns(mockCache)
 		service.springcacheCacheManager.replaceCacheWithDecoratedCache(sameInstance(mockCache), sameInstance(blockingCache))
-		service.springcacheCacheManager.getEhcache("cache1").returns(blockingCache)
 		play {
-			assertEquals "value", service.withBlockingCache("cache1", "key") {
+			assertEquals "value", service.doWithBlockingCache("cache1", "key") {
 				fail "Closure should not have been invoked"
+			}
+		}
+	}
+
+	void testWithBlockingCacheClearsLockIfExceptionIsThrownFromClosure() {
+		def mockCache = mock(BlockingCache) {
+			get("key").returns(null)
+			put(element("key", null))
+			name.returns("cache1").stub()
+		}
+		service.springcacheCacheManager.getEhcache("cache1").returns(mockCache)
+		play {
+			shouldFail(RuntimeException) {
+				service.doWithBlockingCache("cache1", "key") {
+					throw new RuntimeException("thrown to test exception handling")
+				}
+			}
+		}
+	}
+
+	void testWithBlockingCacheDoesNotTryToClearLockIfItNeverAcquiresIt() {
+		def mockCache = mock(BlockingCache) {
+			get("key").raises(new LockTimeoutException("thrown if get() blocks too long"))
+			name.returns("cache1").stub()
+		}
+		service.springcacheCacheManager.getEhcache("cache1").returns(mockCache)
+		play {
+			shouldFail(LockTimeoutException) {
+				service.doWithBlockingCache("cache1", "key") {
+					fail "Closure should not have been invoked"
+				}
 			}
 		}
 	}
