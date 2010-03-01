@@ -10,9 +10,6 @@ import javax.servlet.FilterConfig
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import net.sf.ehcache.CacheManager
-import net.sf.ehcache.Element
-import net.sf.ehcache.constructs.blocking.BlockingCache
-import net.sf.ehcache.constructs.blocking.LockTimeoutException
 import net.sf.ehcache.constructs.web.GenericResponseWrapper
 import net.sf.ehcache.constructs.web.PageInfo
 import net.sf.ehcache.constructs.web.filter.PageFragmentCachingFilter
@@ -22,7 +19,7 @@ import org.slf4j.LoggerFactory
 
 class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 
-	private static final REQUEST_CACHE_ATTR = "${GrailsFragmentCachingFilter.name}.CACHE"
+	private static final REQUEST_CACHE_NAME_ATTR = "${GrailsFragmentCachingFilter.name}.CACHE"
 	private static final REQUEST_CACHE_CONTEXT_ATTR = "${GrailsFragmentCachingFilter.name}.CACHE_CONTEXT"
 
 	private final log = LoggerFactory.getLogger(getClass())
@@ -62,38 +59,23 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 	@Override protected PageInfo buildPageInfo(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
 		def timer = new Timer()
 		timer.start(getCachedUri(request))
-		// Look up the cached page
-		BlockingCache cache = getCache(request)
-		final key = calculateKey(request)
-		PageInfo pageInfo
-		try {
-			Element element = cache.get(key)
-			if (element == null || element.getObjectValue() == null) {
-				try {
-					// Page is not cached - build the response, cache it, and send to client
-					pageInfo = buildPage(request, response, chain)
-					if (pageInfo.isOk()) {
-						log.debug "PageInfo ok. Adding to cache $cache.name with key $key"
-						cache.put(new Element(key, pageInfo))
-					} else {
-						log.debug "PageInfo was not ok(200). Putting null into cache $cache.name with key $key"
-						cache.put(new Element(key, null))
-					}
-				} catch (Throwable throwable) {
-					// Must unlock the cache if the above fails. Will be logged at Filter
-					cache.put(new Element(key, null))
-					throw new Exception(throwable)
-				}
-				timer.stop(false)
+		boolean isCached = true
+
+		def cacheName = request[REQUEST_CACHE_NAME_ATTR]
+		def key = calculateKey(request)
+		PageInfo pageInfo = springcacheService.withBlockingCache(cacheName, key) {
+			isCached = false
+			def pageInfo = buildPage(request, response, chain)
+			if (pageInfo.isOk()) {
+				log.debug "PageInfo ok. Adding to cache $cacheName with key $key"
+				return pageInfo
 			} else {
-				log.debug "Serving cached content for $key"
-				pageInfo = element.getObjectValue()
-				timer.stop(true)
+				log.debug "PageInfo was not ok(200). Putting null into cache $cacheName with key $key"
+				return null
 			}
-		} catch (LockTimeoutException e) {
-			//do not release the lock, because you never acquired it
-			throw e
 		}
+		
+		timer.stop(isCached)
 		return pageInfo
 	}
 
@@ -122,7 +104,7 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 		}
 		wrapper.flush()
 
-		long timeToLiveSeconds = getCache(request).cacheConfiguration.timeToLiveSeconds
+		long timeToLiveSeconds = cacheManager.getEhcache(request[REQUEST_CACHE_NAME_ATTR]).cacheConfiguration.timeToLiveSeconds
 
 		def contentType = wrapper.contentType ?: response.contentType
 		return new PageInfo(wrapper.status, contentType, wrapper.headers, wrapper.cookies,
@@ -140,7 +122,7 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 	}
 
 	@Override protected CacheManager getCacheManager() {
-		return cacheManager
+		throw new UnsupportedOperationException("Not supported in this implementation")
 	}
 
 	/**
@@ -152,26 +134,11 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 		return keyGenerator.generateKey(context).toString()
 	}
 
-	private BlockingCache getCache(HttpServletRequest request) {
-		request[REQUEST_CACHE_ATTR]
-	}
-
-	private void setCache(HttpServletRequest request, BlockingCache cache) {
-		if (!(cache instanceof BlockingCache)) {
-			def blockingCache = new BlockingCache(cache)
-			cacheManager.replaceCacheWithDecoratedCache(cache, blockingCache)
-			request[REQUEST_CACHE_ATTR] = blockingCache
-		} else {
-			request[REQUEST_CACHE_ATTR] = cache
-		}
-	}
-
 	private boolean shouldCache(HttpServletRequest request) {
 		def context = request[REQUEST_CACHE_CONTEXT_ATTR]
 		Cacheable cacheable = getAnnotation(context, Cacheable)
 		if (cacheable) {
-			def cache = cacheManager.getEhcache(cacheable.value())
-			setCache(request, cache)
+			request[REQUEST_CACHE_NAME_ATTR] = cacheable.value()
 			logRequestDetails(request, context, "Caching request")
 			return true
 		} else {
