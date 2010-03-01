@@ -90,6 +90,7 @@
       <module fileurl="file://$PROJECT_DIR$/grails-springcache-grailsPlugins.iml" filepath="$PROJECT_DIR$/grails-springcache-grailsPlugins.iml" />
       <module fileurl="file://$PROJECT_DIR$/springcache.iml" filepath="$PROJECT_DIR$/springcache.iml" />
       <module fileurl="file://$PROJECT_DIR$/test/projects/springcache-test/springcache-test.iml" filepath="$PROJECT_DIR$/test/projects/springcache-test/springcache-test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/test/projects/springcache-test/springcache-test-grailsPlugins.iml" filepath="$PROJECT_DIR$/test/projects/springcache-test/springcache-test-grailsPlugins.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">

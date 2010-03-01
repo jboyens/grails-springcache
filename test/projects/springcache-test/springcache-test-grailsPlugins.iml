@@ -16,6 +16,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="grails-1.2.1" level="application" />
     <orderEntry type="module-library" exported="">
       <library name="Grails User Library">
         <CLASSES>
@@ -26,7 +27,6 @@
         <jarDirectory url="file://$USER_HOME$/.grails/1.2.1/projects/springcache-test/plugins/tomcat-1.2.1/lib" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="Grails 1.2.1" level="project" />
   </component>
 </module>
 
