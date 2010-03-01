@@ -41,6 +41,15 @@ class SpringcacheService {
 		}
 	}
 
+	def withCache(String cacheName, Serializable key, Closure closure) {
+		def value = get(cacheName, key)
+		if (!value) {
+			value = closure()
+			put(cacheName, key, value)
+		}
+		return value
+	}
+
 	void ensureCacheIsBlocking(String cacheName) {
 		def cache = getOrCreateCache(cacheName)
 		if (!(cache instanceof BlockingCache)) {
