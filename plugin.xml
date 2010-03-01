@@ -6,6 +6,7 @@
   <documentation>http://grails.org/Springcache+Plugin</documentation>
   <resources>
     <resource>BuildConfig</resource>
+    <resource>grails.plugin.springcache.SpringcacheService</resource>
   </resources>
   <dependencies>
     <resolvers>
