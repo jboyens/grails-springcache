@@ -43,7 +43,10 @@ class SpringcacheService {
 
 	def withCache(String cacheName, Serializable key, Closure closure) {
 		def value = get(cacheName, key)
-		if (!value) {
+		if (value) {
+			if (log.isDebugEnabled()) log.debug "Cache '$cacheName' hit with key '$key'"
+		} else {
+			if (log.isDebugEnabled()) log.debug "Cache '$cacheName' missed with key '$key'"
 			value = closure()
 			put(cacheName, key, value)
 		}
@@ -67,6 +70,7 @@ class SpringcacheService {
 				springcacheCacheManager.addCache(cacheName)
 				cache = springcacheCacheManager.getEhcache(cacheName)
 			} else {
+				log.error "Cache '$cacheName' does not exist."
 				throw new NoSuchCacheException(cacheName)
 			}
 		}

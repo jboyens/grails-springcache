@@ -17,7 +17,7 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 	void setUp() {
 		super.setUp()
 
-		mockLogging SpringcacheService
+		mockLogging SpringcacheService, true
 		service = new SpringcacheService()
 		service.springcacheCacheManager = mock(CacheManager) {
 			cacheNames.returns(["cache1", "cache2", "cacheA", "cacheB"] as String[]).stub()
