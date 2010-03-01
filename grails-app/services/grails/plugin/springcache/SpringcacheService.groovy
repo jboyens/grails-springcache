@@ -4,6 +4,7 @@ import net.sf.ehcache.CacheManager
 import net.sf.ehcache.Element
 import net.sf.ehcache.Ehcache
 import net.sf.ehcache.constructs.blocking.BlockingCache
+import org.apache.commons.lang.ObjectUtils
 
 class SpringcacheService {
 
@@ -26,34 +27,27 @@ class SpringcacheService {
 		}
 	}
 
-	void put(String cacheName, Serializable key, Object value) {
-		def cache = getOrCreateCache(cacheName)
-		cache.put(new Element(key, value))
-	}
-
-	def get(String cacheName, Serializable key) {
+	def withCache(String cacheName, Serializable key, Closure closure) {
 		def cache = getOrCreateCache(cacheName)
 		def element = cache.get(key)
 		if (!element || element.isExpired()) {
-			return null
-		} else {
-			return element.objectValue
-		}
-	}
-
-	def withCache(String cacheName, Serializable key, Closure closure) {
-		def value = get(cacheName, key)
-		if (value) {
-			if (log.isDebugEnabled()) log.debug "Cache '$cacheName' hit with key '$key'"
-		} else {
 			if (log.isDebugEnabled()) log.debug "Cache '$cacheName' missed with key '$key'"
-			value = closure()
-			put(cacheName, key, value)
+			def value = closure()
+			element = new Element(key, value == null ? ObjectUtils.NULL : value) // TODO: is this null handling really necessary?
+			cache.put(element)
+		} else {
+			if (log.isDebugEnabled()) log.debug "Cache '$cacheName' hit with key '$key'"
 		}
-		return value
+		return element.objectValue == ObjectUtils.NULL ? null : element.objectValue
 	}
 
-	void ensureCacheIsBlocking(String cacheName) {
+	def withBlockingCache(String cacheName, Serializable key, Closure closure) {
+		ensureCacheIsBlocking cacheName
+		return withCache(cacheName, key, closure)
+		// TODO: handle errors and unlocking cache
+	}
+
+	private void ensureCacheIsBlocking(String cacheName) {
 		def cache = getOrCreateCache(cacheName)
 		if (!(cache instanceof BlockingCache)) {
 			log.warn "Cache '$cacheName' is not blocking. Decorating it now..."
@@ -67,7 +61,7 @@ class SpringcacheService {
 		if (!cache) {
 			if (autoCreateCaches) {
 				log.warn "Cache '$cacheName' does not exist. Creating it now..."
-				springcacheCacheManager.addCache(cacheName)
+				springcacheCacheManager.addCache(cacheName) // TODO: configurable defaults?
 				cache = springcacheCacheManager.getEhcache(cacheName)
 			} else {
 				log.error "Cache '$cacheName' does not exist."

@@ -13,29 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package grails.plugin.springcache.aop;
+package grails.plugin.springcache.aop
 
-import grails.plugin.springcache.SpringcacheService;
-import grails.plugin.springcache.annotations.CacheFlush;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.Aspect;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import grails.plugin.springcache.SpringcacheService
+import grails.plugin.springcache.annotations.CacheFlush
+import org.aspectj.lang.annotation.After
+import org.aspectj.lang.annotation.Aspect
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 @Aspect
 public class FlushingAspect {
 
-	private final Logger log = LoggerFactory.getLogger(FlushingAspect.class);
+	private final Logger log = LoggerFactory.getLogger(FlushingAspect.class)
 
-	private SpringcacheService springcacheService;
+	SpringcacheService springcacheService
 
 	@After("@annotation(cacheFlush)")
-	public void flushCaches(final CacheFlush cacheFlush) throws Throwable {
-		springcacheService.flush(cacheFlush.value());
+	void flushCaches(final CacheFlush cacheFlush) {
+		springcacheService.flush(cacheFlush.value())
 	}
-
-	public void setSpringcacheService(SpringcacheService springcacheService) {
-		this.springcacheService = springcacheService;
-	}
-
 }
