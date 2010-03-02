@@ -4,17 +4,13 @@ BUGS
 NEXT RELEASE
 - mime type key generator needs to only work if action uses withFormat (somehow)
 - only cache GET requests?
-- test ajax
-- test multiple sitemesh layouts
-- test caching XML/JSON output
 - option to disable content caching filter
 
 BACKLOG
+- key generator per cache
 - use annotations on taglibs
 - cacheable version of g:render?
-- allow cache names directly on annotations
 - configurable cacheable & cacheflush for controllers in plugins?
-- expose a cache service?
 - expose caching statistics (JMX?)
 - support reloading via onChange and onConfigChange
 
