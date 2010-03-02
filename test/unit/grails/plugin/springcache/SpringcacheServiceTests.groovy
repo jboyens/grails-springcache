@@ -241,7 +241,6 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 			createApplicationContext().returns(mockApplicationContext)
 		}
 		service.springcacheCacheManager.getEhcache("cache1").returns(null)
-		service.springcacheCacheManager.addCache(mockCache)
 		play {
 			service.autoCreateCaches = true
 			assertEquals "value", service.doWithCache("cache1", "key") {
@@ -305,24 +304,6 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 				service.doWithBlockingCache("cache1", "key") {
 					fail "Closure should not have been invoked"
 				}
-			}
-		}
-	}
-
-	void testAutoCreatedCachesHaveConfiguredDefaultsApplied() {
-		def beanBuilder = new BeanBuilder()
-		beanBuilder.beans {
-			abstractCache(EhCacheFactoryBean) {
-				timeToLive = 86400
-			}
-		}
-		service.applicationContext = beanBuilder.createApplicationContext()
-		service.springcacheCacheManager.getEhcache("cache1").returns(null)
-		service.springcacheCacheManager.addCache(configuredCache("cache1", [timeToLiveSeconds: 86400L]))
-		play {
-			service.autoCreateCaches = true
-			service.doWithCache("cache1", "key") {
-				return "whatever"
 			}
 		}
 	}

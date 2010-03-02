@@ -4,6 +4,7 @@ import grails.plugin.spock.IntegrationSpecification
 import net.sf.ehcache.Cache
 import pirates.Pirate
 import grails.validation.ValidationException
+import net.sf.ehcache.store.MemoryStoreEvictionPolicy
 
 class CachingSpecification extends IntegrationSpecification {
 
@@ -140,6 +141,16 @@ class CachingSpecification extends IntegrationSpecification {
 		def cache = springcacheCacheManager.getCache("PirateCache")
 		cache != null
 		cache.statistics.objectCount == 1
+	}
+
+	void "Caches created on demand have default configuration applied"() {
+		when: "A cachable method is called when no cache exists"
+		piracyService.listPirateNames()
+
+		then: "The cache created has default properties applied"
+		def cache = springcacheCacheManager.getCache("PirateCache")
+		cache != null
+		cache.cacheConfiguration.memoryStoreEvictionPolicy == MemoryStoreEvictionPolicy.LFU
 	}
 
 }

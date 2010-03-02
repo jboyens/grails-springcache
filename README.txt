@@ -276,17 +276,10 @@ pirateCache(EhCacheFactoryBean) { bean -&gt;
 }
 {code}
 
-You can use an abstract bean to define cache defaults. For example:
+You can inherit default cache properties from those defined in @Config.groovy@ by setting the factory bean's parent to 'abstractCache'. For example:
 {code}
-abstractCache(EhCacheFactoryBean) { bean -&gt;
-	cacheManager = ref("springcacheCacheManager")
-	bean."abstract" = true
-	// set default cache properties that will apply to all caches that do not override them
-    eternal = false
-	diskPersistent = false
-}
 pirateCache(EhCacheFactoryBean) { bean -&gt;
-    bean.parent = abstractCache
+    bean.parent = ref("abstractCache")
 	cacheName = "pirateCache"
 	// set any properties unique to this cache
 	memoryStoreEvictionPolicy = "LRU"
