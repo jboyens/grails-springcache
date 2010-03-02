@@ -122,7 +122,7 @@ class SpringcacheService implements ApplicationContextAware {
 		def beanBuilder = new BeanBuilder(applicationContext)
 		beanBuilder.beans {
 			"$name"(EhCacheFactoryBean) { bean ->
-				bean.parent = ref("abstractCache", true)
+				bean.parent = ref("springcacheDefaultCache", true)
 				cacheName = name
 			}
 		}

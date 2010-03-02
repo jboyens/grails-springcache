@@ -276,10 +276,10 @@ pirateCache(EhCacheFactoryBean) { bean -&gt;
 }
 {code}
 
-You can inherit default cache properties from those defined in @Config.groovy@ by setting the factory bean's parent to 'abstractCache'. For example:
+You can inherit default cache properties from those defined in @Config.groovy@ by setting the factory bean's parent to 'springcacheDefaultCache'. For example:
 {code}
 pirateCache(EhCacheFactoryBean) { bean -&gt;
-    bean.parent = ref("abstractCache")
+    bean.parent = ref("springcacheDefaultCache")
 	cacheName = "pirateCache"
 	// set any properties unique to this cache
 	memoryStoreEvictionPolicy = "LRU"
