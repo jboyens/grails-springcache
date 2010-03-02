@@ -80,13 +80,16 @@ log4j = {
     warn   'org.mortbay.log'
 
 	info	'net.sf.ehcache'
-	debug	'grails.plugin.springcache'
+//	debug	'grails.plugin.springcache'
 }
 
 springcache {
+	defaults {
+		memoryStoreEvictionPolicy = "LFU"
+	}
 	caches {
 		ConfiguredCache {
-			eternal = true
+			timeToLive = 86400
 		}
 	}
 }

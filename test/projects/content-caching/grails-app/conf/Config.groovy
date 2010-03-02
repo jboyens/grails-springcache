@@ -88,7 +88,7 @@ log4j = {
 	info 'net.sf.ehcache.constructs.web.filter'/*,
 			'grails.plugin.springcache.web.Timer'*/
 
-	debug 'grails.plugin.springcache'
+//	debug 'grails.plugin.springcache'
 
 }
 //log4j.logger.org.springframework.security='off,stdout'

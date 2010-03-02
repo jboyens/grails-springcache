@@ -18,5 +18,3 @@ BACKLOG
 - expose caching statistics (JMX?)
 - support reloading via onChange and onConfigChange
 
-DOCS
-- can you configure cache defaults in spring as well as ehcache.xml?

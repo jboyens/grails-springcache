@@ -290,6 +290,7 @@ pirateCache(EhCacheFactoryBean) { bean -&gt;
 	cacheName = "pirateCache"
 	// set any properties unique to this cache
 	memoryStoreEvictionPolicy = "LRU"
+}
 {code}
 
 h3. Configuring caches with Config.groovy
