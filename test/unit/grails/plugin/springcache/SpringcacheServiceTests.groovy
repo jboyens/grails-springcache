@@ -1,15 +1,18 @@
 package grails.plugin.springcache
 
+import grails.spring.BeanBuilder
 import grails.test.GrailsUnitTestCase
 import net.sf.ehcache.CacheManager
 import net.sf.ehcache.Ehcache
 import net.sf.ehcache.Element
 import net.sf.ehcache.constructs.blocking.BlockingCache
+import net.sf.ehcache.constructs.blocking.LockTimeoutException
+import org.apache.commons.lang.ObjectUtils
 import org.gmock.WithGMock
 import org.hamcrest.Matcher
+import org.springframework.cache.ehcache.EhCacheFactoryBean
 import static org.hamcrest.Matchers.*
-import org.apache.commons.lang.ObjectUtils
-import net.sf.ehcache.constructs.blocking.LockTimeoutException
+import org.springframework.context.ApplicationContext
 
 @WithGMock
 class SpringcacheServiceTests extends GrailsUnitTestCase {
@@ -38,6 +41,20 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 				instanceOf(Element),
 				hasProperty("key", equalTo(key)),
 				hasProperty("objectValue", equalTo(objectValue))
+		)
+	}
+
+	/**
+	 * Creates a matcher that matches an Ehcache instance with the specified name and config properties.
+	 */
+	static Matcher<Ehcache> configuredCache(String name, Map config) {
+		def propertyMatchers = config.collect { k, v ->
+			hasProperty(k, equalTo(v))
+		}
+		allOf(
+				instanceOf(Ehcache),
+				hasProperty("name", equalTo(name)),
+				hasProperty("cacheConfiguration", allOf(propertyMatchers))
 		)
 	}
 
@@ -216,9 +233,15 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 			put(element("key", "value"))
 			name.returns("cache1").stub()
 		}
+		def mockApplicationContext = mock(ApplicationContext) {
+			getBean("cache1").returns(mockCache)
+		}
+		mock(BeanBuilder, constructor(anything())) {
+			beans(anything())
+			createApplicationContext().returns(mockApplicationContext)
+		}
 		service.springcacheCacheManager.getEhcache("cache1").returns(null)
-		service.springcacheCacheManager.addCache("cache1")
-		service.springcacheCacheManager.getEhcache("cache1").returns(mockCache)
+		service.springcacheCacheManager.addCache(mockCache)
 		play {
 			service.autoCreateCaches = true
 			assertEquals "value", service.doWithCache("cache1", "key") {
@@ -282,6 +305,24 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 				service.doWithBlockingCache("cache1", "key") {
 					fail "Closure should not have been invoked"
 				}
+			}
+		}
+	}
+
+	void testAutoCreatedCachesHaveConfiguredDefaultsApplied() {
+		def beanBuilder = new BeanBuilder()
+		beanBuilder.beans {
+			abstractCache(EhCacheFactoryBean) {
+				timeToLive = 86400
+			}
+		}
+		service.applicationContext = beanBuilder.createApplicationContext()
+		service.springcacheCacheManager.getEhcache("cache1").returns(null)
+		service.springcacheCacheManager.addCache(configuredCache("cache1", [timeToLiveSeconds: 86400L]))
+		play {
+			service.autoCreateCaches = true
+			service.doWithCache("cache1", "key") {
+				return "whatever"
 			}
 		}
 	}

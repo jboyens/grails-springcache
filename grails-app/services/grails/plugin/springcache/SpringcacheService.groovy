@@ -6,11 +6,16 @@ import net.sf.ehcache.Ehcache
 import net.sf.ehcache.constructs.blocking.BlockingCache
 import org.apache.commons.lang.ObjectUtils
 import net.sf.ehcache.constructs.blocking.LockTimeoutException
+import org.springframework.context.ApplicationContextAware
+import org.springframework.context.ApplicationContext
+import grails.spring.BeanBuilder
+import org.springframework.cache.ehcache.EhCacheFactoryBean
 
-class SpringcacheService {
+class SpringcacheService implements ApplicationContextAware {
 
 	static transactional = false
 
+	ApplicationContext applicationContext
 	CacheManager springcacheCacheManager
 	boolean autoCreateCaches = true // TODO: config?
 
@@ -87,31 +92,43 @@ class SpringcacheService {
 		return element.objectValue == ObjectUtils.NULL ? null : element.objectValue
 	}
 
-	private Ehcache getOrCreateCache(String cacheName) {
-		def cache = springcacheCacheManager.getEhcache(cacheName)
+	private BlockingCache getOrCreateBlockingCache(String name) {
+		def cache = getOrCreateCache(name)
+		if (cache instanceof BlockingCache) {
+			return cache
+		} else {
+			log.warn "Cache '$name' is non-blocking. Decorating it now..."
+			def blockingCache = new BlockingCache(cache)
+			springcacheCacheManager.replaceCacheWithDecoratedCache(cache, blockingCache)
+			return blockingCache
+		}
+	}
+
+	private Ehcache getOrCreateCache(String name) {
+		Ehcache cache = springcacheCacheManager.getEhcache(name)
 		if (!cache) {
 			if (autoCreateCaches) {
-				log.warn "Cache '$cacheName' does not exist. Creating it now..."
-				springcacheCacheManager.addCache(cacheName) // TODO: configurable defaults?
-				cache = springcacheCacheManager.getEhcache(cacheName)
+				log.warn "Cache '$name' does not exist. Creating it now..."
+				cache = createNewCacheWithDefaults(name)
+				springcacheCacheManager.addCache(cache) // TODO: configurable defaults?
 			} else {
-				log.error "Cache '$cacheName' does not exist."
-				throw new NoSuchCacheException(cacheName)
+				log.error "Cache '$name' does not exist."
+				throw new NoSuchCacheException(name)
 			}
 		}
 		return cache
 	}
 
-	private BlockingCache getOrCreateBlockingCache(String cacheName) {
-		def cache = getOrCreateCache(cacheName)
-		if (cache instanceof BlockingCache) {
-			return cache
-		} else {
-			log.warn "Cache '$cacheName' is non-blocking. Decorating it now..."
-			def blockingCache = new BlockingCache(cache)
-			springcacheCacheManager.replaceCacheWithDecoratedCache(cache, blockingCache)
-			return blockingCache
+	private Ehcache createNewCacheWithDefaults(String name) {
+		def beanBuilder = new BeanBuilder(applicationContext)
+		beanBuilder.beans {
+			"$name"(EhCacheFactoryBean) { bean ->
+				bean.parent = ref("abstractCache", true)
+				cacheName = name
+			}
 		}
+		def ctx = beanBuilder.createApplicationContext()
+		return ctx.getBean(name)
 	}
 
 	private def flushNamedCache(String name, boolean clearStatistics = false) {
