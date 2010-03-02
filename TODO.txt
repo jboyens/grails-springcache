@@ -2,7 +2,6 @@ BUGS
 - check caching of service methods with defaulted params
 
 NEXT RELEASE
-- provide util method for tearing down caches in tests
 - mime type key generator needs to only work if action uses withFormat (somehow)
 - only cache GET requests?
 - test ajax

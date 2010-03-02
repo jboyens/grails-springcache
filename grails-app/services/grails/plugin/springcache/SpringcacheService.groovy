@@ -22,13 +22,18 @@ class SpringcacheService {
 		if (cacheNamePatterns instanceof String) cacheNamePatterns = [cacheNamePatterns]
 		springcacheCacheManager.cacheNames.each { name ->
 			if (cacheNamePatterns.any { name ==~ it }) {
-				if (log.isDebugEnabled()) log.debug "Flushing cache '$name'"
-				try {
-					springcacheCacheManager.getEhcache(name)?.flush()
-				} catch (IllegalStateException e) {
-					log.warn "Attempted to flush cache '$name' when it is not alive"
-				}
+				flushNamedCache(name)
 			}
+		}
+	}
+
+	/**
+	 * Flushes all caches held by the service's cache manager.
+	 * @param clearStatistics if true the method will clear all cache statistics as well as flushing.
+	 */
+	void flushAll(boolean clearStatistics = false) {
+		springcacheCacheManager.cacheNames.each {
+			flushNamedCache(it, clearStatistics)
 		}
 	}
 
@@ -106,6 +111,17 @@ class SpringcacheService {
 			def blockingCache = new BlockingCache(cache)
 			springcacheCacheManager.replaceCacheWithDecoratedCache(cache, blockingCache)
 			return blockingCache
+		}
+	}
+
+	private def flushNamedCache(String name, boolean clearStatistics = false) {
+		if (log.isDebugEnabled()) log.debug "Flushing cache '$name'"
+		try {
+			def cache = springcacheCacheManager.getEhcache(name)
+			cache?.flush()
+			if (clearStatistics) cache?.clearStatistics()
+		} catch (IllegalStateException e) {
+			log.warn "Attempted to flush cache '$name' when it is not alive"
 		}
 	}
 

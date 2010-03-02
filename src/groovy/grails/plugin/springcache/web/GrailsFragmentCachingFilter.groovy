@@ -61,9 +61,9 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 		timer.start(getCachedUri(request))
 		boolean isCached = true
 
-		def cacheName = request[REQUEST_CACHE_NAME_ATTR]
+		String cacheName = request[REQUEST_CACHE_NAME_ATTR]
 		def key = calculateKey(request)
-		PageInfo pageInfo = springcacheService.doWithBlockingCache(cacheName, key) {
+		def pageInfo = springcacheService.doWithBlockingCache(cacheName, key) {
 			isCached = false
 			def pageInfo = buildPage(request, response, chain)
 			if (pageInfo.isOk()) {

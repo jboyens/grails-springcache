@@ -99,6 +99,31 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 		}
 	}
 
+	void testFlushAllFlushesEverything() {
+		["1", "2", "A", "B"].each {
+			def mockCache = mock(Ehcache) {
+				flush()
+			}
+			service.springcacheCacheManager.getEhcache("cache$it").returns(mockCache)
+		}
+		play {
+			service.flushAll()
+		}
+	}
+
+	void testFlushAllClearsStatisticsAsWellIfTrueIsPassed() {
+		["1", "2", "A", "B"].each {
+			def mockCache = mock(Ehcache) {
+				flush()
+				clearStatistics()
+			}
+			service.springcacheCacheManager.getEhcache("cache$it").returns(mockCache)
+		}
+		play {
+			service.flushAll(true)
+		}
+	}
+
 	void testWithCacheRetrievesValueFromCacheIfFound() {
 		def mockCache = mock(Ehcache) {
 			get("key").returns(new Element("key", "value"))
