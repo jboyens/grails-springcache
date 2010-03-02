@@ -307,4 +307,20 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 			}
 		}
 	}
+
+	void testDoWithCacheDelegatesToDoWithBlockingCacheIfItFindsABlockingCache() {
+		def mockCache = mock(BlockingCache) {
+			get("key").returns("value")
+			put(element("key", null))
+			name.returns("cache1").stub()
+		}
+		service.springcacheCacheManager.getEhcache("cache1").returns(mockCache).times(2)
+		play {
+			shouldFail(RuntimeException) {
+				service.doWithCache("cache1", "key") {
+					throw new RuntimeException("thrown to test exception handling")
+				}
+			}
+		}
+	}
 }

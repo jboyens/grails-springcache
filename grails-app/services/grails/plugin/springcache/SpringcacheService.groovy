@@ -52,8 +52,12 @@ class SpringcacheService implements ApplicationContextAware {
 	 */
 	def doWithCache(String cacheName, Serializable key, Closure closure) {
 		def cache = getOrCreateCache(cacheName)
-		// TODO: needs to call doWithBlockingCache if it has found a blocking cache - just in case error is thrown
-		return doWithCacheInternal(cache, key, closure)
+		if (cache instanceof BlockingCache) {
+			// delegate so that we get the special exception handling for blocking caches
+			return doWithBlockingCache(cacheName, key, closure)
+		} else {
+			return doWithCacheInternal(cache, key, closure)
+		}
 	}
 
 	/**
