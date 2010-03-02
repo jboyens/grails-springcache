@@ -88,8 +88,7 @@ log4j = {
 	info 'net.sf.ehcache.constructs.web.filter'/*,
 			'grails.plugin.springcache.web.Timer'*/
 
-//	debug 'grails.plugin.springcache',
-//			'net.sf.ehcache.constructs.web.filter'
+	debug 'grails.plugin.springcache'
 
 }
 //log4j.logger.org.springframework.security='off,stdout'
@@ -97,27 +96,16 @@ log4j = {
 
 springcache {
 //	disabled = true
+	defaults {
+		blocking = true
+		eternal = true
+	}
 	caches {
-		albumControllerCache {
-			blocking = true
-			eternal = true
-		}
-		artistControllerCache {
-			blocking = true
-			eternal = true
-		}
-		userControllerCache {
-			blocking = true
-			eternal = true
-		}
-		latestControllerCache {
-			blocking = true
-			eternal = true
-		}
-		popularControllerCache {
-			blocking = true
-			eternal = true
-		}
+		albumControllerCache
+		artistControllerCache
+		userControllerCache
+		latestControllerCache
+		popularControllerCache
 	}
 }
 

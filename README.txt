@@ -269,29 +269,53 @@ h4. grails-app/conf/spring/resources.groovy
 pirateCache(EhCacheFactoryBean) { bean -&gt;
 	cacheManager = ref("springcacheCacheManager")
 	cacheName = "pirateCache"
-	eternal = true
-	diskPersistent = true
-	memoryStoreEvictionPolicy = "LFU"
+	// these are just examples of properties you could set
+	eternal = false
+	diskPersistent = false
+	memoryStoreEvictionPolicy = "LRU"
 }
+{code}
+
+You can use an abstract bean to define cache defaults. For example:
+{code}
+abstractCache(EhCacheFactoryBean) { bean -&gt;
+	cacheManager = ref("springcacheCacheManager")
+	bean."abstract" = true
+	// set default cache properties that will apply to all caches that do not override them
+    eternal = false
+	diskPersistent = false
+}
+pirateCache(EhCacheFactoryBean) { bean -&gt;
+    bean.parent = abstractCache
+	cacheName = "pirateCache"
+	// set any properties unique to this cache
+	memoryStoreEvictionPolicy = "LRU"
 {code}
 
 h3. Configuring caches with Config.groovy
 
-With the Springcache plugin you can define caches in @Config.groovy@ in a similar way. For example:
+The Springcache plugin enables you to define caches in @Config.groovy@ for convenience. For example:
 
 h4. grails-app/conf/Config.groovy
 {code}
 springcache {
+    defaults {
+        // set default cache properties that will apply to all caches that do not override them
+        eternal = false
+		diskPersistent = false
+    }
 	caches {
 		pirateCache {
-			eternal = true
-			diskPersistent = true
-			memoryStoreEvictionPolicy = "LFU"
+        	// set any properties unique to this cache
+			memoryStoreEvictionPolicy = "LRU"
 		}
 	}
 }
 {code}
+
 Under the hood this is simply setting up @EhCacheFactoryBean@ instances in the Spring context, so it is up to you whether you prefer to use @resources.groovy@ or @Config.groovy@ there is not much difference.
+
+The properties shown are just examples, see the [EhCacheFactoryBean|http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/cache/ehcache/EhCacheFactoryBean.html] documentation for full details of all the properties you can set.
 
 h2. Tips
 
