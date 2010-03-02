@@ -367,6 +367,7 @@ h2. Release Notes
 h4. 1.2
  * Adds page fragment caching via annotations on controllers.
  * Simplifies config by getting rid of caching and flushing models and having annotations refer to cache names directly.
+ * Adds configurable cache defaults that apply to configured caches and auto-created caches
 h4. 1.1.3
  * Fixes bug where an expired ehcache element whose key is still in the cache can cause the plugin to think the key still maps to a valid value.
  * Allows configuration of ehcache caches directly in Config.groovy
