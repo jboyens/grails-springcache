@@ -236,7 +236,7 @@ Both the servlet filter used for content caching and the AOP aspects used for se
  * **flushAll()** : Flushes all caches.
  * **clearStatistics()** : Clears statistics for all caches.
  * **getOrCreateCache(name)** : Gets the named cache or creates it from defaults if it does not exist.
- * **getOrCreateBlockingCache(name)** : As _getOrCreateCache_ but will decorate the cache with a < href="http://ehcache.org/apidocs/net/sf/ehcache/constructs/blocking/BlockingCache.html">BlockingCache</a> if it is non-blocking.
+ * **getOrCreateBlockingCache(name)** : As _getOrCreateCache_ but will decorate the cache with a <a href="http://ehcache.org/apidocs/net/sf/ehcache/constructs/blocking/BlockingCache.html">BlockingCache</a> if it is non-blocking.
 
 The plugin encourages you to use declarative caching and flushing to maintain a good separation of concerns. Over-using the _springcacheService_ is likely to render your code harder to test and maintain. That said programmatic caching may be necessary in some places but there are some caveats:
 
