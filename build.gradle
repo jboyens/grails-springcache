@@ -1,3 +1,17 @@
+defaultTasks "clean", "test"
+
+configurations {
+    doc
+}
+
+repositories {
+    mavenRepo urls: "http://scala-tools.org/repo-releases"
+}
+
+dependencies {
+	doc "org.markdownj:markdownj:0.3.0-1.0.2b4"
+}
+
 allprojects {
 	task clean << { task ->
 	    ant.exec(executable: "grails", dir: "$task.project.projectDir", failonerror: true) {
@@ -10,4 +24,10 @@ task test << {
 	ant.exec(executable: "grails", dir: "$projectDir", failonerror: true) {
 	    arg line: "test-app unit:"
 	}
+}
+
+task doc(dependsOn: configurations.doc) << {
+	ant.java(classpath: configurations.doc.asPath,
+			classname: "com.petebevin.markdown.MarkdownProcessor",
+			input: "README.txt")
 }
