@@ -9,3 +9,4 @@ docs/gapi
 build/
 .gradle/
 web-app/
+*.zip
