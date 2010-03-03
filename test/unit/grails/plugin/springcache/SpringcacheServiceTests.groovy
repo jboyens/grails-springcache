@@ -128,16 +128,15 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 		}
 	}
 
-	void testFlushAllClearsStatisticsAsWellIfTrueIsPassed() {
+	void testClearStatistics() {
 		["1", "2", "A", "B"].each {
 			def mockCache = mock(Ehcache) {
-				flush()
 				clearStatistics()
 			}
 			service.springcacheCacheManager.getEhcache("cache$it").returns(mockCache)
 		}
 		play {
-			service.flushAll(true)
+			service.clearStatistics()
 		}
 	}
 
@@ -154,9 +153,9 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 		}
 	}
 
-	void testWithCacheReturnsNullIfNullPlaceholderFoundInCache() {
+	void testWithCacheReturnsNullIfNullFoundInCache() {
 		def mockCache = mock(Ehcache) {
-			get("key").returns(new Element("key", ObjectUtils.NULL))
+			get("key").returns(new Element("key", null))
 			name.returns("cache1").stub()
 		}
 		service.springcacheCacheManager.getEhcache("cache1").returns(mockCache)
@@ -204,7 +203,7 @@ class SpringcacheServiceTests extends GrailsUnitTestCase {
 		}
 		def mockCache = mock(Ehcache) {
 			get("key").returns(mockElement)
-			put(element("key", ObjectUtils.NULL))
+			put(element("key", null))
 			name.returns("cache1").stub()
 		}
 		service.springcacheCacheManager.getEhcache("cache1").returns(mockCache)
