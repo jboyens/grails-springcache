@@ -29,5 +29,5 @@ task test << {
 task doc(dependsOn: configurations.doc) << {
 	ant.java(classpath: configurations.doc.asPath,
 			classname: "com.petebevin.markdown.MarkdownProcessor",
-			input: "README.txt")
+			input: "README.markdown")
 }
