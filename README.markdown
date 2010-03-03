@@ -230,11 +230,11 @@ The plugin only provides page fragment caching rather than full page caching. Fu
 
 Both the servlet filter used for content caching and the AOP aspects used for service method caching use a Grails service to handle caching and flushing. Your application can access this service directly if you need to do any programmatic caching or flushing. The service is called _springcacheService_ and can be auto-injected into your Grails artefacts just like any other Spring bean. The service provides the following methods:
 
- * *doWithCache(String, Serializable, Closure)* : Parameters are cache name, cache key and closure invoked when there is no cached value. The method returns either the cached value or the return value of the closure. If the closure is invoked the return value is cached.
- * *doWithBlockingCache(String, Serializable, Closure)* : A variant of doWithCache that ensures a BlockingCache is used and handles exceptions so that the cache's lock is relinquished correctly.
- * *flush(patterns)* : Flushes all caches matching the specified names/patterns. The parameter can be a String, a regex pattern or a Collection or array of them.
- * *flushAll()* : Flushes all caches.
- * *clearStatistics()* : Clears statistics for all caches.
+ * **doWithCache(String, Serializable, Closure)** : Parameters are cache name, cache key and closure invoked when there is no cached value. The method returns either the cached value or the return value of the closure. If the closure is invoked the return value is cached.
+ * **doWithBlockingCache(String, Serializable, Closure)** : A variant of doWithCache that ensures a BlockingCache is used and handles exceptions so that the cache's lock is relinquished correctly.
+ * **flush(patterns)** : Flushes all caches matching the specified names/patterns. The parameter can be a String, a regex pattern or a Collection or array of them.
+ * **flushAll()** : Flushes all caches.
+ * **clearStatistics()** : Clears statistics for all caches.
 
 The plugin encourages you to use declarative caching and flushing to maintain a good separation of concerns. Over-using the _springcacheService_ is likely to render your code harder to test and maintain. That said programmatic caching may be necessary in some places but there are some caveats:
 
