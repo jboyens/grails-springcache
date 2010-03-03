@@ -1,15 +1,14 @@
 package grails.plugin.springcache
 
-import net.sf.ehcache.CacheManager
-import net.sf.ehcache.Element
-import net.sf.ehcache.Ehcache
-import net.sf.ehcache.constructs.blocking.BlockingCache
-import org.apache.commons.lang.ObjectUtils
-import net.sf.ehcache.constructs.blocking.LockTimeoutException
-import org.springframework.context.ApplicationContextAware
-import org.springframework.context.ApplicationContext
 import grails.spring.BeanBuilder
+import net.sf.ehcache.CacheManager
+import net.sf.ehcache.Ehcache
+import net.sf.ehcache.Element
+import net.sf.ehcache.constructs.blocking.BlockingCache
+import net.sf.ehcache.constructs.blocking.LockTimeoutException
 import org.springframework.cache.ehcache.EhCacheFactoryBean
+import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextAware
 
 class SpringcacheService implements ApplicationContextAware {
 
@@ -91,20 +90,13 @@ class SpringcacheService implements ApplicationContextAware {
 		}
 	}
 
-	private doWithCacheInternal(Ehcache cache, Serializable key, Closure closure) {
-		def element = cache.get(key)
-		if (!element || element.isExpired()) {
-			if (log.isDebugEnabled()) log.debug "Cache '$cache.name' missed with key '$key'"
-			def value = closure()
-			element = new Element(key, value == null ? ObjectUtils.NULL : value) // TODO: is this null handling really necessary?
-			cache.put(element)
-		} else {
-			if (log.isDebugEnabled()) log.debug "Cache '$cache.name' hit with key '$key'"
-		}
-		return element.objectValue == ObjectUtils.NULL ? null : element.objectValue
-	}
-
-	private BlockingCache getOrCreateBlockingCache(String name) {
+	/**
+	 * Gets a named blocking cache instance from the cache manager. If the named cache is non-blocking it will be
+	 * decorated and replaced. If no such cache exists it will be created.
+	 * @param name The cache name.
+	 * @return a BlockingCache instance.
+	 */
+	BlockingCache getOrCreateBlockingCache(String name) {
 		def cache = getOrCreateCache(name)
 		if (cache instanceof BlockingCache) {
 			return cache
@@ -116,7 +108,12 @@ class SpringcacheService implements ApplicationContextAware {
 		}
 	}
 
-	private Ehcache getOrCreateCache(String name) {
+	/**
+	 * Gets a named cache instance from the cache manager. If no such cache exists it will be created.
+	 * @param name The cache name.
+	 * @return a cache instance.
+	 */
+	Ehcache getOrCreateCache(String name) {
 		Ehcache cache = springcacheCacheManager.getEhcache(name)
 		if (!cache) {
 			if (autoCreateCaches) {
@@ -128,6 +125,19 @@ class SpringcacheService implements ApplicationContextAware {
 			}
 		}
 		return cache
+	}
+
+	private doWithCacheInternal(Ehcache cache, Serializable key, Closure closure) {
+		def element = cache.get(key)
+		if (!element || element.isExpired()) {
+			if (log.isDebugEnabled()) log.debug "Cache '$cache.name' missed with key '$key'"
+			def value = closure()
+			element = new Element(key, value)
+			cache.put(element)
+		} else {
+			if (log.isDebugEnabled()) log.debug "Cache '$cache.name' hit with key '$key'"
+		}
+		return element.objectValue
 	}
 
 	private Ehcache createNewCacheWithDefaults(String name) {

@@ -69,4 +69,11 @@ class StaticScaffoldingCachingTests extends AbstractContentCachingTestCase {
 		assertEquals 2, albumControllerCache.statistics.objectCount
 	}
 
+	void testNotFoundDoesNotGetCached() {
+		def page = AlbumShowPage.openInvalidId(404)
+		assertEquals "Album not found with id 404", page.flashMessage
+
+		// cache size will be 1 as list page is returned
+		assertEquals 1, albumControllerCache.statistics.objectCount
+	}
 }

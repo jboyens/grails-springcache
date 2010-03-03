@@ -16,6 +16,8 @@ import net.sf.ehcache.constructs.web.filter.PageFragmentCachingFilter
 import org.codehaus.groovy.grails.web.servlet.WrappedResponseHolder
 import org.codehaus.groovy.grails.web.util.WebUtils
 import org.slf4j.LoggerFactory
+import net.sf.ehcache.Element
+import net.sf.ehcache.constructs.blocking.LockTimeoutException
 
 class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 
@@ -62,19 +64,39 @@ class GrailsFragmentCachingFilter extends PageFragmentCachingFilter {
 		boolean isCached = true
 
 		String cacheName = request[REQUEST_CACHE_NAME_ATTR]
+		def cache = springcacheService.getOrCreateBlockingCache(cacheName)
+
 		def key = calculateKey(request)
-		def pageInfo = springcacheService.doWithBlockingCache(cacheName, key) {
-			isCached = false
-			def pageInfo = buildPage(request, response, chain)
-			if (pageInfo.isOk()) {
-				log.debug "PageInfo ok. Adding to cache $cacheName with key $key"
-				return pageInfo
+
+		def pageInfo
+		try {
+			def element = cache.get(key)
+			if (!element || element.isExpired() || !element.objectValue) {
+				isCached = false
+				try {
+					// Page is not cached - build the response, cache it, and send to client
+					pageInfo = buildPage(request, response, chain)
+					if (pageInfo.isOk()) {
+						log.debug "PageInfo ok. Adding to cache $cacheName with key $key"
+						cache.put(new Element(key, pageInfo))
+					} else {
+						log.debug "PageInfo was not ok(200). Putting null into cache $cacheName with key $key"
+						cache.put(new Element(key, null))
+					}
+				} catch (Throwable t) {
+					// Must unlock the cache if the above fails. Will be logged at Filter
+					cache.put(new Element(key, null))
+					throw t
+				}
 			} else {
-				log.debug "PageInfo was not ok(200). Putting null into cache $cacheName with key $key"
-				return null
+				log.debug "Serving cached content for $key"
+				pageInfo = element.objectValue
 			}
+		} catch(LockTimeoutException e) {
+			//do not release the lock, because you never acquired it
+			throw e
 		}
-		
+
 		timer.stop(isCached)
 		return pageInfo
 	}

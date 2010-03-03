@@ -12,6 +12,11 @@ class AlbumShowPage extends GrailsShowPage {
 		return new AlbumShowPage()
 	}
 
+	static AlbumListPage openInvalidId(id) {
+		GrailsPage.open "/album/show/$id"
+		return new AlbumListPage()
+	}
+
 	void vote(int stars) {
 		if (stars in (1..5)) {
 			selenium.click("rating_star_$stars")
