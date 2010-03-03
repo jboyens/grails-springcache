@@ -8,7 +8,7 @@ import org.springframework.web.filter.DelegatingFilterProxy
 import grails.plugin.springcache.web.key.DefaultKeyGenerator
 
 class SpringcacheGrailsPlugin {
-	def version = "1.2-SNAPSHOT"
+	def version = "1.2"
 	def grailsVersion = "1.2-M3 > *"
 	def dependsOn = [:]
 	def pluginExcludes = [
