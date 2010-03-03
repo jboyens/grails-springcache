@@ -1,15 +1,15 @@
 package grails.plugin.springcache.web
 
-import net.sf.ehcache.*
-import groovy.util.*
 import functionaltestplugin.FunctionalTestCase
+import grails.plugin.springcache.SpringcacheService
 import musicstore.Album
 import musicstore.Artist
-import static javax.servlet.http.HttpServletResponse.*
+import net.sf.ehcache.Ehcache
+import static javax.servlet.http.HttpServletResponse.SC_OK
 
 class ContentNegotiationTests extends FunctionalTestCase {
 
-	CacheManager springcacheCacheManager
+	SpringcacheService springcacheService
 	Ehcache latestControllerCache
 
 	void setUp() {
@@ -30,11 +30,8 @@ class ContentNegotiationTests extends FunctionalTestCase {
 			Album.list()*.delete()
 			Artist.list()*.delete()
 		}
-		springcacheCacheManager.cacheNames.each {
-			def cache = springcacheCacheManager.getEhcache(it)
-			cache.flush()
-			cache.clearStatistics()
-		}
+		springcacheService.flushAll()
+		springcacheService.clearStatistics()
 	}
 
 	void testCachedContentNotServedWhenAcceptHeaderIsDifferent() {

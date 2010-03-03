@@ -34,11 +34,19 @@ class SpringcacheService implements ApplicationContextAware {
 
 	/**
 	 * Flushes all caches held by the service's cache manager.
-	 * @param clearStatistics if true the method will clear all cache statistics as well as flushing.
 	 */
-	void flushAll(boolean clearStatistics = false) {
+	void flushAll() {
 		springcacheCacheManager.cacheNames.each {
-			flushNamedCache(it, clearStatistics)
+			flushNamedCache(it)
+		}
+	}
+
+	/**
+	 * Clears statistics for all caches held by the service's cache manager.
+	 */
+	void clearStatistics() {
+		springcacheCacheManager.cacheNames.each {
+			springcacheCacheManager.getEhcache(it)?.clearStatistics()
 		}
 	}
 
@@ -134,12 +142,10 @@ class SpringcacheService implements ApplicationContextAware {
 		return ctx.getBean(name)
 	}
 
-	private def flushNamedCache(String name, boolean clearStatistics = false) {
+	private def flushNamedCache(String name) {
 		if (log.isDebugEnabled()) log.debug "Flushing cache '$name'"
 		try {
-			def cache = springcacheCacheManager.getEhcache(name)
-			cache?.flush()
-			if (clearStatistics) cache?.clearStatistics()
+			springcacheCacheManager.getEhcache(name)?.flush()
 		} catch (IllegalStateException e) {
 			log.warn "Attempted to flush cache '$name' when it is not alive"
 		}

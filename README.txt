@@ -247,10 +247,11 @@ h2. Programmatic caching and flushing
 Both the servlet filter used for content caching and the AOP aspects used for service method caching use a Grails service to handle caching and flushing. Your app can access this service directly if you need to do any programmatic caching or flushing. The service is called _springcacheService_ and can be auto-injected into your Grails artefacts just like any other Spring bean. The service provides the following methods:
 
 |_. Name |_. Parameters |_. Description |
-| flush(patterns) | A String, regex pattern or Collection/array of them. | All caches matching the names/patterns are flushed. |
-| flushAll(boolean) | Optional boolean, defaults to false. | Flushes all caches and optionally clears statistics. |
 | doWithCache(String, Serializable, Closure) | Cache name, cache key and closure used when cache is missed. | Returns either cached value or the return value of the closure if no cache element exists for the key. If the latter, the value is cached and used on future calls with the same key. |
 | doWithBlockingCache(String, Serializable, Closure) | As above. | A variant of doWithCache that ensures a BlockingCache is used and handles exceptions so that the cache's lock is relinquished correctly. |
+| flush(patterns) | A String, regex pattern or Collection/array of them. | All caches matching the names/patterns are flushed. |
+| flushAll() |  | Flushes all caches. |
+| clearStatistics() |  | Clears statistics for all caches. |
 
 The plugin encourages you to use declarative caching and flushing to maintain a good separation of concerns. Over-using the _springcacheService_ is likely to render your code harder to test and maintain. That said programmatic caching may be necessary in some places but there are some caveats:
  * If you try to perform caching or flushing in interceptors on controller actions bear in mind those actions, and therefore any interceptors, will not be invoked at all if they are annotated with @Cacheable and the cache is hit.

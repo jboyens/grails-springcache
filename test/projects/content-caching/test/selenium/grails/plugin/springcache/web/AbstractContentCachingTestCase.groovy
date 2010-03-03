@@ -1,29 +1,25 @@
 package grails.plugin.springcache.web
 
+import grails.plugin.springcache.SpringcacheService
 import grails.plugins.selenium.SeleniumManager
 import musicstore.Album
 import musicstore.auth.Role
 import musicstore.auth.User
 import musicstore.pages.HomePage
 import musicstore.pages.LoginPage
-import net.sf.ehcache.CacheManager
 import org.grails.plugins.springsecurity.service.AuthenticateService
 import org.grails.rateable.Rating
 import org.grails.rateable.RatingLink
 
 abstract class AbstractContentCachingTestCase extends GroovyTestCase {
 
-	CacheManager springcacheCacheManager
+	SpringcacheService springcacheService
 	AuthenticateService authenticateService
 
 	void tearDown() {
 		super.tearDown()
-
-		springcacheCacheManager.cacheNames.each {
-			def cache = springcacheCacheManager.getEhcache(it)
-			cache.flush()
-			cache.clearStatistics()
-		}
+		springcacheService.flushAll()
+		springcacheService.clearStatistics()
 	}
 
 	protected void setUpAlbumRating(Album album, User rater, double stars) {
