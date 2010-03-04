@@ -27,7 +27,17 @@ task test << {
 }
 
 task doc(dependsOn: configurations.doc) << {
-	ant.java(classpath: configurations.doc.asPath,
-			classname: "com.petebevin.markdown.MarkdownProcessor",
-			input: "README.markdown")
+//	ant.java(classpath: configurations.doc.asPath,
+//			classname: "com.petebevin.markdown.MarkdownProcessor",
+//			input: "README.markdown", output: "README.html")
+	def text = new File("README.markdown").text
+	text = text.replaceAll(/\*+/, "*")
+	text = text.replaceAll(/`/, "@")
+	text = text.replaceAll(/<a href="(.*?)">(.*?)<\/a>/) { match, href, label ->
+		"[$label|$href]"
+	}
+	text = text.replaceAll(/(?m)^#+/) {
+		"h${it.size()}."
+	}
+	println text
 }
