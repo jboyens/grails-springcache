@@ -96,44 +96,44 @@ Grails' standard scaffolded _CRUD_ pages provide a good example of how caching a
 #### AlbumController.groovy
 	class AlbumController {
 		// the index action is uncached as it just performs a redirect to list
-	    def index = {
-	        redirect(action: "list", params: params)
-	    }
+		def index = {
+			redirect(action: "list", params: params)
+		}
 
 		@Cacheable("albumControllerCache")
-	    def list = {
+		def list = {
 			// standard Grails scaffolding code omitted
-	    }
+		}
 
 		@Cacheable("albumControllerCache")
-	    def create = {
+		def create = {
 			// standard Grails scaffolding code omitted
-	    }
+		}
 
 		@CacheFlush(["albumControllerCache", "artistControllerCache", "latestControllerCache", "popularControllerCache"])
-	    def save = {
+		def save = {
 			// standard Grails scaffolding code omitted
-	    }
+		}
 
 		@Cacheable("albumControllerCache")
-	    def show = {
+		def show = {
 			// standard Grails scaffolding code omitted
-	    }
+		}
 
 		@Cacheable("albumControllerCache")
-	    def edit = {
+		def edit = {
 			// standard Grails scaffolding code omitted
-	    }
+		}
 
 		@CacheFlush(["albumControllerCache", "latestControllerCache", "popularControllerCache"])
-	    def update = {
+		def update = {
 			// standard Grails scaffolding code omitted
-	    }
+		}
 
 		@CacheFlush(["albumControllerCache", "artistControllerCache", "latestControllerCache", "popularControllerCache"])
-	    def delete = {
+		def delete = {
 			// standard Grails scaffolding code omitted
-	    }
+		}
 	}
 
 The _list_, _show_, _create_ and _edit_ pages are all cached. The _show_ and _edit_ rely on an domain object id parameter and this will be included in the cache key so that `/album/show/1` and `/album/show/2` are cached separately. The _save_, _update_ and _delete_ actions will flush caches. Note that in addition to flushing the cache used by the _list_, _show_, _create_ and _edit_ actions they are flushing other caches which are content caches for controllers whose output should be refreshed if `Album` data changes.
@@ -181,9 +181,9 @@ One of the most powerful features of page fragment caching is that the generated
 			<g:layoutBody/>
 
 			<div class="sidebar">
-			    <%-- each of these controller actions can be cached separately as well --%>
-	        	<g:include controller="latest" action="albums"/>
-			    <g:include controller="popular" action="albums"/>
+				<%-- each of these controller actions can be cached separately as well --%>
+				<g:include controller="latest" action="albums"/>
+				<g:include controller="popular" action="albums"/>
 			</div>
 		</body>
 	</html>
@@ -203,6 +203,36 @@ One of the most powerful features of page fragment caching is that the generated
 	}
 
 If all the caches are hit the final rendered page will be composed of 3 separate cached sections. What is more, each individual section can be flushed without affecting the others so with some thought about how to compose your page and apply your caches you can optimise cache usage without delivering stale data to the user.
+
+### Example: annotations applied at class level
+
+The `@Cacheable` and `@CacheFlush` annotations can be applied at class level. This is more likely useful with `@Cacheable` but it is certainly possible to apply `@CacheFlush` at class level so that any action on that controller will flush a set of caches. Any annotation on an individual action will be applied in preference to an annotation at class level, so a class level annotation behaves like a default. An annotation at class level will work with dynamic scaffolded actions so you don't have to generate a concrete action in order to benefit from caching behaviour.
+
+	@Cacheable("albumControllerCache")
+	class AlbumController {
+		
+		static scaffold = true // all dynamically scaffolded actions will be cached
+		
+		@Cacheable("albumListCache")
+		def list = {
+			// ...
+		}
+		
+		@CacheFlush(/album\w+Cache/)
+		def save = {
+			// ...
+		}
+		
+		def show = {
+			// ...
+		}
+	}
+	
+In this example:
+ * The _show_ action will use the default class level `@Cacheable` annotation and its page fragment will be cached in the _albumControllerCache_ cache.
+ * The _list_ action will not use the default as it specifies its own `@Cacheable` annotation and its content will be cached separately.
+ * The _save_ action uses a `@CacheFlush` and will therefore not be cached at all.
+ * Dynamically scaffolded actions (e.g. _edit_, _update_, etc.) will use the class level annotation and their results will be cached in the _albumControllerCache_ cache.
 
 ### Customising key generation for page fragment caching
 
@@ -252,42 +282,42 @@ Caches referenced by the annotations can be configured, either in an `ehcache.xm
 You can configure caches in `grails-app/conf/spring/resources.groovy` using Spring's <a href="http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/cache/ehcache/EhCacheFactoryBean.html">EhCacheFactoryBean</a>. For example:
 
 #### grails-app/conf/spring/resources.groovy
-    pirateCache(EhCacheFactoryBean) { bean ->
-	    cacheManager = ref("springcacheCacheManager")
-	    cacheName = "pirateCache"
-	    // these are just examples of properties you could set
-	    eternal = false
-	    diskPersistent = false
-	    memoryStoreEvictionPolicy = "LRU"
-    }
+	pirateCache(EhCacheFactoryBean) { bean ->
+		cacheManager = ref("springcacheCacheManager")
+		cacheName = "pirateCache"
+		// these are just examples of properties you could set
+		eternal = false
+		diskPersistent = false
+		memoryStoreEvictionPolicy = "LRU"
+	}
 
 You can inherit default cache properties from those defined in `Config.groovy` by setting the factory bean's parent to '`springcacheDefaultCache`'. For example:
 
-    pirateCache(EhCacheFactoryBean) { bean ->
-        bean.parent = ref("springcacheDefaultCache")
-	    cacheName = "pirateCache"
-	    // set any properties unique to this cache
-	    memoryStoreEvictionPolicy = "LRU"
-    }
+	pirateCache(EhCacheFactoryBean) { bean ->
+		bean.parent = ref("springcacheDefaultCache")
+		cacheName = "pirateCache"
+		// set any properties unique to this cache
+		memoryStoreEvictionPolicy = "LRU"
+	}
 
 ### Configuring caches with Config.groovy
 
 The Springcache plugin enables you to define caches in `Config.groovy` for convenience. For example:
 
 #### grails-app/conf/Config.groovy
-    springcache {
-        defaults {
-            // set default cache properties that will apply to all caches that do not override them
-            eternal = false
-		    diskPersistent = false
-        }
-	    caches {
-		    pirateCache {
-            	// set any properties unique to this cache
-			    memoryStoreEvictionPolicy = "LRU"
-		    }
-	    }
-    }
+	springcache {
+		defaults {
+			// set default cache properties that will apply to all caches that do not override them
+			eternal = false
+			diskPersistent = false
+		}
+		caches {
+			pirateCache {
+				// set any properties unique to this cache
+				memoryStoreEvictionPolicy = "LRU"
+			}
+		}
+	}
 
 Under the hood this is simply setting up `EhCacheFactoryBean` instances in the Spring context, so it is up to you whether you prefer to use `resources.groovy` or `Config.groovy` there is not much difference.
 
@@ -303,28 +333,28 @@ There is nothing special about the different types of cache so it's perfectly fi
 
 In integration test and some types of functional test (e.g. Selenium RC tests when not running in remote mode) your tests can have Spring beans automatically injected. You can use this facility to tear down caches between tests. For example:
 
-    def springcacheService // auto-injected service bean from plugin
+	def springcacheService // auto-injected service bean from plugin
 
-    void tearDown() {
-        super.tearDown()
-	    springcacheService.flushAll()
-	    // only need to do this if your tests are making assertions about hit/miss counts, etc.
-	    springcacheService.clearStatistics()
-    }
+	void tearDown() {
+		super.tearDown()
+		springcacheService.flushAll()
+		// only need to do this if your tests are making assertions about hit/miss counts, etc.
+		springcacheService.clearStatistics()
+	}
 
 ### Disabling
 
 Rather than tearing down caches between tests you may prefer to disable the plugin altogether. This is done by setting the config key `springcache.disabled = true` which can be done on a per-environment basis. For example:
 
-    springcache {
-	    // cache definitions, etc
-    }
+	springcache {
+		// cache definitions, etc
+	}
 
-    environments {
-	    test {
-		    springcache.disabled = true
-	    }
-    }
+	environments {
+		test {
+			springcache.disabled = true
+		}
+	}
 
 ### Logging Output
 
