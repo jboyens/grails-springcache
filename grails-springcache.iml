@@ -33,7 +33,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="grails-1.2.1" level="application" />
     <orderEntry type="module-library" exported="">
       <library name="Grails User Library">
         <CLASSES>
@@ -56,6 +55,7 @@
           <root url="jar://$USER_HOME$/.ivy2/cache/org.mortbay.jetty/servlet-api/jars/servlet-api-2.5-20081211.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.spockframework/spock-core/jars/spock-core-0.4-SNAPSHOT.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/junit/junit/jars/junit-4.7.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.markdownj/markdownj/jars/markdownj-0.3.0-1.0.2b4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
